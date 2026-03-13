@@ -60,7 +60,7 @@ if ENABLE_SERVERS then
         -- @field httpLogin Enables HTTP-based login on the server
         -- @field useAuthenticator Enables additional authentication layer
         --
-        ["http://127.0.0.1/login.php"] = {
+        ["http://26.0.58.87/login.php"] = {
             port = 80,
             protocol = 1500,
             httpLogin = true,
@@ -84,7 +84,7 @@ if ENABLE_SERVERS then
     }
 end
 
-g_app.setName("OTClient - Redemption");
+g_app.setName("OTClient - Projeto OtServ");
 g_app.setCompactName("otclient");
 g_app.setOrganizationName("otcr");
 
