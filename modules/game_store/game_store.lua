@@ -398,6 +398,14 @@ function controllerShop:onInit()
     controllerShop.ui.transferPoints.onClick = transferPoints
     controllerShop.ui.panelItem.listProduct.onChildFocusChange = chooseOffert
     controllerShop.ui.HomePanel.HomeRecentlyAdded.HomeProductos.onChildFocusChange = chooseHome
+    
+    -- Gatilho da barra de pesquisa
+    local searchEdit = controllerShop.ui:recursiveGetChildById('SearchEdit')
+    if searchEdit then
+        searchEdit.onTextChange = function(widget, text)
+            search()
+        end
+    end
     -- /*=============================================
     -- =            Parse                         =
     -- =============================================*/
@@ -1180,10 +1188,38 @@ end
 -- =            Search Button            =
 -- =============================================*/
 
-function search()
-    if  controllerShop.ui.openedCategory ~= nil then
-        close(controllerShop.ui.openedCategory)
-    end
-    g_game.sendRequestStoreSearch(controllerShop.ui.SearchEdit:getText(), 0, 1)
-end
+-- /*=============================================
+-- =            Search Button                    =
+-- =============================================*/
 
+function search()
+    -- Verifica se a interface do controller está carregada
+    if not controllerShop.ui then return end
+
+    -- Pega o campo de pesquisa e a lista de produtos
+    local searchEdit = controllerShop.ui:recursiveGetChildById('SearchEdit')
+    local listProduct = controllerShop.ui:recursiveGetChildById('listProduct')
+
+    if not searchEdit or not listProduct then return end
+
+    -- Pega o texto digitado e transforma em minúsculo
+    local searchText = searchEdit:getText():lower()
+    
+    -- Pega todos os itens que estão aparecendo na tela da loja
+    local children = listProduct:getChildren()
+
+    -- Passa por cada um dos itens verificando o nome
+    for _, child in ipairs(children) do
+        local nameLabel = child:getChildById('lblName')
+        if nameLabel then
+            local itemName = nameLabel:getText():lower()
+            
+            -- Filtra os itens mostrando apenas os que batem com o texto
+            if itemName:find(searchText, 1, true) then
+                child:show()
+            else
+                child:hide()
+            end
+        end
+    end
+end
