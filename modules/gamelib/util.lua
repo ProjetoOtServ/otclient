@@ -11,7 +11,10 @@ function dirtostring(dir)
 end
 
 function comma_value(n)
-    local left, num, right = string.match(n, '^([^%d]*%d)(%d*)(.-)$')
+    if not n then return "0" end
+    local nStr = tostring(n)
+    local left, num, right = string.match(nStr, '^([^%d]*%d)(%d*)(.-)$')
+    if not num then return nStr end
     return left .. (num:reverse():gsub('(%d%d%d)', '%1,'):reverse()) .. right
 end
 
@@ -36,9 +39,14 @@ function math.cround(value, rd)
 end
 
 function formatMoney(amount, separator)
+  if not amount then return "0" end
+  separator = separator or ","
+  
   local patternSeparator = string.format("%%1%s%%2", separator)
-  local formatted = amount
+  local formatted = tostring(amount)
+  
   while true do
+    local k
     formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", patternSeparator)
     if (k==0) then
       break

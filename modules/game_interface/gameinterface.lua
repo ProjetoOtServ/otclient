@@ -20,7 +20,7 @@ logoutWindow = nil
 exitWindow = nil
 bottomSplitter = nil
 limitedZoom = false
-currentViewMode = 0
+currentViewMode = 2
 leftIncreaseSidePanels = nil
 leftDecreaseSidePanels = nil
 rightIncreaseSidePanels = nil
@@ -43,10 +43,13 @@ local mobileConfig = {
     mobileHeightShortcuts = 0
 }
 
+local maxZoomOut = 11 -- O nosso limite seguro (equivalente a 15x11 ou 14x10 dependendo da resolução do jogador)
+local baseZoom = 11 -- Padrão 100% clássico
+
 function init()
     g_ui.importStyle('styles/countwindow')
     g_ui.importStyle('styles/countStashWindow')
-
+    
     connect(g_game, {
         onGameStart = onGameStart,
         onGameEnd = onGameEnd,
@@ -157,6 +160,8 @@ function init()
     end
 
     bindKeys()
+    
+-- A linha 'setupViewMode(2)' que estava aqui foi DELETADA!
 
     if g_game.isOnline() then
         show()
@@ -164,16 +169,9 @@ function init()
 
     StatsBar.init()
 end
-
+-- AQUI ACABA A FUNÇÃO INIT()
 function bindKeys()
     gameRootPanel:setAutoRepeatDelay(50)
-
-    g_keyboard.bindKeyPress('Ctrl+=', function()
-        gameMapPanel:zoomIn()
-    end, gameRootPanel)
-    g_keyboard.bindKeyPress('Ctrl+-', function()
-        gameMapPanel:zoomOut()
-    end, gameRootPanel)
 
     Keybind.new("Movement", "Stop All Actions", "Escape", "", true)
     Keybind.bind("Movement", "Stop All Actions", {
@@ -271,19 +269,52 @@ function onGameEnd()
     hide()
 end
 
+-- === O SEU NOVO MENU FLUTUANTE CUSTOMIZADO ===
+local customMenu = nil
+
+-- === O SEU NOVO MENU FLUTUANTE CUSTOMIZADO ===
+local customMenu = nil
+
+-- === O SEU NOVO MENU FLUTUANTE CUSTOMIZADO ===
+local customMenu = nil
+
+-- === O SEU NOVO MENU FLUTUANTE CUSTOMIZADO ===
+local customMenu = nil
+
+-- === O SEU NOVO MENU FLUTUANTE CUSTOMIZADO ===
+local customMenu = nil
+
+-- === O SEU NOVO MENU FLUTUANTE CUSTOMIZADO ===
+local customMenu = nil
+
+-- === O SEU NOVO MENU FLUTUANTE (VERSÃO MEHAH) ===
+local customMenu = nil
+
+-- === O SEU NOVO MENU FLUTUANTE (MÉTODO ANCORAGEM MANUAL) ===
+local customMenu = nil
+
+
+-- ==============================================
+
 function show()
     connect(g_app, {
         onClose = tryExit
     })
     modules.client_background.hide()
+    
+    -- 1. Ativa a matemática do Widescreen EXATAMENTE ao logar
+    setupViewMode(2)
+    
+    -- 2. Mostra o mapa, mas força ele a ficar ABAIXO da barra
     gameRootPanel:show()
+    gameRootPanel:lower() 
+    
     gameRootPanel:focus()
     gameMapPanel:followCreature(g_game.getLocalPlayer())
 
     updateStretchShrink()
     logoutButton:setTooltip(tr('Logout'))
 
-    setupViewMode(0)
     if g_platform.isMobile() then
         mobileConfig.mobileWidthJoystick = modules.game_joystick.getPanel():getWidth()
         mobileConfig.mobileWidthShortcuts = modules.game_shortcuts.getPanel():getWidth()
@@ -292,21 +323,9 @@ function show()
         setupViewMode(1)
         setupViewMode(2)
     end
-
-    addEvent(function()
-        if not limitedZoom or g_game.isGM() then
-            gameMapPanel:setMaxZoomOut(513)
-            gameMapPanel:setLimitVisibleRange(false)
-        else
-            gameMapPanel:setMaxZoomOut(11)
-            gameMapPanel:setLimitVisibleRange(true)
-        end
-    end)
 end
 
 function hide()
-    setupViewMode(0)
-
     disconnect(g_app, {
         onClose = tryExit
     })
@@ -326,6 +345,11 @@ function hide()
     end
     gameRootPanel:hide()
     modules.client_background.show()
+    
+    -- 3. Devolve a Barra Grande e o YouTube para a tela de Login
+    if modules.client_topmenu then 
+        modules.client_topmenu.extendedView(false) 
+    end
 end
 
 function save()
@@ -453,16 +477,23 @@ function tryLogout(prompt)
 end
 
 function updateStretchShrink()
-    if modules.client_options.getOption('dontStretchShrink') and not alternativeView then
-        gameMapPanel:setVisibleDimension({
-            width = 15,
-            height = 11
-        })
-
-        -- Set gameMapPanel size to height = 11 * 32 + 2
-        bottomSplitter:setMarginBottom(bottomSplitter:getMarginBottom() + (gameMapPanel:getHeight() - 32 * 11) - 10)
+    if not gameMapPanel then return end
+    
+    local width = gameRootPanel:getWidth()
+    local height = gameRootPanel:getHeight()
+    
+    if height > 0 then
+        local aspect = width / height
+        local wideWidth = math.ceil(11 * aspect)
+        
+        -- A MÁGICA: Se o número for par, soma 1 para virar ímpar e não crashar a engine!
+        if wideWidth % 2 == 0 then
+            wideWidth = wideWidth + 1
+        end
+        
+        gameMapPanel:setVisibleDimension({ width = wideWidth, height = 11 })
     end
-    -- Update action bar layout when window geometry changes
+
     if modules.game_actionbar and modules.game_actionbar.updateVisibleWidgetsExternal then
         addEvent(function()
             modules.game_actionbar.updateVisibleWidgetsExternal()
@@ -1706,20 +1737,22 @@ function findContentPanelAvailable(child, minContentHeight)
 end
 
 function nextViewMode()
-    setupViewMode((currentViewMode + 1) % 3)
+    -- Função desativada. O cliente agora é 100% Fullscreen e não muda de modo.
+end
+
+function testExtendedView(mode)
+    -- Função desativada. A lógica foi mesclada na função abaixo.
 end
 
 function setupViewMode(mode)
-    if mode == currentViewMode then
-        return
-    end
-
+    currentViewMode = 2
+    
+    -- Lógica original de ocultar painéis laterais base
     leftIncreaseSidePanels:setEnabled(not modules.client_options.getOption('showLeftExtraPanel'))
     if g_platform.isMobile() then
         leftDecreaseSidePanels:setEnabled(false)
     else
-        local hasLeftPanels = modules.client_options.getOption('showLeftPanel') or
-        modules.client_options.getOption('showLeftExtraPanel')
+        local hasLeftPanels = modules.client_options.getOption('showLeftPanel') or modules.client_options.getOption('showLeftExtraPanel')
         leftDecreaseSidePanels:setEnabled(hasLeftPanels)
     end
     rightIncreaseSidePanels:setEnabled(not modules.client_options.getOption('showRightExtraPanel'))
@@ -1730,85 +1763,75 @@ function setupViewMode(mode)
         gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
     end
 
-    if currentViewMode == 2 then
-        gameMapPanel:addAnchor(AnchorLeft, 'gameLeftPanel', AnchorRight)
-        gameMapPanel:addAnchor(AnchorRight, 'gameRightPanel', AnchorLeft)
-        gameMapPanel:addAnchor(AnchorBottom, 'bottomSplitter', AnchorTop)
-        gameMapPanel:addAnchor(AnchorTop, 'gameTopPanel', AnchorBottom)
-        gameRootPanel:addAnchor(AnchorTop, 'parent', AnchorTop)
-        gameLeftPanel:setOn(modules.client_options.getOption('showLeftPanel'))
-        gameRightExtraPanel:setOn(modules.client_options.getOption('showRightExtraPanel'))
-        gameLeftExtraPanel:setOn(modules.client_options.getOption('showLeftExtraPanel'))
-        gameLeftPanel:setImageColor('white')
-        gameRightPanel:setImageColor('white')
-        gameRightExtraPanel:setImageColor('white')
-        gameLeftExtraPanel:setImageColor('white')
-        gameLeftPanel:setMarginTop(0)
-        gameRightPanel:setMarginTop(0)
-        gameRightExtraPanel:setMarginTop(0)
-        gameLeftExtraPanel:setMarginTop(0)
-        gameBottomPanel:setImageColor('white')
-        if g_platform.isMobile() then
-            gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
-            gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
-        end
+    -- === O WIDESCREEN PERFEITO E RESPEITOSO ===
+    local limit = limitedZoom and not g_game.isGM()
+    gameMapPanel:setLimitVisibleRange(limit)
+    gameMapPanel:setZoom(11)
+    gameMapPanel:setKeepAspectRatio(false) -- Permite preencher as bordas cinzas
+    
+    gameMapPanel:fill('parent')
+    gameMapPanel:lower() 
+    -- (O gameRootPanel:fill foi REMOVIDO para que o Top Menu não seja engolido!)
+    -- ==========================================
+
+    gameLeftPanel:setImageColor('alpha')
+    gameRightPanel:setImageColor('alpha')
+    gameRightExtraPanel:setImageColor('alpha')
+    gameLeftExtraPanel:setImageColor('alpha')
+    gameLeftPanel:setOn(true)
+    gameLeftPanel:setVisible(true)
+    gameRightPanel:setOn(true)
+    gameRightExtraPanel:setOn(false)
+    gameRightExtraPanel:setVisible(false)
+    gameLeftExtraPanel:setOn(false)
+    gameLeftExtraPanel:setVisible(false)
+    gameMapPanel:setOn(true)
+    gameBottomPanel:setImageColor('#ffffff88')
+
+    if g_platform.isMobile() then
+        gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
+        gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
     end
 
-    if mode == 0 then
-        gameMapPanel:setKeepAspectRatio(true)
-        gameMapPanel:setLimitVisibleRange(false)
-        gameMapPanel:setZoom(11)
-        gameMapPanel:setVisibleDimension({
-            width = 15,
-            height = 11
-        })
-        if g_platform.isMobile() then
-            gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
-            gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
-        end
-    elseif mode == 1 then
-        gameMapPanel:setKeepAspectRatio(false)
-        gameMapPanel:setLimitVisibleRange(true)
-        gameMapPanel:setZoom(11)
-        gameMapPanel:setVisibleDimension({
-            width = 15,
-            height = 11
-        })
-        if g_platform.isMobile() then
-            gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
-            gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
-        end
-    elseif mode == 2 then
-        local limit = limitedZoom and not g_game.isGM()
-        gameMapPanel:setLimitVisibleRange(limit)
-        gameMapPanel:setZoom(11)
-        gameMapPanel:setVisibleDimension({
-            width = 15,
-            height = 11
-        })
-        gameMapPanel:fill('parent')
-        gameRootPanel:fill('parent')
-        gameLeftPanel:setImageColor('alpha')
-        gameRightPanel:setImageColor('alpha')
-        gameRightExtraPanel:setImageColor('alpha')
-        gameLeftExtraPanel:setImageColor('alpha')
-        gameLeftPanel:setOn(true)
-        gameLeftPanel:setVisible(true)
-        gameRightPanel:setOn(true)
-        gameRightExtraPanel:setOn(false)
-        gameRightExtraPanel:setVisible(false)
-        gameLeftExtraPanel:setOn(false)
-        gameLeftExtraPanel:setVisible(false)
-        gameMapPanel:setOn(true)
-        gameBottomPanel:setImageColor('#ffffff88')
-        if g_platform.isMobile() then
-            gameRightPanel:setMarginBottom(mobileConfig.mobileHeightShortcuts)
-            gameLeftPanel:setMarginBottom(mobileConfig.mobileHeightJoystick)
-        end
+    local buttons = { leftIncreaseSidePanels, rightIncreaseSidePanels, rightDecreaseSidePanels, leftDecreaseSidePanels }
+    for _, button in ipairs(buttons) do
+        button:hide()
     end
 
-    currentViewMode = mode
-    testExtendedView(mode)
+    if not g_platform.isMobile() then
+        gameBottomPanel:breakAnchors()
+        gameBottomPanel:bindRectToParent()
+        gameBottomPanel:setDraggable(true)
+    else
+        gameBottomPanel:setWidth(g_window.getWidth() - mobileConfig.mobileWidthJoystick - mobileConfig.mobileWidthShortcuts)
+        gameBottomPanel:setPosition({ x = mobileConfig.mobileWidthJoystick, y = gameBottomPanel:getY() })
+    end
+    
+    gameBottomPanel:getChildById('rightResizeBorder'):setMaximum(gameBottomPanel:getWidth())
+    gameBottomPanel:getChildById('bottomResizeBorder'):enable()
+    gameBottomPanel:getChildById('rightResizeBorder'):enable()
+    gameMainRightPanel:setHeight(0)
+    gameMainRightPanel:setImageColor('alpha')
+    gameBottomPanel:addAnchor(AnchorTop, 'gameBottomActionPanel', AnchorBottom)
+    gameBottomPanel:addAnchor(AnchorBottom, 'parent', AnchorBottom)
+    gameLeftActionPanel:setImageSource(nil)
+    gameRightActionPanel:setImageSource(nil)
+    gameLeftActionPanel:setBorderWidthRight(0)
+    gameRightActionPanel:setBorderWidthLeft(0)
+
+    addEvent(function()
+        if modules.game_console then modules.game_console.setExtendedView(true) end
+        if modules.game_minimap then modules.game_minimap.extendedView(true) end
+        if modules.game_healthinfo then modules.game_healthinfo.extendedView(true) end
+        if modules.game_inventory then modules.game_inventory.extendedView(true) end
+        
+        -- A MÁGICA FINAL: Avisa a barra oficial para aparecer no jogo e achatar os textos desnecessários
+        if modules.client_topmenu then modules.client_topmenu.extendedView(true) end
+        
+        if modules.game_mainpanel then modules.game_mainpanel.toggleExtendedViewButtons(true) end
+        
+        updateStretchShrink()
+    end)
 end
 
 function limitZoom()
@@ -1941,84 +1964,7 @@ function checkAndOpenLeftPanel()
 end
 
 function testExtendedView(mode)
-    local extendedView = mode == 2
-    if extendedView then
-        local buttons = { leftIncreaseSidePanels, rightIncreaseSidePanels, rightDecreaseSidePanels,
-            leftDecreaseSidePanels }
-        for _, button in ipairs(buttons) do
-            button:hide()
-        end
-
-        if not g_platform.isMobile() then
-            gameBottomPanel:breakAnchors()
-            gameBottomPanel:bindRectToParent()
-            gameBottomPanel:setDraggable(true)
-        else
-            gameBottomPanel:setWidth(g_window.getWidth() - mobileConfig.mobileWidthJoystick -
-                mobileConfig.mobileWidthShortcuts)
-            gameBottomPanel:setPosition({
-                x = mobileConfig.mobileWidthJoystick,
-                y = gameBottomPanel:getY()
-            })
-        end
-        gameBottomPanel:getChildById('rightResizeBorder'):setMaximum(gameBottomPanel:getWidth())
-        gameBottomPanel:getChildById('bottomResizeBorder'):enable()
-        gameBottomPanel:getChildById('rightResizeBorder'):enable()
-        gameMainRightPanel:setHeight(0)
-        gameMainRightPanel:setImageColor('alpha')
-        gameBottomPanel:addAnchor(AnchorTop, 'gameBottomActionPanel', AnchorBottom)
-        gameBottomPanel:addAnchor(AnchorBottom, 'parent', AnchorBottom)
-        gameLeftActionPanel:setImageSource(nil)
-        gameRightActionPanel:setImageSource(nil)
-        gameLeftActionPanel:setBorderWidthRight(0)
-        gameRightActionPanel:setBorderWidthLeft(0)
-    else
-        -- Reset to normal view
-        gameMainRightPanel:setHeight(200)
-        gameMainRightPanel:setMarginTop(0)
-        gameMainRightPanel:setImageColor('white')
-        gameLeftActionPanel:setImageSource('/images/ui/actionbar/actionbar_background-light')
-        gameRightActionPanel:setImageSource('/images/ui/actionbar/actionbar_background-light')
-        gameLeftActionPanel:setBorderWidthRight(1)
-        gameRightActionPanel:setBorderWidthLeft(1)
-        local buttons = { leftIncreaseSidePanels, rightIncreaseSidePanels, rightDecreaseSidePanels,
-            leftDecreaseSidePanels }
-
-        for _, button in ipairs(buttons) do
-            button:setMarginTop(0)
-            button:show()
-        end
-
-        -- Reset bottom panel
-        gameBottomPanel:setDraggable(false)
-
-        -- Set anchors
-        if not g_platform.isMobile() then
-            gameBottomPanel:breakAnchors()
-            gameBottomPanel:addAnchor(AnchorLeft, 'gameLeftExtraPanel', AnchorRight)
-            gameBottomPanel:addAnchor(AnchorRight, 'gameRightExtraPanel', AnchorLeft)
-            gameBottomPanel:addAnchor(AnchorTop, 'gameBottomCooldownPanel', AnchorBottom)
-            gameBottomPanel:addAnchor(AnchorBottom, 'parent', AnchorBottom)
-        end
-        gameBottomPanel:getChildById('bottomResizeBorder'):disable()
-        gameBottomPanel:getChildById('rightResizeBorder'):disable()
-
-        -- Move children back to gameMainRightPanel
-        local children = gameRightPanel:getChildren()
-        for _, child in ipairs(children) do
-            if child.moveOnlyToMain then
-                child:setParent(gameMainRightPanel)
-            end
-        end
-    end
-    addEvent(function()
-        modules.game_console.setExtendedView(extendedView)
-        modules.game_minimap.extendedView(extendedView)
-        modules.game_healthinfo.extendedView(extendedView)
-        modules.game_inventory.extendedView(extendedView)
-        modules.client_topmenu.extendedView(extendedView)
-        modules.game_mainpanel.toggleExtendedViewButtons(extendedView)
-    end)
+    -- Função desativada. A lógica foi mesclada na função setupViewMode.
 end
 
 function toggleInternalFocus()

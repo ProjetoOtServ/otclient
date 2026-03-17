@@ -1,0 +1,3893 @@
+Listagem de caminhos de pasta OTClient
+O número de série do volume é CE5C-D894
+C:.
+|   .dockerignore
+|   .editorconfig
+|   .gitattributes
+|   .gitignore
+|   .reviewdog.yml
+|   arvore.txt
+|   AUTHORS
+|   BUGS
+|   cacert.pem
+|   CHANGELOG.md
+|   CMakeLists.txt
+|   CMakePresets.json
+|   config.ini
+|   Dockerfile
+|   Dockerfile.browser
+|   Dockerfile.browser.sh
+|   init.lua
+|   LICENSE
+|   meta.lua
+|   otclient.exe
+|   otclient.log
+|   OTClient.sublime-project
+|   otclientrc.lua
+|   README.md
+|   recompile.sh
+|   vcpkg.json
+|   
++---.github
+|   |   FUNDING.yml
+|   |   labeler.yml
+|   |   PULL_REQUEST_TEMPLATE.md
+|   |   
+|   +---ISSUE_TEMPLATE
+|   |       bug.yaml
+|   |       config.yml
+|   |       request.yaml
+|   |       
+|   \---workflows
+|           build-browser.yml
+|           build-docker.yml
+|           build-ubuntu.yml
+|           build-windows-solution.yml
+|           build-windows.yml
+|           cron-stale.yml
+|           issue.yml
+|           pr-labeler.yml
+|           tests-lua.yml
+|           
++---android
+|   |   build.gradle
+|   |   gradle.properties
+|   |   gradlew
+|   |   gradlew.bat
+|   |   settings.gradle
+|   |   
+|   +---app
+|   |   |   build.gradle.kts
+|   |   |   proguard-rules.pro
+|   |   |   
+|   |   +---libs
+|   |   |       put_libs_here.txt
+|   |   |       
+|   |   \---src
+|   |       \---main
+|   |           |   AndroidManifest.xml
+|   |           |   
+|   |           +---assets
+|   |           |       put_data_zip_here.txt
+|   |           |       
+|   |           +---java
+|   |           |   \---com
+|   |           |       \---otclient
+|   |           |               AndroidManager.kt
+|   |           |               FakeEditText.kt
+|   |           |               MainActivity.kt
+|   |           |               NativeInputConnection.kt
+|   |           |               
+|   |           \---res
+|   |               +---drawable
+|   |               |       ic_launcher_background.xml
+|   |               |       keyboard_preview_background.xml
+|   |               |       
+|   |               +---drawable-v24
+|   |               |       ic_launcher_foreground.xml
+|   |               |       
+|   |               +---layout
+|   |               |       activity_main.xml
+|   |               |       
+|   |               +---mipmap-anydpi-v26
+|   |               |       ic_launcher.xml
+|   |               |       ic_launcher_round.xml
+|   |               |       
+|   |               +---mipmap-hdpi
+|   |               |       ic_launcher.webp
+|   |               |       ic_launcher_round.webp
+|   |               |       
+|   |               +---mipmap-mdpi
+|   |               |       ic_launcher.webp
+|   |               |       ic_launcher_round.webp
+|   |               |       
+|   |               +---mipmap-xhdpi
+|   |               |       ic_launcher.webp
+|   |               |       ic_launcher_round.webp
+|   |               |       
+|   |               +---mipmap-xxhdpi
+|   |               |       ic_launcher.webp
+|   |               |       ic_launcher_round.webp
+|   |               |       
+|   |               +---mipmap-xxxhdpi
+|   |               |       ic_launcher.webp
+|   |               |       ic_launcher_round.webp
+|   |               |       
+|   |               +---values
+|   |               |       strings.xml
+|   |               |       themes.xml
+|   |               |       
+|   |               \---xml
+|   |                       backup_rules.xml
+|   |                       data_extraction_rules.xml
+|   |                       
+|   \---gradle
+|       \---wrapper
+|               gradle-wrapper.jar
+|               gradle-wrapper.properties
+|               
++---browser
+|   |   shell.html
+|   |   
+|   +---include
+|   |   +---bitlib
+|   |   |       bit_limits.h
+|   |   |       lbitlib.c
+|   |   |       LICENSE
+|   |   |       
+|   |   \---lua51
+|   |           lauxlib.h
+|   |           liblua.a
+|   |           lua.h
+|   |           luaconf.h
+|   |           lualib.h
+|   |           
+|   +---overlay-ports
+|   |   +---abseil
+|   |   |       portfile.cmake
+|   |   |       use_pthread.patch
+|   |   |       vcpkg.json
+|   |   |       
+|   |   +---freetype
+|   |   |       portfile.cmake
+|   |   |       
+|   |   +---physfs
+|   |   |       portfile.cmake
+|   |   |       usage
+|   |   |       use_pthread.patch
+|   |   |       vcpkg-cmake-wrapper.cmake
+|   |   |       vcpkg.json
+|   |   |       
+|   |   \---protobuf
+|   |           fix-arm64-msvc.patch
+|   |           fix-default-proto-file-path.patch
+|   |           fix-static-build.patch
+|   |           fix-utf8-range.patch
+|   |           portfile.cmake
+|   |           protobuf-targets-vcpkg-protoc.cmake
+|   |           use_pthread.patch
+|   |           vcpkg-cmake-wrapper.cmake
+|   |           vcpkg.json
+|   |           
+|   \---triplets
+|           wasm32-emscripten-pthread.cmake
+|           
++---cmake
+|   |   Findasio.cmake
+|   |   FindDbgHelp.cmake
+|   |   FindDirectX.cmake
+|   |   FindDiscordRPC.cmake
+|   |   FindEGL.cmake
+|   |   FindGLEW.cmake
+|   |   FindGMP.cmake
+|   |   FindLua.cmake
+|   |   FindLuaJIT.cmake
+|   |   FindOgg.cmake
+|   |   FindOpenAL.cmake
+|   |   FindOpenGL.cmake
+|   |   Findphmap.cmake
+|   |   FindPhysFS.cmake
+|   |   FindPkgMacros.cmake
+|   |   FindVorbis.cmake
+|   |   FindVorbisFile.cmake
+|   |   LoggingHelper.cmake
+|   |   MessageColors.cmake
+|   |   vcpkg_android.cmake
+|   |   
+|   \---icon
+|           otcicon.ico
+|           otcicon.rc
+|           
++---data
+|   |   setup.otml
+|   |   
+|   +---cursors
+|   |       attackcursor.png
+|   |       containercursor.png
+|   |       cursor-crosshair-reject.png
+|   |       cursor-default-reject.png
+|   |       cursor-lenshelp.png
+|   |       cursor-reject.png
+|   |       cursors.otml
+|   |       default_testcolor.png
+|   |       default_tibia.png
+|   |       default_window.png
+|   |       horizontalcursor.png
+|   |       lookcursor.png
+|   |       pointerbutton.png
+|   |       pointinghand.png
+|   |       quicklootcursor.png
+|   |       talkcursor.png
+|   |       targetcursor.png
+|   |       textcursor.png
+|   |       usecursor.png
+|   |       verticalcursor.png
+|   |       walkcursor.png
+|   |       
+|   +---fonts
+|   |   +---otfont
+|   |   |       cipsoftFont.otfont
+|   |   |       cipsoftFont.png
+|   |   |       Icon-VBold-11px.otfont
+|   |   |       Icon-VBold-11px.png
+|   |   |       pVerdana Bold-11px.otfont
+|   |   |       pVerdana Bold-11px.png
+|   |   |       sans-bold-16px.otfont
+|   |   |       sans-bold-16px_cp1252.png
+|   |   |       small-9px.otfont
+|   |   |       small-9px.png
+|   |   |       terminus-10px.otfont
+|   |   |       terminus-10px.png
+|   |   |       terminus-14px-bold.otfont
+|   |   |       terminus-14px-bold.png
+|   |   |       Verdana 9px-anti-espaco.otfont
+|   |   |       Verdana 9px-anti-espaco.png
+|   |   |       Verdana Bold-10px.otfont
+|   |   |       Verdana Bold-10px.png
+|   |   |       Verdana Bold-11px-low-space.otfont
+|   |   |       Verdana Bold-11px-wheel.otfont
+|   |   |       Verdana Bold-11px-wheel.png
+|   |   |       Verdana Bold-11px.otfont
+|   |   |       Verdana Bold-11px.png
+|   |   |       Verdana Bold-13px.otfont
+|   |   |       Verdana Bold-13px.png
+|   |   |       Verdana-10px-antialiased.otfont
+|   |   |       Verdana-10px-antialiased.png
+|   |   |       verdana-10px.otfont
+|   |   |       verdana-10px.png
+|   |   |       verdana-11px-antialised-italic.otfont
+|   |   |       verdana-11px-antialised.otfont
+|   |   |       verdana-11px-antialised_cp1250.png
+|   |   |       verdana-11px-antialised_cp1252-italic.png
+|   |   |       verdana-11px-antialised_cp1252.png
+|   |   |       Verdana-11px-cor.png
+|   |   |       Verdana-11px-italic.otfont
+|   |   |       Verdana-11px-italic.png
+|   |   |       verdana-11px-mono-rounded.otfont
+|   |   |       verdana-11px-mono-rounded.png
+|   |   |       verdana-11px-monochrome-underline.otfont
+|   |   |       verdana-11px-monochrome.otfont
+|   |   |       verdana-11px-monochrome.png
+|   |   |       verdana-11px-monochrome_cp1250.png
+|   |   |       verdana-11px-monochrome_cp1252.png
+|   |   |       verdana-11px-monochrome_underline_cp1252.png
+|   |   |       verdana-11px-rounded-lowspace.otfont
+|   |   |       verdana-11px-rounded-lowspace.png
+|   |   |       verdana-11px-rounded.otfont
+|   |   |       verdana-11px-rounded_cp1250.png
+|   |   |       verdana-11px-rounded_cp1252.png
+|   |   |       verdana-7px-rounded.otfont
+|   |   |       verdana-7px-rounded.png
+|   |   |       Verdana-8px-antialiased-espaco.otfont
+|   |   |       Verdana-8px-antialiased-espaco.png
+|   |   |       Verdana-8px-antialiased.otfont
+|   |   |       Verdana-8px-antialiased.png
+|   |   |       verdana-8px-rounded.otfont
+|   |   |       verdana-8px-rounded_cp1252.png
+|   |   |       Verdana-8px.otfont
+|   |   |       Verdana-8px.png
+|   |   |       Verdana-9px-antialiased.otfont
+|   |   |       Verdana-9px-antialiased.png
+|   |   |       verdana-9px-bold.otfont
+|   |   |       verdana-9px-bold.png
+|   |   |       verdana-9px-brounded.png
+|   |   |       verdana-9px-italic.otfont
+|   |   |       verdana-9px-italic.png
+|   |   |       verdana-9px-rounded.otfont
+|   |   |       verdana-9px-rounded.png
+|   |   |       verdana-9px.otfont
+|   |   |       verdana-9px.png
+|   |   |       verdana-cap-bold.otfont
+|   |   |       verdana-cap-bold.png
+|   |   |       Verdana-Strikethrough-11px.otfont
+|   |   |       Verdana-Strikethrough-11px.png
+|   |   |       
+|   |   \---ttf
+|   |           28 Days Later.ttf
+|   |           arial.ttf
+|   |           arialb.ttf
+|   |           banita.ttf
+|   |           martel.ttf
+|   |           pixel dead.ttf
+|   |           TerminusTTF-4.49.3.ttf
+|   |           TerminusTTF-Bold-4.49.3.ttf
+|   |           TerminusTTF-Bold-Italic-4.49.3.ttf
+|   |           TerminusTTF-Italic-4.49.3.ttf
+|   |           verdana-bold-italic.ttf
+|   |           verdana-bold.ttf
+|   |           Verdana-BoldItalic.ttf
+|   |           Verdana-Italic.ttf
+|   |           Verdana-Pro.ttf
+|   |           Verdana.ttf
+|   |           
+|   +---images
+|   |   |   background.png
+|   |   |   clienticon.png
+|   |   |   
+|   |   +---automap
+|   |   |       automap_buttons.png
+|   |   |       automap_indicator_maplayers.png
+|   |   |       automap_indicator_slider_left.png
+|   |   |       automap_phantom.png
+|   |   |       automap_rose.png
+|   |   |       timedisplay_scroll.png
+|   |   |       
+|   |   +---bars
+|   |   |       horizontal_experience_progressbar_tiny.png
+|   |   |       horizontal_health_progressbar_grey_large.png
+|   |   |       horizontal_health_progressbar_large_10.png
+|   |   |       horizontal_health_progressbar_large_100.png
+|   |   |       horizontal_health_progressbar_large_30.png
+|   |   |       horizontal_health_progressbar_large_4.png
+|   |   |       horizontal_health_progressbar_large_60.png
+|   |   |       horizontal_health_progressbar_large_95.png
+|   |   |       horizontal_health_progressbar_small_10.png
+|   |   |       horizontal_health_progressbar_small_100.png
+|   |   |       horizontal_health_progressbar_small_30.png
+|   |   |       horizontal_health_progressbar_small_4.png
+|   |   |       horizontal_health_progressbar_small_60.png
+|   |   |       horizontal_health_progressbar_small_95.png
+|   |   |       horizontal_manashield_progressbar_large.png
+|   |   |       horizontal_manashield_progressbar_small.png
+|   |   |       horizontal_mana_progressbar_large.png
+|   |   |       horizontal_mana_progressbar_small.png
+|   |   |       horizontal_skill_progressbar_tiny.png
+|   |   |       marker_left.png
+|   |   |       marker_right.png
+|   |   |       marker_top.png
+|   |   |       
+|   |   +---flags
+|   |   |       de.png
+|   |   |       en.png
+|   |   |       es.png
+|   |   |       pl.png
+|   |   |       pt.png
+|   |   |       sv.png
+|   |   |       
+|   |   +---game
+|   |   |   |   dangerous.png
+|   |   |   |   skull_socket.png
+|   |   |   |   summon_other.png
+|   |   |   |   summon_own.png
+|   |   |   |   
+|   |   |   +---actionbar
+|   |   |   |       actionbarslot.png
+|   |   |   |       arrow-disabled.png
+|   |   |   |       arrow-down.png
+|   |   |   |       arrow-left.png
+|   |   |   |       arrow-right.png
+|   |   |   |       arrow-skip-disabled.png
+|   |   |   |       arrow-skip.png
+|   |   |   |       arrow-up.png
+|   |   |   |       arrow.png
+|   |   |   |       border_activespell.png
+|   |   |   |       double-arrow-down.png
+|   |   |   |       double-arrow-left.png
+|   |   |   |       double-arrow-right.png
+|   |   |   |       double-arrow-up.png
+|   |   |   |       edit.png
+|   |   |   |       icon-arrow-disabled.png
+|   |   |   |       icon-arrow-right-disabled.png
+|   |   |   |       icon-arrow-right.png
+|   |   |   |       icon-arrow.png
+|   |   |   |       icon-arrowskip-disabled.png
+|   |   |   |       icon-arrowskip-right-disabled.png
+|   |   |   |       icon-arrowskip-right.png
+|   |   |   |       icon-arrowskip.png
+|   |   |   |       item-background.png
+|   |   |   |       lenshelp-icon-arrow-left.png
+|   |   |   |       lenshelp-icon-arrow-right.png
+|   |   |   |       lenshelp-icon-arrowskip-left.png
+|   |   |   |       lenshelp-icon-arrowskip-right.png
+|   |   |   |       lock-button-1.png
+|   |   |   |       lock-button-2.png
+|   |   |   |       locked.png
+|   |   |   |       slot-actionbar.png
+|   |   |   |       unlocked.png
+|   |   |   |       
+|   |   |   +---analyzer
+|   |   |   |   |   arrow.png
+|   |   |   |   |   bossButton.png
+|   |   |   |   |   damageButton.png
+|   |   |   |   |   dpsGraphBG.png
+|   |   |   |   |   dropButton.png
+|   |   |   |   |   graphBG.png
+|   |   |   |   |   graphDpsHorizontal.png
+|   |   |   |   |   graphHorizontal.png
+|   |   |   |   |   hpsGraphBG.png
+|   |   |   |   |   huntingButton.png
+|   |   |   |   |   impactButton.png
+|   |   |   |   |   lootButton.png
+|   |   |   |   |   miscButton.png
+|   |   |   |   |   partyButton.png
+|   |   |   |   |   placeholder.png
+|   |   |   |   |   supplyButton.png
+|   |   |   |   |   targetBG.png
+|   |   |   |   |   trackedDrop.png
+|   |   |   |   |   xpButton.png
+|   |   |   |   |   xpGraphBG.png
+|   |   |   |   |   
+|   |   |   |   +---charm_runes
+|   |   |   |   |       charm_0.png
+|   |   |   |   |       charm_1.png
+|   |   |   |   |       charm_10.png
+|   |   |   |   |       charm_11.png
+|   |   |   |   |       charm_12.png
+|   |   |   |   |       charm_13.png
+|   |   |   |   |       charm_14.png
+|   |   |   |   |       charm_15.png
+|   |   |   |   |       charm_16.png
+|   |   |   |   |       charm_17.png
+|   |   |   |   |       charm_18.png
+|   |   |   |   |       charm_19.png
+|   |   |   |   |       charm_2.png
+|   |   |   |   |       charm_20.png
+|   |   |   |   |       charm_21.png
+|   |   |   |   |       charm_22.png
+|   |   |   |   |       charm_23.png
+|   |   |   |   |       charm_24.png
+|   |   |   |   |       charm_3.png
+|   |   |   |   |       charm_4.png
+|   |   |   |   |       charm_5.png
+|   |   |   |   |       charm_6.png
+|   |   |   |   |       charm_7.png
+|   |   |   |   |       charm_8.png
+|   |   |   |   |       charm_9.png
+|   |   |   |   |       
+|   |   |   |   +---labels
+|   |   |   |   |       dps.png
+|   |   |   |   |       hps.png
+|   |   |   |   |       loot-track.png
+|   |   |   |   |       loot.png
+|   |   |   |   |       supply.png
+|   |   |   |   |       xp.png
+|   |   |   |   |       
+|   |   |   |   \---misc
+|   |   |   |           critical.png
+|   |   |   |           life-leech.png
+|   |   |   |           mana-leech.png
+|   |   |   |           momentum.png
+|   |   |   |           onslaught.png
+|   |   |   |           ruse.png
+|   |   |   |           transcendence.png
+|   |   |   |           
+|   |   |   +---battle
+|   |   |   |       icon-battlelist-druid.png
+|   |   |   |       icon-battlelist-knight.png
+|   |   |   |       icon-battlelist-monk.png
+|   |   |   |       icon-battlelist-monster.png
+|   |   |   |       icon-battlelist-npc.png
+|   |   |   |       icon-battlelist-own-guild.png
+|   |   |   |       icon-battlelist-paladin.png
+|   |   |   |       icon-battlelist-party-widget.png
+|   |   |   |       icon-battlelist-party.png
+|   |   |   |       icon-battlelist-players.png
+|   |   |   |       icon-battlelist-secondary-widget.png
+|   |   |   |       icon-battlelist-skull.png
+|   |   |   |       icon-battlelist-sorcerer.png
+|   |   |   |       icon-battlelist-summon.png
+|   |   |   |       icon-battlelist.png
+|   |   |   |       
+|   |   |   +---combatmodes
+|   |   |   |       chasemode.png
+|   |   |   |       fightbalanced.png
+|   |   |   |       fightdefensive.png
+|   |   |   |       fightoffensive.png
+|   |   |   |       mount.png
+|   |   |   |       onPanel.png
+|   |   |   |       redfistmode.png
+|   |   |   |       safefight.png
+|   |   |   |       whitedovemode.png
+|   |   |   |       whitehandmode.png
+|   |   |   |       yellowhandmode.png
+|   |   |   |       
+|   |   |   +---console
+|   |   |   |       channels.png
+|   |   |   |       clearchannel.png
+|   |   |   |       closechannel.png
+|   |   |   |       ignore.png
+|   |   |   |       leftarrow.png
+|   |   |   |       readOnly.png
+|   |   |   |       rightarrow.png
+|   |   |   |       say.png
+|   |   |   |       typing.png
+|   |   |   |       whisper.png
+|   |   |   |       yell.png
+|   |   |   |       
+|   |   |   +---creatureicons
+|   |   |   |       CreatureIcons.png
+|   |   |   |       monsterIcons.png
+|   |   |   |       
+|   |   |   +---creaturetype
+|   |   |   |       summon_other.png
+|   |   |   |       summon_own.png
+|   |   |   |       
+|   |   |   +---crosshair
+|   |   |   |       animation.png
+|   |   |   |       default.png
+|   |   |   |       full.png
+|   |   |   |       
+|   |   |   +---cyclopedia
+|   |   |   |   |   bestiary_off.png
+|   |   |   |   |   bestiary_on.png
+|   |   |   |   |   bossSlot_off.png
+|   |   |   |   |   bossSlot_on.png
+|   |   |   |   |   bosstiary_off.png
+|   |   |   |   |   bosstiary_on.png
+|   |   |   |   |   character_off.png
+|   |   |   |   |   character_on.png
+|   |   |   |   |   charms_off.png
+|   |   |   |   |   charms_on.png
+|   |   |   |   |   houses_off.png
+|   |   |   |   |   houses_on.png
+|   |   |   |   |   items_off.png
+|   |   |   |   |   items_on.png
+|   |   |   |   |   magical_off.png
+|   |   |   |   |   magical_on.png
+|   |   |   |   |   map_off.png
+|   |   |   |   |   map_on.png
+|   |   |   |   |   off.psd
+|   |   |   |   |   on.psd
+|   |   |   |   |   
+|   |   |   |   \---icons
+|   |   |   |           icon-goldcoin.png
+|   |   |   |           
+|   |   |   +---effects
+|   |   |   |       ki.png
+|   |   |   |       pentagram.png
+|   |   |   |       thunder.png
+|   |   |   |       
+|   |   |   +---emblems
+|   |   |   |       emblem_blue.png
+|   |   |   |       emblem_green.png
+|   |   |   |       emblem_member.png
+|   |   |   |       emblem_other.png
+|   |   |   |       emblem_red.png
+|   |   |   |       
+|   |   |   +---entergame
+|   |   |   |       dailyreward_collected.png
+|   |   |   |       dailyreward_deactivated.png
+|   |   |   |       dailyreward_notcollected.png
+|   |   |   |       hidden.png
+|   |   |   |       maincharacter.png
+|   |   |   |       nopremium.png
+|   |   |   |       premium.png
+|   |   |   |       
+|   |   |   +---healthcircle
+|   |   |   |   |   bottom_empty.png
+|   |   |   |   |   bottom_full.png
+|   |   |   |   |   left_empty.png
+|   |   |   |   |   left_full.png
+|   |   |   |   |   right_empty.png
+|   |   |   |   |   right_extra_empty.png
+|   |   |   |   |   right_extra_full.png
+|   |   |   |   |   right_full.png
+|   |   |   |   |   right_tiny_empty.png
+|   |   |   |   |   right_tiny_full.png
+|   |   |   |   |   top_empty.png
+|   |   |   |   |   top_full.png
+|   |   |   |   |   
+|   |   |   |   \---left
+|   |   |   |           default-bg-full-monk.png
+|   |   |   |           default-circle-purple-monk.png
+|   |   |   |           default-maximal-monk.png
+|   |   |   |           default-slot-1-monk.png
+|   |   |   |           default-slot-2-monk.png
+|   |   |   |           default-slot-3-monk.png
+|   |   |   |           default-slot-4-monk.png
+|   |   |   |           default-slot-5-monk.png
+|   |   |   |           
+|   |   |   +---imbuing
+|   |   |   |   |   100percent.png
+|   |   |   |   |   clear.png
+|   |   |   |   |   imbue_empty.png
+|   |   |   |   |   imbue_green.png
+|   |   |   |   |   slot.png
+|   |   |   |   |   slot_disabled.png
+|   |   |   |   |   slot_inactive.png
+|   |   |   |   |   
+|   |   |   |   \---icons
+|   |   |   |           0.png
+|   |   |   |           1.png
+|   |   |   |           10.png
+|   |   |   |           11.png
+|   |   |   |           12.png
+|   |   |   |           13.png
+|   |   |   |           14.png
+|   |   |   |           15.png
+|   |   |   |           16.png
+|   |   |   |           17.png
+|   |   |   |           18.png
+|   |   |   |           19.png
+|   |   |   |           2.png
+|   |   |   |           20.png
+|   |   |   |           21.png
+|   |   |   |           22.png
+|   |   |   |           23.png
+|   |   |   |           24.png
+|   |   |   |           25.png
+|   |   |   |           26.png
+|   |   |   |           27.png
+|   |   |   |           28.png
+|   |   |   |           29.png
+|   |   |   |           3.png
+|   |   |   |           30.png
+|   |   |   |           31.png
+|   |   |   |           32.png
+|   |   |   |           33.png
+|   |   |   |           34.png
+|   |   |   |           35.png
+|   |   |   |           36.png
+|   |   |   |           37.png
+|   |   |   |           38.png
+|   |   |   |           39.png
+|   |   |   |           4.png
+|   |   |   |           40.png
+|   |   |   |           41.png
+|   |   |   |           42.png
+|   |   |   |           43.png
+|   |   |   |           44.png
+|   |   |   |           45.png
+|   |   |   |           46.png
+|   |   |   |           47.png
+|   |   |   |           48.png
+|   |   |   |           49.png
+|   |   |   |           5.png
+|   |   |   |           50.png
+|   |   |   |           51.png
+|   |   |   |           52.png
+|   |   |   |           53.png
+|   |   |   |           54.png
+|   |   |   |           55.png
+|   |   |   |           56.png
+|   |   |   |           57.png
+|   |   |   |           58.png
+|   |   |   |           59.png
+|   |   |   |           6.png
+|   |   |   |           60.png
+|   |   |   |           61.png
+|   |   |   |           62.png
+|   |   |   |           63.png
+|   |   |   |           64.png
+|   |   |   |           65.png
+|   |   |   |           66.png
+|   |   |   |           67.png
+|   |   |   |           68.png
+|   |   |   |           69.png
+|   |   |   |           7.png
+|   |   |   |           70.png
+|   |   |   |           71.png
+|   |   |   |           72.png
+|   |   |   |           73.png
+|   |   |   |           74.png
+|   |   |   |           75.png
+|   |   |   |           76.png
+|   |   |   |           77.png
+|   |   |   |           78.png
+|   |   |   |           79.png
+|   |   |   |           8.png
+|   |   |   |           80.png
+|   |   |   |           81.png
+|   |   |   |           9.png
+|   |   |   |           
+|   |   |   +---minimap
+|   |   |   |       cross.png
+|   |   |   |       flag0.png
+|   |   |   |       flag1.png
+|   |   |   |       flag10.png
+|   |   |   |       flag11.png
+|   |   |   |       flag12.png
+|   |   |   |       flag13.png
+|   |   |   |       flag14.png
+|   |   |   |       flag15.png
+|   |   |   |       flag16.png
+|   |   |   |       flag17.png
+|   |   |   |       flag18.png
+|   |   |   |       flag19.png
+|   |   |   |       flag2.png
+|   |   |   |       flag3.png
+|   |   |   |       flag4.png
+|   |   |   |       flag5.png
+|   |   |   |       flag6.png
+|   |   |   |       flag7.png
+|   |   |   |       flag8.png
+|   |   |   |       flag9.png
+|   |   |   |       flagcheckbox.png
+|   |   |   |       floor_down.png
+|   |   |   |       floor_up.png
+|   |   |   |       zoom_in.png
+|   |   |   |       zoom_out.png
+|   |   |   |       
+|   |   |   +---mobile
+|   |   |   |       attack.png
+|   |   |   |       chat.png
+|   |   |   |       follow.png
+|   |   |   |       keypad.png
+|   |   |   |       keypad_pointer.png
+|   |   |   |       look.png
+|   |   |   |       use.png
+|   |   |   |       
+|   |   |   +---npcicons
+|   |   |   |       icon_chat.png
+|   |   |   |       icon_quest.png
+|   |   |   |       icon_trade.png
+|   |   |   |       icon_tradequest.png
+|   |   |   |       
+|   |   |   +---prey
+|   |   |   |       icon-prey-widget.png
+|   |   |   |       prey_bigdamage.png
+|   |   |   |       prey_bigdefense.png
+|   |   |   |       prey_biginactive.png
+|   |   |   |       prey_bigloot.png
+|   |   |   |       prey_bignobonus.png
+|   |   |   |       prey_bigxp.png
+|   |   |   |       prey_bonus_reroll.png
+|   |   |   |       prey_choose.png
+|   |   |   |       prey_choose_blocked.png
+|   |   |   |       prey_damage.png
+|   |   |   |       prey_defense.png
+|   |   |   |       prey_gold.png
+|   |   |   |       prey_inactive.png
+|   |   |   |       prey_loot.png
+|   |   |   |       prey_nostar.png
+|   |   |   |       prey_no_bonus.png
+|   |   |   |       prey_perm.png
+|   |   |   |       prey_perm_test.png
+|   |   |   |       prey_reroll.png
+|   |   |   |       prey_reroll_blocked.png
+|   |   |   |       prey_select.png
+|   |   |   |       prey_select_blocked.png
+|   |   |   |       prey_smallstore.png
+|   |   |   |       prey_smallstore_clicked.png
+|   |   |   |       prey_star.png
+|   |   |   |       prey_temp.png
+|   |   |   |       prey_temp_test.png
+|   |   |   |       prey_wildcard.png
+|   |   |   |       prey_xp.png
+|   |   |   |       
+|   |   |   +---shields
+|   |   |   |       shields.png
+|   |   |   |       shield_blue.png
+|   |   |   |       shield_blue_not_shared.png
+|   |   |   |       shield_blue_shared.png
+|   |   |   |       shield_blue_white.png
+|   |   |   |       shield_gray.png
+|   |   |   |       shield_yellow.png
+|   |   |   |       shield_yellow_not_shared.png
+|   |   |   |       shield_yellow_shared.png
+|   |   |   |       shield_yellow_white.png
+|   |   |   |       
+|   |   |   +---skulls
+|   |   |   |       skull_black.png
+|   |   |   |       skull_green.png
+|   |   |   |       skull_orange.png
+|   |   |   |       skull_red.png
+|   |   |   |       skull_white.png
+|   |   |   |       skull_yellow.png
+|   |   |   |       
+|   |   |   +---slots
+|   |   |   |       ammo-blessed.png
+|   |   |   |       ammo.png
+|   |   |   |       back-blessed.png
+|   |   |   |       back.png
+|   |   |   |       body-blessed.png
+|   |   |   |       body.png
+|   |   |   |       feet-blessed.png
+|   |   |   |       feet.png
+|   |   |   |       finger-blessed.png
+|   |   |   |       finger.png
+|   |   |   |       head-blessed.png
+|   |   |   |       head.png
+|   |   |   |       inventory-back.png
+|   |   |   |       inventory-feet.png
+|   |   |   |       inventory-finger.png
+|   |   |   |       inventory-head.png
+|   |   |   |       inventory-hip.png
+|   |   |   |       inventory-left-hand.png
+|   |   |   |       inventory-legs.png
+|   |   |   |       inventory-neck.png
+|   |   |   |       inventory-right-hand.png
+|   |   |   |       inventory-torso.png
+|   |   |   |       left-hand (2).png
+|   |   |   |       left-hand-blessed.png
+|   |   |   |       left-hand.png
+|   |   |   |       legs-blessed.png
+|   |   |   |       legs.png
+|   |   |   |       neck-blessed.png
+|   |   |   |       neck.png
+|   |   |   |       purse.png
+|   |   |   |       right-hand (2).png
+|   |   |   |       right-hand-blessed.png
+|   |   |   |       right-hand.png
+|   |   |   |       slots.psd
+|   |   |   |       
+|   |   |   +---spells
+|   |   |   |       custom.png
+|   |   |   |       passiveability-icons-32x32.png
+|   |   |   |       spell-icons-20x20.png
+|   |   |   |       spell-icons-32x32.png
+|   |   |   |       spellgroup-icons-20x20.png
+|   |   |   |       
+|   |   |   +---states
+|   |   |   |       player-state-flags.png
+|   |   |   |       
+|   |   |   +---tutorial
+|   |   |   |       backdrop_combat.jpg
+|   |   |   |       backdrop_crest.png
+|   |   |   |       backdrop_druid.jpg
+|   |   |   |       backdrop_knight.jpg
+|   |   |   |       backdrop_loot.jpg
+|   |   |   |       backdrop_monk.jpg
+|   |   |   |       backdrop_paladin.jpg
+|   |   |   |       backdrop_popup_depot.png
+|   |   |   |       backdrop_popup_level10.jpg
+|   |   |   |       backdrop_popup_level20.jpg
+|   |   |   |       backdrop_popup_market.png
+|   |   |   |       backdrop_popup_supplystash.png
+|   |   |   |       backdrop_sorcerer.jpg
+|   |   |   |       backdrop_vocations.jpg
+|   |   |   |       banner_combat_01.png
+|   |   |   |       banner_combat_02.png
+|   |   |   |       banner_combat_03.png
+|   |   |   |       banner_loot_01.png
+|   |   |   |       banner_loot_02.png
+|   |   |   |       banner_loot_03.png
+|   |   |   |       banner_tutorialpopup01.png
+|   |   |   |       banner_tutorialpopup_level10.png
+|   |   |   |       banner_tutorialpopup_level20.png
+|   |   |   |       banner_tutorialpopup_level9.png
+|   |   |   |       banner_vocation_druid.png
+|   |   |   |       banner_vocation_knight.png
+|   |   |   |       banner_vocation_monk.png
+|   |   |   |       banner_vocation_paladin.png
+|   |   |   |       banner_vocation_sorcerer.png
+|   |   |   |       hint_01_alternativecontrols.png
+|   |   |   |       hint_03_vocationknight.png
+|   |   |   |       hint_04_vocationpaladin.png
+|   |   |   |       hint_05_vocationsorcerer.png
+|   |   |   |       hint_06_vocationdruid.png
+|   |   |   |       hint_07_arrivalmainknight.jpg
+|   |   |   |       hint_08_arrivalmainpaladin.jpg
+|   |   |   |       hint_09_arrivalmainsorcerer.jpg
+|   |   |   |       hint_10_arrivalmaindruid.jpg
+|   |   |   |       hint_11_vocationmonk.png
+|   |   |   |       tutorial-mouse-hint-icons.png
+|   |   |   |       
+|   |   |   +---viplist
+|   |   |   |       icons.png
+|   |   |   |       vipcheckbox.png
+|   |   |   |       
+|   |   |   +---vocations
+|   |   |   |   \---monk
+|   |   |   |           icon-combopoint-empty.png
+|   |   |   |           icon-combopoint-filled.png
+|   |   |   |           icon-serene-off.png
+|   |   |   |           icon-serene-on.png
+|   |   |   |           
+|   |   |   \---wheel
+|   |   |       |   apply_button.png
+|   |   |       |   backdrop_grades_circle_bottom.png
+|   |   |       |   backdrop_grades_circle_bottom_anim.png
+|   |   |       |   backdrop_grades_circle_mid.png
+|   |   |       |   backdrop_grades_circle_mid_anim.png
+|   |   |       |   backdrop_grades_circle_top.png
+|   |   |       |   backdrop_grades_circle_top_anim.png
+|   |   |       |   backdrop_grades_line.png
+|   |   |       |   backdrop_grades_line_anim.png
+|   |   |       |   backdrop_modgrades.png
+|   |   |       |   backdrop_skillwheel.png
+|   |   |       |   backdrop_skillwheel_largebonus_front0_BL.png
+|   |   |       |   backdrop_skillwheel_largebonus_front0_BR.png
+|   |   |       |   backdrop_skillwheel_largebonus_front0_TL.png
+|   |   |       |   backdrop_skillwheel_largebonus_front0_TR.png
+|   |   |       |   backdrop_skillwheel_largebonus_front1_BL.png
+|   |   |       |   backdrop_skillwheel_largebonus_front1_BR.png
+|   |   |       |   backdrop_skillwheel_largebonus_front1_TL.png
+|   |   |       |   backdrop_skillwheel_largebonus_front1_TR.png
+|   |   |       |   backdrop_skillwheel_largebonus_front2_BL.png
+|   |   |       |   backdrop_skillwheel_largebonus_front2_BR.png
+|   |   |       |   backdrop_skillwheel_largebonus_front2_TL.png
+|   |   |       |   backdrop_skillwheel_largebonus_front2_TR.png
+|   |   |       |   backdrop_skillwheel_largebonus_front3_BL.png
+|   |   |       |   backdrop_skillwheel_largebonus_front3_BR.png
+|   |   |       |   backdrop_skillwheel_largebonus_front3_TL.png
+|   |   |       |   backdrop_skillwheel_largebonus_front3_TR.png
+|   |   |       |   backdrop_skillwheel_largebonus_light_BL.png
+|   |   |       |   backdrop_skillwheel_largebonus_light_BR.png
+|   |   |       |   backdrop_skillwheel_largebonus_light_TL.png
+|   |   |       |   backdrop_skillwheel_largebonus_light_TR.png
+|   |   |       |   backdrop_skillwheel_largebonus_socketdisabled_0.png
+|   |   |       |   backdrop_skillwheel_largebonus_socketdisabled_1.png
+|   |   |       |   backdrop_skillwheel_largebonus_socketdisabled_2.png
+|   |   |       |   backdrop_skillwheel_largebonus_socketdisabled_3.png
+|   |   |       |   backdrop_skillwheel_largebonus_socketenabled_0.png
+|   |   |       |   backdrop_skillwheel_largebonus_socketenabled_1.png
+|   |   |       |   backdrop_skillwheel_largebonus_socketenabled_2.png
+|   |   |       |   backdrop_skillwheel_largebonus_socketenabled_3.png
+|   |   |       |   backdrop_skillwheel_socket_active.png
+|   |   |       |   backdrop_skillwheel_socket_inactive.png
+|   |   |       |   change-button.png
+|   |   |       |   change-skillpoints-button-down.png
+|   |   |       |   change-skillpoints-button-up.png
+|   |   |       |   change_preset_icon.png
+|   |   |       |   delete_button.png
+|   |   |       |   destroy-button.png
+|   |   |       |   enhance-button.png
+|   |   |       |   export_button.png
+|   |   |       |   fragmentIcon.png
+|   |   |       |   fragmentMenu.png
+|   |   |       |   gemMenu.png
+|   |   |       |   icon-augmentation1-active.png
+|   |   |       |   icon-augmentation1-inactive.png
+|   |   |       |   icon-augmentation2-active.png
+|   |   |       |   icon-augmentation2-inactive.png
+|   |   |       |   icon-crit.png
+|   |   |       |   icon-gematelier.png
+|   |   |       |   icon-locked.png
+|   |   |       |   icon-modgrade1.png
+|   |   |       |   icon-modgrade2.png
+|   |   |       |   icon-modgrade3.png
+|   |   |       |   icon-modgrade4.png
+|   |   |       |   icon-skillwheel-presets.png
+|   |   |       |   icon-skillwheel-selection.png
+|   |   |       |   icon-skillwheel-vesselresonance-basic.png
+|   |   |       |   icon-skillwheel-vesselresonance-supreme.png
+|   |   |       |   icon-socketed.png
+|   |   |       |   icon-spelldamage.png
+|   |   |       |   icon-unlocked.png
+|   |   |       |   icons-gematelier-domainaffinity.png
+|   |   |       |   icons-gematelier-gemvariants.png
+|   |   |       |   icons-gematelier-gemvariants64.png
+|   |   |       |   icons-modgrades-potential.png
+|   |   |       |   icons-skillwheel-basicmods.png
+|   |   |       |   icons-skillwheel-largeperks.png
+|   |   |       |   icons-skillwheel-mediumperks.png
+|   |   |       |   icons-skillwheel-smallperks.png
+|   |   |       |   icons-skillwheel-sockets.png
+|   |   |       |   icons-skillwheel-suprememods-1.png
+|   |   |       |   icons-skillwheel-suprememods-2.png
+|   |   |       |   icons-skillwheel-suprememods-3.png
+|   |   |       |   icons-skillwheel-suprememods.png
+|   |   |       |   import_button.png
+|   |   |       |   informationSelection.png
+|   |   |       |   manageSelect.png
+|   |   |       |   marker_largeperk.png
+|   |   |       |   marker_skillwheelsocket.png
+|   |   |       |   menuBg.png
+|   |   |       |   new_button.png
+|   |   |       |   place-vessel-button.png
+|   |   |       |   preset_bg.png
+|   |   |       |   progressBar.png
+|   |   |       |   progressBg.png
+|   |   |       |   remove-vessel-button.png
+|   |   |       |   rename_button.png
+|   |   |       |   reveal-button.png
+|   |   |       |   revelation-bg-perk-circles.png
+|   |   |       |   show-gui-help-grey.png
+|   |   |       |   small_information_button.png
+|   |   |       |   small_manage_button.png
+|   |   |       |   socket-gematelier.png
+|   |   |       |   summary.png
+|   |   |       |   switch-button.png
+|   |   |       |   wheelMenu.png
+|   |   |       |   
+|   |   |       +---wheel-border
+|   |   |       |   +---bottom_left
+|   |   |       |   |       1.png
+|   |   |       |   |       2.png
+|   |   |       |   |       3.png
+|   |   |       |   |       4.png
+|   |   |       |   |       5.png
+|   |   |       |   |       6.png
+|   |   |       |   |       7.png
+|   |   |       |   |       8.png
+|   |   |       |   |       9.png
+|   |   |       |   |       revelationPerk.png
+|   |   |       |   |       vesselGem.png
+|   |   |       |   |       
+|   |   |       |   +---bottom_right
+|   |   |       |   |       1.png
+|   |   |       |   |       2.png
+|   |   |       |   |       3.png
+|   |   |       |   |       4.png
+|   |   |       |   |       5.png
+|   |   |       |   |       6.png
+|   |   |       |   |       7.png
+|   |   |       |   |       8.png
+|   |   |       |   |       9.png
+|   |   |       |   |       revelationPerk.png
+|   |   |       |   |       vesselGem.png
+|   |   |       |   |       
+|   |   |       |   +---top_left
+|   |   |       |   |       1.png
+|   |   |       |   |       2.png
+|   |   |       |   |       3.png
+|   |   |       |   |       4.png
+|   |   |       |   |       5.png
+|   |   |       |   |       6.png
+|   |   |       |   |       7.png
+|   |   |       |   |       8.png
+|   |   |       |   |       9.png
+|   |   |       |   |       revelationPerk.png
+|   |   |       |   |       vesselGem.png
+|   |   |       |   |       
+|   |   |       |   \---top_right
+|   |   |       |           1.png
+|   |   |       |           2.png
+|   |   |       |           3.png
+|   |   |       |           4.png
+|   |   |       |           5.png
+|   |   |       |           6.png
+|   |   |       |           7.png
+|   |   |       |           8.png
+|   |   |       |           9.png
+|   |   |       |           revelationPerk.png
+|   |   |       |           vesselGem.png
+|   |   |       |           
+|   |   |       +---wheel-colors
+|   |   |       |   +---bottom_left
+|   |   |       |   |   |   BottonLeft_1.png
+|   |   |       |   |   |   BottonLeft_2.png
+|   |   |       |   |   |   BottonLeft_3.png
+|   |   |       |   |   |   BottonLeft_4.png
+|   |   |       |   |   |   BottonLeft_5.png
+|   |   |       |   |   |   BottonLeft_6.png
+|   |   |       |   |   |   BottonLeft_7.png
+|   |   |       |   |   |   BottonLeft_8.png
+|   |   |       |   |   |   BottonLeft_9.png
+|   |   |       |   |   |   revelationBg.png
+|   |   |       |   |   |   vesselGem.png
+|   |   |       |   |   |   
+|   |   |       |   |   +---perkCircle
+|   |   |       |   |   |       revelationBg.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot1
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot2
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot3
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot4
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot5
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot6
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot7
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       11.png
+|   |   |       |   |   |       12.png
+|   |   |       |   |   |       13.png
+|   |   |       |   |   |       14.png
+|   |   |       |   |   |       15.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot8
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       11.png
+|   |   |       |   |   |       12.png
+|   |   |       |   |   |       13.png
+|   |   |       |   |   |       14.png
+|   |   |       |   |   |       15.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   \---slot9
+|   |   |       |   |           1.png
+|   |   |       |   |           10.png
+|   |   |       |   |           11.png
+|   |   |       |   |           12.png
+|   |   |       |   |           13.png
+|   |   |       |   |           14.png
+|   |   |       |   |           15.png
+|   |   |       |   |           16.png
+|   |   |       |   |           17.png
+|   |   |       |   |           18.png
+|   |   |       |   |           19.png
+|   |   |       |   |           2.png
+|   |   |       |   |           20.png
+|   |   |       |   |           3.png
+|   |   |       |   |           4.png
+|   |   |       |   |           5.png
+|   |   |       |   |           6.png
+|   |   |       |   |           7.png
+|   |   |       |   |           8.png
+|   |   |       |   |           9.png
+|   |   |       |   |           
+|   |   |       |   +---bottom_right
+|   |   |       |   |   |   BottonRight_1.png
+|   |   |       |   |   |   BottonRight_2.png
+|   |   |       |   |   |   BottonRight_3.png
+|   |   |       |   |   |   BottonRight_4.png
+|   |   |       |   |   |   BottonRight_5.png
+|   |   |       |   |   |   BottonRight_6.png
+|   |   |       |   |   |   BottonRight_7.png
+|   |   |       |   |   |   BottonRight_8.png
+|   |   |       |   |   |   BottonRight_9.png
+|   |   |       |   |   |   revelationBg.png
+|   |   |       |   |   |   vesselGem.png
+|   |   |       |   |   |   
+|   |   |       |   |   +---perkCircle
+|   |   |       |   |   |       revelationBg.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot1
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot2
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot3
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot4
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot5
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot6
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot7
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       11.png
+|   |   |       |   |   |       12.png
+|   |   |       |   |   |       13.png
+|   |   |       |   |   |       14.png
+|   |   |       |   |   |       15.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot8
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       11.png
+|   |   |       |   |   |       12.png
+|   |   |       |   |   |       13.png
+|   |   |       |   |   |       14.png
+|   |   |       |   |   |       15.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   \---slot9
+|   |   |       |   |           1.png
+|   |   |       |   |           10.png
+|   |   |       |   |           11.png
+|   |   |       |   |           12.png
+|   |   |       |   |           13.png
+|   |   |       |   |           14.png
+|   |   |       |   |           15.png
+|   |   |       |   |           16.png
+|   |   |       |   |           17.png
+|   |   |       |   |           18.png
+|   |   |       |   |           19.png
+|   |   |       |   |           2.png
+|   |   |       |   |           20.png
+|   |   |       |   |           3.png
+|   |   |       |   |           4.png
+|   |   |       |   |           5.png
+|   |   |       |   |           6.png
+|   |   |       |   |           7.png
+|   |   |       |   |           8.png
+|   |   |       |   |           9.png
+|   |   |       |   |           
+|   |   |       |   +---top_left
+|   |   |       |   |   |   revelationBg.png
+|   |   |       |   |   |   TopLeft_1.png
+|   |   |       |   |   |   TopLeft_2.png
+|   |   |       |   |   |   TopLeft_3.png
+|   |   |       |   |   |   TopLeft_4.png
+|   |   |       |   |   |   TopLeft_5.png
+|   |   |       |   |   |   TopLeft_6.png
+|   |   |       |   |   |   TopLeft_7.png
+|   |   |       |   |   |   TopLeft_8.png
+|   |   |       |   |   |   TopLeft_9.png
+|   |   |       |   |   |   vesselGem.png
+|   |   |       |   |   |   
+|   |   |       |   |   +---perkCircle
+|   |   |       |   |   |       revelationBg.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot1
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot2
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot3
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot4
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot5
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot6
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot7
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       11.png
+|   |   |       |   |   |       12.png
+|   |   |       |   |   |       13.png
+|   |   |       |   |   |       14.png
+|   |   |       |   |   |       15.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   +---slot8
+|   |   |       |   |   |       1.png
+|   |   |       |   |   |       10.png
+|   |   |       |   |   |       11.png
+|   |   |       |   |   |       12.png
+|   |   |       |   |   |       13.png
+|   |   |       |   |   |       14.png
+|   |   |       |   |   |       15.png
+|   |   |       |   |   |       2.png
+|   |   |       |   |   |       3.png
+|   |   |       |   |   |       4.png
+|   |   |       |   |   |       5.png
+|   |   |       |   |   |       6.png
+|   |   |       |   |   |       7.png
+|   |   |       |   |   |       8.png
+|   |   |       |   |   |       9.png
+|   |   |       |   |   |       
+|   |   |       |   |   \---slot9
+|   |   |       |   |           1.png
+|   |   |       |   |           10.png
+|   |   |       |   |           11.png
+|   |   |       |   |           12.png
+|   |   |       |   |           13.png
+|   |   |       |   |           14.png
+|   |   |       |   |           15.png
+|   |   |       |   |           16.png
+|   |   |       |   |           17.png
+|   |   |       |   |           18.png
+|   |   |       |   |           19.png
+|   |   |       |   |           2.png
+|   |   |       |   |           20.png
+|   |   |       |   |           3.png
+|   |   |       |   |           4.png
+|   |   |       |   |           5.png
+|   |   |       |   |           6.png
+|   |   |       |   |           7.png
+|   |   |       |   |           8.png
+|   |   |       |   |           9.png
+|   |   |       |   |           
+|   |   |       |   \---top_right
+|   |   |       |       |   revelationBg.png
+|   |   |       |       |   TopRight_1.png
+|   |   |       |       |   TopRight_2.png
+|   |   |       |       |   TopRight_3.png
+|   |   |       |       |   TopRight_4.png
+|   |   |       |       |   TopRight_5.png
+|   |   |       |       |   TopRight_6.png
+|   |   |       |       |   TopRight_7.png
+|   |   |       |       |   TopRight_8.png
+|   |   |       |       |   TopRight_9.png
+|   |   |       |       |   vesselGem.png
+|   |   |       |       |   
+|   |   |       |       +---perkCircle
+|   |   |       |       |       revelationBg.png
+|   |   |       |       |       
+|   |   |       |       +---slot1
+|   |   |       |       |       1.png
+|   |   |       |       |       2.png
+|   |   |       |       |       3.png
+|   |   |       |       |       4.png
+|   |   |       |       |       5.png
+|   |   |       |       |       
+|   |   |       |       +---slot2
+|   |   |       |       |       1.png
+|   |   |       |       |       2.png
+|   |   |       |       |       3.png
+|   |   |       |       |       4.png
+|   |   |       |       |       5.png
+|   |   |       |       |       6.png
+|   |   |       |       |       7.png
+|   |   |       |       |       8.png
+|   |   |       |       |       
+|   |   |       |       +---slot3
+|   |   |       |       |       1.png
+|   |   |       |       |       2.png
+|   |   |       |       |       3.png
+|   |   |       |       |       4.png
+|   |   |       |       |       5.png
+|   |   |       |       |       6.png
+|   |   |       |       |       7.png
+|   |   |       |       |       8.png
+|   |   |       |       |       
+|   |   |       |       +---slot4
+|   |   |       |       |       1.png
+|   |   |       |       |       10.png
+|   |   |       |       |       2.png
+|   |   |       |       |       3.png
+|   |   |       |       |       4.png
+|   |   |       |       |       5.png
+|   |   |       |       |       6.png
+|   |   |       |       |       7.png
+|   |   |       |       |       8.png
+|   |   |       |       |       9.png
+|   |   |       |       |       
+|   |   |       |       +---slot5
+|   |   |       |       |       1.png
+|   |   |       |       |       10.png
+|   |   |       |       |       2.png
+|   |   |       |       |       3.png
+|   |   |       |       |       4.png
+|   |   |       |       |       5.png
+|   |   |       |       |       6.png
+|   |   |       |       |       7.png
+|   |   |       |       |       8.png
+|   |   |       |       |       9.png
+|   |   |       |       |       
+|   |   |       |       +---slot6
+|   |   |       |       |       1.png
+|   |   |       |       |       10.png
+|   |   |       |       |       2.png
+|   |   |       |       |       3.png
+|   |   |       |       |       4.png
+|   |   |       |       |       5.png
+|   |   |       |       |       6.png
+|   |   |       |       |       7.png
+|   |   |       |       |       8.png
+|   |   |       |       |       9.png
+|   |   |       |       |       
+|   |   |       |       +---slot7
+|   |   |       |       |       1.png
+|   |   |       |       |       10.png
+|   |   |       |       |       11.png
+|   |   |       |       |       12.png
+|   |   |       |       |       13.png
+|   |   |       |       |       14.png
+|   |   |       |       |       15.png
+|   |   |       |       |       2.png
+|   |   |       |       |       3.png
+|   |   |       |       |       4.png
+|   |   |       |       |       5.png
+|   |   |       |       |       6.png
+|   |   |       |       |       7.png
+|   |   |       |       |       8.png
+|   |   |       |       |       9.png
+|   |   |       |       |       
+|   |   |       |       +---slot8
+|   |   |       |       |       1.png
+|   |   |       |       |       10.png
+|   |   |       |       |       11.png
+|   |   |       |       |       12.png
+|   |   |       |       |       13.png
+|   |   |       |       |       14.png
+|   |   |       |       |       15.png
+|   |   |       |       |       2.png
+|   |   |       |       |       3.png
+|   |   |       |       |       4.png
+|   |   |       |       |       5.png
+|   |   |       |       |       6.png
+|   |   |       |       |       7.png
+|   |   |       |       |       8.png
+|   |   |       |       |       9.png
+|   |   |       |       |       
+|   |   |       |       \---slot9
+|   |   |       |               1.png
+|   |   |       |               10.png
+|   |   |       |               11.png
+|   |   |       |               12.png
+|   |   |       |               13.png
+|   |   |       |               14.png
+|   |   |       |               15.png
+|   |   |       |               16.png
+|   |   |       |               17.png
+|   |   |       |               18.png
+|   |   |       |               19.png
+|   |   |       |               2.png
+|   |   |       |               20.png
+|   |   |       |               3.png
+|   |   |       |               4.png
+|   |   |       |               5.png
+|   |   |       |               6.png
+|   |   |       |               7.png
+|   |   |       |               8.png
+|   |   |       |               9.png
+|   |   |       |               
+|   |   |       \---wheel-vocations
+|   |   |               backdrop_skillwheel_druid.png
+|   |   |               backdrop_skillwheel_front.png
+|   |   |               backdrop_skillwheel_knight.png
+|   |   |               backdrop_skillwheel_monk.png
+|   |   |               backdrop_skillwheel_paladin.png
+|   |   |               backdrop_skillwheel_sorcerer.png
+|   |   |               
+|   |   +---healthmana
+|   |   |       hitpoints_bar_filled.png
+|   |   |       hitpoints_manapoints_bar_border.png
+|   |   |       hitpoints_symbol.png
+|   |   |       mana_bar_filled.png
+|   |   |       mana_symbol.png
+|   |   |       
+|   |   +---icons
+|   |   |       icon-analyticsselector-widget.png
+|   |   |       icon-balance.png
+|   |   |       icon-bestiarytracker-widget.png
+|   |   |       icon-bosstracker-widget.png
+|   |   |       icon-damage.png
+|   |   |       icon-defensiveanalyser-widget.png
+|   |   |       icon-healing.png
+|   |   |       icon-huntingsessionanalyser-widget.png
+|   |   |       icon-imbuementtracker-widget.png
+|   |   |       icon-impactanalyser-widget.png
+|   |   |       icon-lootanalyser-widget.png
+|   |   |       icon-loottracker-widget.png
+|   |   |       icon-partyhunt-widget.png
+|   |   |       icon-progressanalyser-widget.png
+|   |   |       icon-unjustified-points-widget.png
+|   |   |       icon-wasteanalyser-widget.png
+|   |   |       icons-skills.png
+|   |   |       icons-vocations.png
+|   |   |       icon_axe.png
+|   |   |       icon_club.png
+|   |   |       icon_controls.png
+|   |   |       icon_discord.png
+|   |   |       icon_distance.png
+|   |   |       icon_experience.png
+|   |   |       icon_fishing.png
+|   |   |       icon_fist.png
+|   |   |       icon_graphics.png
+|   |   |       icon_health.png
+|   |   |       icon_help.png
+|   |   |       icon_interface.png
+|   |   |       icon_magic.png
+|   |   |       icon_misc.png
+|   |   |       icon_options.png
+|   |   |       icon_players.png
+|   |   |       icon_seasonalevent.png
+|   |   |       icon_shielding.png
+|   |   |       icon_sound.png
+|   |   |       icon_streamers.png
+|   |   |       icon_sword.png
+|   |   |       icon_viewers.png
+|   |   |       icon_youtube.png
+|   |   |       show_gui_help_grey.png
+|   |   |       
+|   |   +---inventory
+|   |   |       button-expert-disabled.png
+|   |   |       button-expert-down.png
+|   |   |       button-expert-small-disabled.png
+|   |   |       button-expert-small-down.png
+|   |   |       button-expert-small-up.png
+|   |   |       button-expert-up.png
+|   |   |       buttons_general.png
+|   |   |       button_blessings_gold.png
+|   |   |       button_blessings_green.png
+|   |   |       button_blessings_grey.png
+|   |   |       containerslot.png
+|   |   |       containerslot_goldenborder.png
+|   |   |       inventory_back.png
+|   |   |       inventory_feet.png
+|   |   |       inventory_finger.png
+|   |   |       inventory_head.png
+|   |   |       inventory_hip.png
+|   |   |       inventory_left_hand.png
+|   |   |       inventory_legs.png
+|   |   |       inventory_neck.png
+|   |   |       inventory_right_hand.png
+|   |   |       inventory_torso.png
+|   |   |       max_button_small.png
+|   |   |       min_button_small.png
+|   |   |       purse.png
+|   |   |       tiers-strip-big.png
+|   |   |       tiers-strip.png
+|   |   |       
+|   |   +---options
+|   |   |       analyzers.png
+|   |   |       bestiaryTracker.png
+|   |   |       blue_large.png
+|   |   |       bosstiaryTracker.png
+|   |   |       bot.png
+|   |   |       button-exaltation-forge.png
+|   |   |       ButtonBossSlot.png
+|   |   |       ButtonBosstiary.png
+|   |   |       button_battlelist.png
+|   |   |       button_control.png
+|   |   |       button_empty.png
+|   |   |       button_enlarge.png
+|   |   |       button_frags.png
+|   |   |       button_imbuementtracker.png
+|   |   |       button_logout.png
+|   |   |       button_options.png
+|   |   |       button_prey.png
+|   |   |       button_preydialog.png
+|   |   |       button_questlog.png
+|   |   |       button_questlog_tracker.png
+|   |   |       button_shrink.png
+|   |   |       button_skills.png
+|   |   |       button_skillwheeldialog.png
+|   |   |       button_spells.png
+|   |   |       button_vip.png
+|   |   |       cooldowns.png
+|   |   |       green_large.png
+|   |   |       highscores.png
+|   |   |       hotkeys.png
+|   |   |       idk1.png
+|   |   |       idk2.png
+|   |   |       rewardwall.png
+|   |   |       store_large.png
+|   |   |       terminal.png
+|   |   |       yellow_large.png
+|   |   |       
+|   |   +---optionstab
+|   |   |       audio.png
+|   |   |       console.png
+|   |   |       controls.png
+|   |   |       game.png
+|   |   |       graphics.png
+|   |   |       health_circle.png
+|   |   |       
+|   |   +---skin
+|   |   |       show-gui-help-blue.png
+|   |   |       show-gui-help-grey.png
+|   |   |       show-gui-help-orange.png
+|   |   |       show-gui-help-red.png
+|   |   |       
+|   |   +---store
+|   |   |       button-erase-small-down-2.png
+|   |   |       button-erase-small-down.png
+|   |   |       button-erase-small-up-2.png
+|   |   |       button-erase-small-up.png
+|   |   |       icon-tibiacoin.png
+|   |   |       icon-tibiacointransferable.png
+|   |   |       icon-tibiastore.png
+|   |   |       
+|   |   +---topbuttons
+|   |   |       analyzers.png
+|   |   |       audio.png
+|   |   |       audio_mute.png
+|   |   |       battle.png
+|   |   |       bestiaryTracker.png
+|   |   |       bot.png
+|   |   |       buttons.png
+|   |   |       button_mute_pressed.png
+|   |   |       button_mute_up.png
+|   |   |       button_options.png
+|   |   |       combatcontrols.png
+|   |   |       cooldowns.png
+|   |   |       debug.png
+|   |   |       healthinfo.png
+|   |   |       hotkeys.png
+|   |   |       icon-questtracker-widget.png
+|   |   |       inventory.png
+|   |   |       login.png
+|   |   |       logout.png
+|   |   |       minimap.png
+|   |   |       modulemanager.png
+|   |   |       motd.png
+|   |   |       options.png
+|   |   |       particles.png
+|   |   |       prey.png
+|   |   |       prey_window.png
+|   |   |       questlog.png
+|   |   |       shop.png
+|   |   |       skills.png
+|   |   |       spelllist.png
+|   |   |       terminal.png
+|   |   |       unjustifiedpoints.png
+|   |   |       viplist.png
+|   |   |       zoomin.png
+|   |   |       zoomout.png
+|   |   |       
+|   |   \---ui
+|   |       |   1pixel-down-frame.png
+|   |       |   1pixel_down_frame.png
+|   |       |   2pixel-up-frame-borderimage.png
+|   |       |   2pixel_up_frame_borderimage.png
+|   |       |   2pixel_up_frame_borderimage_dark.png
+|   |       |   2pixel_up_frame_borderimage_dark_reversed.png
+|   |       |   3pixel-frame-borderimage.png
+|   |       |   3pixel_frame_borderimage.png
+|   |       |   actionbar_locked.png
+|   |       |   actionbar_unlocked.png
+|   |       |   arrow-left-button.png
+|   |       |   arrow-right-button.png
+|   |       |   arrow_horizontal.png
+|   |       |   arrow_vertical.png
+|   |       |   back-icons.png
+|   |       |   backdrop-dark-grey.png
+|   |       |   background.png
+|   |       |   background_dark.png
+|   |       |   blank.png
+|   |       |   bright-x20.png
+|   |       |   button-9grid-idle.png
+|   |       |   button-9grid-pressed.png
+|   |       |   button-blue-qt.png
+|   |       |   button-clear-18x18-down.png
+|   |       |   button-clear-18x18-up.png
+|   |       |   button-green-up.png
+|   |       |   button-grey-down.png
+|   |       |   button-grey-qt.png
+|   |       |   button-grey-up.png
+|   |       |   button-storexp-pressed.png
+|   |       |   button-storexp.png
+|   |       |   button-unjustpoints-down.png
+|   |       |   button-unjustpoints-up.png
+|   |       |   button.png
+|   |       |   buttons-blue.png
+|   |       |   buttons-gold.png
+|   |       |   buttons-red.png
+|   |       |   buttons.png
+|   |       |   button_rounded.png
+|   |       |   button_startplaying_idle.png
+|   |       |   button_top.png
+|   |       |   button_topgame.png
+|   |       |   button_top_blink.png
+|   |       |   buy-potions-button.png
+|   |       |   checkbox-checked-disabled.png
+|   |       |   checkbox-checked.png
+|   |       |   checkbox-unchecked.png
+|   |       |   checkbox.png
+|   |       |   checkboxcircle.png
+|   |       |   checkbox_round.png
+|   |       |   colorbox-border-13.png
+|   |       |   colorbox-border.png
+|   |       |   colorbox.png
+|   |       |   combobox_new.png
+|   |       |   combobox_rounded.png
+|   |       |   combobox_square.png
+|   |       |   console_button.png
+|   |       |   console_buttons.png
+|   |       |   console_direction_button.png
+|   |       |   console_flash_left.png
+|   |       |   console_flash_right.png
+|   |       |   console_say.png
+|   |       |   console_whisper.png
+|   |       |   console_yell.png
+|   |       |   container-browse-left-down.png
+|   |       |   container-browse-left-up.png
+|   |       |   container-browse-right-down.png
+|   |       |   container-browse-right-up.png
+|   |       |   containerslot-coloredges.png
+|   |       |   containerslot.png
+|   |       |   ditherpattern.png
+|   |       |   ditherpattern64.png
+|   |       |   divider_horizontal.png
+|   |       |   dpsearchButtons.png
+|   |       |   erase-small.png
+|   |       |   getCoins.png
+|   |       |   getpremium.png
+|   |       |   graph_background.png
+|   |       |   hidden-button-down.png
+|   |       |   hidden-button.png
+|   |       |   hide_eye.png
+|   |       |   hierarchy-branch.png
+|   |       |   high_ping.png
+|   |       |   horizontal_line_bright.png
+|   |       |   horizontal_line_dark.png
+|   |       |   icon-arrow-disabled.png
+|   |       |   icon-arrow.png
+|   |       |   icon-arrow7x7-down.png
+|   |       |   icon-arrow7x7-right.png
+|   |       |   icon-edit.png
+|   |       |   icon-nopremium.png
+|   |       |   icon-premium.png
+|   |       |   icon-questionmark.png
+|   |       |   icon-viewers.png
+|   |       |   icon_add.png
+|   |       |   item-blessed.png
+|   |       |   item.png
+|   |       |   lenshelp.png
+|   |       |   low_ping.png
+|   |       |   medium_ping.png
+|   |       |   menubox.png
+|   |       |   miniborder.png
+|   |       |   miniStoreIcon.png
+|   |       |   miniwindow.png
+|   |       |   miniwindow_body.png
+|   |       |   miniwindow_buttons.png
+|   |       |   miniwindow_header.png
+|   |       |   newcheckbox.png
+|   |       |   panel_bottom.png
+|   |       |   panel_flat.png
+|   |       |   panel_lightflat.png
+|   |       |   panel_map.png
+|   |       |   panel_side.png
+|   |       |   panel_top.png
+|   |       |   percent-buttons.png
+|   |       |   popupwindow.png
+|   |       |   progress-separator.png
+|   |       |   progress.png
+|   |       |   progressbar.png
+|   |       |   rarity_blue.png
+|   |       |   rarity_frames.png
+|   |       |   rarity_green.png
+|   |       |   rarity_grey.png
+|   |       |   rarity_purple.png
+|   |       |   rarity_white.png
+|   |       |   rarity_yellow.png
+|   |       |   regular_direction_button.png
+|   |       |   scrollbar.png
+|   |       |   scrollbar_new_horizontal.png
+|   |       |   scrollbar_new_vertical.png
+|   |       |   separator_horizontal.png
+|   |       |   separator_vertical.png
+|   |       |   spinbox.png
+|   |       |   spinbox_down.png
+|   |       |   spinbox_up.png
+|   |       |   t2pixel-up-frame-borderimage.png
+|   |       |   tabbutton_new_shadowed.png
+|   |       |   tabbutton_rounded.png
+|   |       |   tabbutton_square.png
+|   |       |   textedit.png
+|   |       |   tibiaCoin.png
+|   |       |   topstats_button_panel.png
+|   |       |   top_bar_login.png
+|   |       |   undefined_item.png
+|   |       |   unjustified-points-bar-background.png
+|   |       |   unjustified-points-bar-texture-green.png
+|   |       |   unjustified-points-bar-texture-red.png
+|   |       |   unjustified-points-bar-texture-yellow.png
+|   |       |   unjustified-points-skull-dent.png
+|   |       |   vertical_line_bright.png
+|   |       |   vertical_line_dark.png
+|   |       |   widget-borderimage.png
+|   |       |   widget_border.png
+|   |       |   window.png
+|   |       |   window_headless.png
+|   |       |   window_new.png
+|   |       |   
+|   |       +---actionbar
+|   |       |       actionbar_background-light.png
+|   |       |       actionbar_background.png
+|   |       |       arrow-left.png
+|   |       |       background-dark.png
+|   |       |       locked.png
+|   |       |       splitterActBottom.png
+|   |       |       
+|   |       +---buttons
+|   |       |       automap-button-movedown-down.png
+|   |       |       automap-button-movedown-up.png
+|   |       |       automap-button-moveup-down.png
+|   |       |       automap-button-moveup-up.png
+|   |       |       button-clear-18x18-down.png
+|   |       |       button-clear-18x18-up.png
+|   |       |       button-erase-small-down-2.png
+|   |       |       button-erase-small-up-2.png
+|   |       |       
+|   |       +---character
+|   |       |       ammo.png
+|   |       |       ammo2.png
+|   |       |       amulet.png
+|   |       |       amulet2.png
+|   |       |       armor.png
+|   |       |       armor2.png
+|   |       |       artifact.png
+|   |       |       artifact2.png
+|   |       |       backpack.png
+|   |       |       backpack2.png
+|   |       |       blank.png
+|   |       |       boots.png
+|   |       |       boots2.png
+|   |       |       helmet.png
+|   |       |       helmet2.png
+|   |       |       icon.png
+|   |       |       legs.png
+|   |       |       legs2.png
+|   |       |       mainhand.png
+|   |       |       mainhand2.png
+|   |       |       offhand.png
+|   |       |       offhand2.png
+|   |       |       primary_backpack.png
+|   |       |       ring.png
+|   |       |       ring2.png
+|   |       |       rune.png
+|   |       |       rune2.png
+|   |       |       secondary_backpack.png
+|   |       |       slot.png
+|   |       |       
+|   |       +---createaccount
+|   |       |       banneraccountdatainvalid.png
+|   |       |       banneraccountdatavalid.png
+|   |       |       banneralldatainvalid.png
+|   |       |       banneralldatavalid.png
+|   |       |       bannercharacterdatainvalid.png
+|   |       |       bannercharacterdatavalid.png
+|   |       |       bannerleft.png
+|   |       |       bannerright.png
+|   |       |       button_startplaying.png
+|   |       |       button_startplaying_down.png
+|   |       |       icon-no.png
+|   |       |       icon-yes.png
+|   |       |       
+|   |       +---miniwindow
+|   |       |       button-contextmenu-12x12-idle.png
+|   |       |       button-contextmenu-12x12-pressed.png
+|   |       |       button-expand-12x12-down.png
+|   |       |       button-expand-12x12-up.png
+|   |       |       exit-button-small-down.png
+|   |       |       exit-button-small-up.png
+|   |       |       horizontal-line-dark.png
+|   |       |       icon-add-small.png
+|   |       |       max-button-small-down.png
+|   |       |       max-button-small-highlight-down.png
+|   |       |       max-button-small-highlight-up.png
+|   |       |       max-button-small-up.png
+|   |       |       min-button-small-down.png
+|   |       |       min-button-small-up.png
+|   |       |       windowresizer.png
+|   |       |       
+|   |       +---outfits
+|   |       |       checkbox_round.png
+|   |       |       floor.png
+|   |       |       minipanel.png
+|   |       |       rotate_button.png
+|   |       |       
+|   |       \---test
+|   |               button-darkgrey-down.png
+|   |               button-darkgrey-up.png
+|   |               button-verydarkgrey-down.png
+|   |               button-verydarkgrey-up.png
+|   |               
+|   +---locales
+|   |       de.lua
+|   |       en.lua
+|   |       es.lua
+|   |       pl.lua
+|   |       pt.lua
+|   |       sv.lua
+|   |       
+|   +---particles
+|   |       background_particles.otps
+|   |       background_particles2.otps
+|   |       creature-particles.otps
+|   |       particle.png
+|   |       particle2.png
+|   |       particles.otps
+|   |       
+|   +---sounds
+|   |       .gitignore
+|   |       README.md
+|   |       
+|   +---styles
+|   |       10-buttons.otui
+|   |       10-checkboxes.otui
+|   |       10-comboboxes.otui
+|   |       10-creaturebuttons.otui
+|   |       10-creatures.otui
+|   |       10-effect.otui
+|   |       10-items.otui
+|   |       10-labels.otui
+|   |       10-listboxes.otui
+|   |       10-missile.otui
+|   |       10-panels.otui
+|   |       10-progressbars.otui
+|   |       10-scrollbars.otui
+|   |       10-separators.otui
+|   |       10-splitters.otui
+|   |       10-textedits.otui
+|   |       10-windows.otui
+|   |       20-imageview.otui
+|   |       20-popupmenus.otui
+|   |       20-smallscrollbar.otui
+|   |       20-spinboxes.otui
+|   |       20-tabbars.otui
+|   |       20-tables.otui
+|   |       20-topmenu.otui
+|   |       30-calendar.otui
+|   |       30-inputboxes.otui
+|   |       30-messageboxes.otui
+|   |       30-minimap.otui
+|   |       30-miniwindow.otui
+|   |       30-statsbar.otui
+|   |       40-gamebuttons.otui
+|   |       40-outfitwindow.otui
+|   |       custom.css
+|   |       global_alias_test.otui
+|   |       html.css
+|   |       README.md
+|   |       
+|   \---things
+|       |   .gitignore
+|       |   README.md
+|       |   
+|       \---1500
+|               appearances-ec29a245e364f190682aa3677ca04f657cb9a2076eca5fc931d039bab8c32887.dat
+|               catalog-content.json
+|               map-cd3b97a76a95c49fb029337a7655f8e7ad2b99e4f09df9f695de5913712614f9.dat
+|               minimap-32-0996-0968-00-647ec7fa31e97660af8e822af00fff2f8012b86ed4365398c0a759bef5a8e837.bmp.lzma
+|               
+|               
++---docs
+|       convert_stdext_format.py
+|       generate_spell_data.py
+|       otml-variables.md
+|       string-encoding-policy.md
+|       
++---mods
+|   |   .gitignore
+|   |   README.txt
+|   |   
+|   +---client_mods
+|   |       mods.otmod
+|   |       
+|   +---client_profiles
+|   |       profiles.lua
+|   |       profiles.otmod
+|   |       
+|   +---client_textedit
+|   |       textedit.lua
+|   |       textedit.otmod
+|   |       textedit.otui
+|   |       
+|   +---game_bot
+|   |   |   bot.lua
+|   |   |   bot.otmod
+|   |   |   bot.otui
+|   |   |   configs.png
+|   |   |   edit.otui
+|   |   |   executor.lua
+|   |   |   scripts.png
+|   |   |   
+|   |   +---default_configs
+|   |   |   +---cavebot_1.3
+|   |   |   |   |   cavebot.lua
+|   |   |   |   |   hp.lua
+|   |   |   |   |   main.lua
+|   |   |   |   |   mwall_timer.lua
+|   |   |   |   |   storage.json
+|   |   |   |   |   tools.lua
+|   |   |   |   |   
+|   |   |   |   +---cavebot
+|   |   |   |   |       actions.lua
+|   |   |   |   |       cavebot.lua
+|   |   |   |   |       cavebot.otui
+|   |   |   |   |       config.lua
+|   |   |   |   |       config.otui
+|   |   |   |   |       depositer.lua
+|   |   |   |   |       editor.lua
+|   |   |   |   |       editor.otui
+|   |   |   |   |       example_functions.lua
+|   |   |   |   |       extension_template.lua
+|   |   |   |   |       recorder.lua
+|   |   |   |   |       supply.lua
+|   |   |   |   |       supply.otui
+|   |   |   |   |       walking.lua
+|   |   |   |   |       
+|   |   |   |   +---cavebot_configs
+|   |   |   |   |       config_name.cfg
+|   |   |   |   |       fast_walking.cfg
+|   |   |   |   |       test_src.cfg
+|   |   |   |   |       
+|   |   |   |   +---targetbot
+|   |   |   |   |       creature.lua
+|   |   |   |   |       creature_attack.lua
+|   |   |   |   |       creature_editor.lua
+|   |   |   |   |       creature_editor.otui
+|   |   |   |   |       creature_priority.lua
+|   |   |   |   |       looting.lua
+|   |   |   |   |       looting.otui
+|   |   |   |   |       target.lua
+|   |   |   |   |       target.otui
+|   |   |   |   |       walking.lua
+|   |   |   |   |       
+|   |   |   |   \---targetbot_configs
+|   |   |   |           config_name.json
+|   |   |   |           
+|   |   |   \---vBot_4.8
+|   |   |       |   _Loader.lua
+|   |   |       |   
+|   |   |       +---cavebot
+|   |   |       |       actions.lua
+|   |   |       |       bank.lua
+|   |   |       |       buy_supplies.lua
+|   |   |       |       cavebot.lua
+|   |   |       |       cavebot.otui
+|   |   |       |       clear_tile.lua
+|   |   |       |       config.lua
+|   |   |       |       config.otui
+|   |   |       |       depositor.lua
+|   |   |       |       doors.lua
+|   |   |       |       d_withdraw.lua
+|   |   |       |       editor.lua
+|   |   |       |       editor.otui
+|   |   |       |       example_functions.lua
+|   |   |       |       extension_template.lua
+|   |   |       |       imbuing.lua
+|   |   |       |       inbox_withdraw.lua
+|   |   |       |       lure.lua
+|   |   |       |       minimap.lua
+|   |   |       |       pos_check.lua
+|   |   |       |       recorder.lua
+|   |   |       |       sell_all.lua
+|   |   |       |       stand_lure.lua
+|   |   |       |       supply_check.lua
+|   |   |       |       tasker.lua
+|   |   |       |       travel.lua
+|   |   |       |       walking.lua
+|   |   |       |       withdraw.lua
+|   |   |       |       
+|   |   |       +---targetbot
+|   |   |       |       creature.lua
+|   |   |       |       creature_attack.lua
+|   |   |       |       creature_editor.lua
+|   |   |       |       creature_editor.otui
+|   |   |       |       creature_priority.lua
+|   |   |       |       looting.lua
+|   |   |       |       looting.otui
+|   |   |       |       target.lua
+|   |   |       |       target.otui
+|   |   |       |       walking.lua
+|   |   |       |       
+|   |   |       \---vBot
+|   |   |               alarms.lua
+|   |   |               alarms.otui
+|   |   |               analyzer.lua
+|   |   |               analyzer.otui
+|   |   |               antiRs.lua
+|   |   |               AttackBot.lua
+|   |   |               AttackBot.otui
+|   |   |               BotServer.lua
+|   |   |               BotServer.otui
+|   |   |               cast_food.lua
+|   |   |               cavebot.lua
+|   |   |               cavebot_control_panel.lua
+|   |   |               combo.lua
+|   |   |               combo.otui
+|   |   |               Conditions.lua
+|   |   |               Conditions.otui
+|   |   |               configs.lua
+|   |   |               Containers.lua
+|   |   |               depositer_config.lua
+|   |   |               depositer_config.otui
+|   |   |               depot_withdraw.lua
+|   |   |               Dropper.lua
+|   |   |               eat_food.lua
+|   |   |               equip.lua
+|   |   |               Equipper.lua
+|   |   |               equipper.otui
+|   |   |               exeta.lua
+|   |   |               extras.lua
+|   |   |               extras.otui
+|   |   |               HealBot.lua
+|   |   |               HealBot.otui
+|   |   |               hold_target.lua
+|   |   |               ingame_editor.lua
+|   |   |               items.lua
+|   |   |               main.lua
+|   |   |               new_cavebot_lib.lua
+|   |   |               new_healer.lua
+|   |   |               new_healer.otui
+|   |   |               npc_talk.lua
+|   |   |               playerlist.lua
+|   |   |               playerlist.otui
+|   |   |               pushmax.lua
+|   |   |               pushmax.otui
+|   |   |               quiver_label.lua
+|   |   |               quiver_manager.lua
+|   |   |               Sio.lua
+|   |   |               siolist.otui
+|   |   |               spy_level.lua
+|   |   |               supplies.lua
+|   |   |               supplies.otui
+|   |   |               tools.lua
+|   |   |               version.txt
+|   |   |               vlib.lua
+|   |   |               xeno_menu.lua
+|   |   |               
+|   |   +---functions
+|   |   |       callbacks.lua
+|   |   |       config.lua
+|   |   |       const.lua
+|   |   |       icon.lua
+|   |   |       main.lua
+|   |   |       map.lua
+|   |   |       npc.lua
+|   |   |       player.lua
+|   |   |       player_conditions.lua
+|   |   |       player_inventory.lua
+|   |   |       script_loader.lua
+|   |   |       server.lua
+|   |   |       sound.lua
+|   |   |       test.lua
+|   |   |       tools.lua
+|   |   |       ui.lua
+|   |   |       ui_elements.lua
+|   |   |       ui_legacy.lua
+|   |   |       ui_windows.lua
+|   |   |       
+|   |   +---panels
+|   |   |       attacking.lua
+|   |   |       basic.lua
+|   |   |       DONT_USE_PANELS.txt
+|   |   |       healing.lua
+|   |   |       looting.lua
+|   |   |       tools.lua
+|   |   |       war.lua
+|   |   |       waypoints.lua
+|   |   |       
+|   |   +---sounds
+|   |   |       alarm.ogg
+|   |   |       Creature_Detected.ogg
+|   |   |       Low_Health.ogg
+|   |   |       Low_Mana.ogg
+|   |   |       magnum.ogg
+|   |   |       Player_Attack.ogg
+|   |   |       Player_Detected.ogg
+|   |   |       Private_Message.ogg
+|   |   |       
+|   |   \---ui
+|   |           basic.otui
+|   |           config.otui
+|   |           container.otui
+|   |           icons.otui
+|   |           panels.otui
+|   |           
+|   +---game_buttons
+|   |       buttons.lua
+|   |       buttons.otmod
+|   |       buttons.otui
+|   |       
+|   \---game_itemselector
+|           itemselector.lua
+|           itemselector.otmod
+|           itemselector.otui
+|           
++---modules
+|   +---.project
+|   |       modules.sublime-project
+|   |       
+|   +---client
+|   |   |   client.lua
+|   |   |   client.otmod
+|   |   |   
+|   |   \---sounds
+|   |           startup.ogg
+|   |           
+|   +---client_background
+|   |       background.lua
+|   |       background.otmod
+|   |       background.otui
+|   |       
+|   +---client_bottommenu
+|   |   |   bottommenu.lua
+|   |   |   bottommenu.otmod
+|   |   |   bottommenu.otui
+|   |   |   calendar.otui
+|   |   |   
+|   |   \---images
+|   |           icon-questionmark.png
+|   |           randomhint.png
+|   |           
+|   +---client_debug_info
+|   |       debug_info.lua
+|   |       debug_info.otmod
+|   |       debug_info.otui
+|   |       
+|   +---client_entergame
+|   |       characterlist.lua
+|   |       characterlist.otui
+|   |       createAccount.lua
+|   |       createAccount.otui
+|   |       entergame.lua
+|   |       entergame.otmod
+|   |       entergame.otui
+|   |       waitinglist.otui
+|   |       
+|   +---client_locales
+|   |       locales.lua
+|   |       locales.otmod
+|   |       locales.otui
+|   |       neededtranslations.lua
+|   |       
+|   +---client_options
+|   |   |   data_options.lua
+|   |   |   keybins.lua
+|   |   |   options.lua
+|   |   |   options.otmod
+|   |   |   options.otui
+|   |   |   
+|   |   \---styles
+|   |       +---controls
+|   |       |       general.otui
+|   |       |       keybinds.otui
+|   |       |       key_edit.otui
+|   |       |       preset.otui
+|   |       |       
+|   |       +---graphics
+|   |       |       effects.otui
+|   |       |       graphics.otui
+|   |       |       
+|   |       +---interface
+|   |       |       actionbars.otui
+|   |       |       console.otui
+|   |       |       HUD.otui
+|   |       |       interface.otui
+|   |       |       
+|   |       +---misc
+|   |       |       help.otui
+|   |       |       misc.otui
+|   |       |       
+|   |       \---sound
+|   |               audio.otui
+|   |               
+|   +---client_serverlist
+|   |       addserver.lua
+|   |       addserver.otui
+|   |       serverlist.lua
+|   |       serverlist.otmod
+|   |       serverlist.otui
+|   |       
+|   +---client_styles
+|   |       styles.lua
+|   |       styles.otmod
+|   |       
+|   +---client_terminal
+|   |       commands.lua
+|   |       terminal.lua
+|   |       terminal.otmod
+|   |       terminal.otui
+|   |       
+|   +---client_topmenu
+|   |       pingFps.otui
+|   |       topmenu.lua
+|   |       topmenu.otmod
+|   |       topmenu.otui
+|   |       
+|   +---corelib
+|   |   |   base64.lua
+|   |   |   bitwise.lua
+|   |   |   config.lua
+|   |   |   const.lua
+|   |   |   corelib.otmod
+|   |   |   globals.lua
+|   |   |   http.lua
+|   |   |   inputmessage.lua
+|   |   |   json.lua
+|   |   |   keybind.lua
+|   |   |   keyboard.lua
+|   |   |   math.lua
+|   |   |   mouse.lua
+|   |   |   net.lua
+|   |   |   objectpool.lua
+|   |   |   outputmessage.lua
+|   |   |   settings.lua
+|   |   |   string.lua
+|   |   |   struct.lua
+|   |   |   table.lua
+|   |   |   util.lua
+|   |   |   
+|   |   \---ui
+|   |           effects.lua
+|   |           tooltip.lua
+|   |           uiactionslot.lua
+|   |           uibutton.lua
+|   |           uicalendar.lua
+|   |           uicheckbox.lua
+|   |           uicombobox.lua
+|   |           uidragicon.lua
+|   |           uihtml.lua
+|   |           uiimageview.lua
+|   |           uiinputbox.lua
+|   |           uilabel.lua
+|   |           uimessagebox.lua
+|   |           uiminiwindow.lua
+|   |           uiminiwindowcontainer.lua
+|   |           uimovabletabbar.lua
+|   |           uipopupmenu.lua
+|   |           uipopupscrollmenu.lua
+|   |           uiprogressbar.lua
+|   |           uiprogressbarsd.lua
+|   |           uiprogressbarsdinverted.lua
+|   |           uiradiogroup.lua
+|   |           uiresizeborder.lua
+|   |           uiscrollarea.lua
+|   |           uiscrollbar.lua
+|   |           uispinbox.lua
+|   |           uisplitter.lua
+|   |           uistatsbar.lua
+|   |           uitabbar.lua
+|   |           uitable.lua
+|   |           uitextedit.lua
+|   |           uiwidget.lua
+|   |           uiwindow.lua
+|   |           
+|   +---gamelib
+|   |   |   const.lua
+|   |   |   creature.lua
+|   |   |   game.lua
+|   |   |   gamelib.otmod
+|   |   |   items.lua
+|   |   |   market.lua
+|   |   |   player.lua
+|   |   |   position.lua
+|   |   |   protocol.lua
+|   |   |   protocolgame.lua
+|   |   |   protocollogin.lua
+|   |   |   spells.lua
+|   |   |   textmessages.lua
+|   |   |   thing.lua
+|   |   |   tile.lua
+|   |   |   util.lua
+|   |   |   
+|   |   \---ui
+|   |           uicreaturebutton.lua
+|   |           uiminimap.lua
+|   |           
+|   +---game_actionbar
+|   |   |   game_actionbar.lua
+|   |   |   game_actionbar.otmod
+|   |   |   
+|   |   +---html
+|   |   |       hotkeys.html
+|   |   |       object.html
+|   |   |       passive.html
+|   |   |       spells.html
+|   |   |       text.html
+|   |   |       
+|   |   +---json
+|   |   |       cipsoft-default-options-minimal.json
+|   |   |       
+|   |   +---logics
+|   |   |       ActionAssignmentWindows.lua
+|   |   |       ActionBarLayout.lua
+|   |   |       ActionBarOptions.lua
+|   |   |       ActionButtonLogic.lua
+|   |   |       ActionHotkeys.lua
+|   |   |       ApiJson.lua
+|   |   |       const.lua
+|   |   |       
+|   |   \---otui
+|   |           actionbar.otui
+|   |           sideactionbar.otui
+|   |           style.otui
+|   |           
+|   +---game_analyser
+|   |   |   analyser.lua
+|   |   |   analyser.otmod
+|   |   |   analyser.otui
+|   |   |   
+|   |   +---classes
+|   |   |       BossCooldown.lua
+|   |   |       Controller.lua
+|   |   |       DropTrackerAnalyser.lua
+|   |   |       HuntingAnalyser.lua
+|   |   |       ImpactAnalyser.lua
+|   |   |       InputAnalyser.lua
+|   |   |       LootAnalyser.lua
+|   |   |       PartyHuntAnalyser.lua
+|   |   |       SupplyAnalyser.lua
+|   |   |       XPAanalyser.lua
+|   |   |       
+|   |   \---styles
+|   |           boss.otui
+|   |           dpshpsTarget.otui
+|   |           dropTarget.otui
+|   |           droptracker.otui
+|   |           hunting.otui
+|   |           impact.otui
+|   |           input.otui
+|   |           loot.otui
+|   |           lootTarget.otui
+|   |           partyhunt.otui
+|   |           supply.otui
+|   |           xp.otui
+|   |           xpTarget.otui
+|   |           
+|   +---game_attachedeffects
+|   |   |   attachedeffects.lua
+|   |   |   attachedeffects.otmod
+|   |   |   effects.lua
+|   |   |   lib.lua
+|   |   |   
+|   |   \---configs
+|   |           outfit_618.lua
+|   |           
+|   +---game_battle
+|   |   |   battle.lua
+|   |   |   battle.otmod
+|   |   |   battle.otui
+|   |   |   battlebutton.otui
+|   |   |   
+|   |   \---style
+|   |           changeListName.otui
+|   |           
+|   +---game_blessing
+|   |   |   blessing.html
+|   |   |   blessing.lua
+|   |   |   blessing.otmod
+|   |   |   style.otui
+|   |   |   
+|   |   \---images
+|   |           1.png
+|   |           1_on.png
+|   |           2.png
+|   |           2_on.png
+|   |           3.png
+|   |           3_on.png
+|   |           4.png
+|   |           4_on.png
+|   |           5.png
+|   |           5_on.png
+|   |           6.png
+|   |           6_on.png
+|   |           7.png
+|   |           7_on.png
+|   |           8.png
+|   |           8_on.png
+|   |           blessingContainer.png
+|   |           
+|   +---game_bugreport
+|   |       bugreport.lua
+|   |       bugreport.otmod
+|   |       bugreport.otui
+|   |       
+|   +---game_console
+|   |       channelswindow.otui
+|   |       communicationwindow.otui
+|   |       console.lua
+|   |       console.otmod
+|   |       console.otui
+|   |       violationwindow.otui
+|   |       
+|   +---game_containers
+|   |       container.otui
+|   |       containers.lua
+|   |       containers.otmod
+|   |       
+|   +---game_cooldown
+|   |       cooldown.lua
+|   |       cooldown.otmod
+|   |       cooldown.otui
+|   |       
+|   +---game_creatureinformation
+|   |       creatureinformation.lua
+|   |       creatureinformation.otmod
+|   |       creatureInformation.otui
+|   |       
+|   +---game_cyclopedia
+|   |   |   cyclopedia_pages.otui
+|   |   |   cyclopedia_widgets.otui
+|   |   |   game_cyclopedia.lua
+|   |   |   game_cyclopedia.otmod
+|   |   |   game_cyclopedia.otui
+|   |   |   utils.lua
+|   |   |   
+|   |   +---images
+|   |   |   |   button_back.png
+|   |   |   |   button_back_disabled.png
+|   |   |   |   button_back_pressed.png
+|   |   |   |   button_clear_search.png
+|   |   |   |   button_store.png
+|   |   |   |   button_wheel.png
+|   |   |   |   checkbox.png
+|   |   |   |   checkmark-icon.png
+|   |   |   |   icon-achievement.png
+|   |   |   |   icon-arrow7x7-down.png
+|   |   |   |   icon-arrow7x7-right.png
+|   |   |   |   icon-downarrow-disabled.png
+|   |   |   |   icon-equipmentdetails.png
+|   |   |   |   icon-goldcoin.png
+|   |   |   |   icon-left-arrow-disabled.png
+|   |   |   |   icon-left-arrow.png
+|   |   |   |   icon-map-house-status.png
+|   |   |   |   icon-map-house.png
+|   |   |   |   icon-map-improvedrespawn.png
+|   |   |   |   icon-map-npc.png
+|   |   |   |   icon-map-passage-idle.png
+|   |   |   |   icon-map-passage-selected.png
+|   |   |   |   icon-map-player.png
+|   |   |   |   icon-map-pointofinterest.png
+|   |   |   |   icon-playerdetails.png
+|   |   |   |   icon-refresh.png
+|   |   |   |   icon-right-arrow-disabled.png
+|   |   |   |   icon-right-arrow.png
+|   |   |   |   icon-uparrow-disabled.png
+|   |   |   |   icon_charms.png
+|   |   |   |   icon_gold.png
+|   |   |   |   indicator_soulcore.png
+|   |   |   |   markers.png
+|   |   |   |   minor-charm-echoes.png
+|   |   |   |   monster-icon-bonuspoints.png
+|   |   |   |   panel_flat.png
+|   |   |   |   
+|   |   |   +---bestiary
+|   |   |   |   |   armor.png
+|   |   |   |   |   barra.png
+|   |   |   |   |   bestiaryContainer.png
+|   |   |   |   |   bestiaryContainerBorder.png
+|   |   |   |   |   charm.png
+|   |   |   |   |   creatureCheck.png
+|   |   |   |   |   death.png
+|   |   |   |   |   difficulty.png
+|   |   |   |   |   difficulty_disabled.png
+|   |   |   |   |   drown.png
+|   |   |   |   |   durability_fill.png
+|   |   |   |   |   earth.png
+|   |   |   |   |   elementContainer.png
+|   |   |   |   |   empty.png
+|   |   |   |   |   energy.png
+|   |   |   |   |   exp.png
+|   |   |   |   |   fill.png
+|   |   |   |   |   fill_completed.png
+|   |   |   |   |   fire.png
+|   |   |   |   |   haste.png
+|   |   |   |   |   healing.png
+|   |   |   |   |   health.png
+|   |   |   |   |   holy.png
+|   |   |   |   |   ice.png
+|   |   |   |   |   lifedrain.png
+|   |   |   |   |   lockedCreature.png
+|   |   |   |   |   manadrain.png
+|   |   |   |   |   ocurrence.png
+|   |   |   |   |   ocurrence_disabled.png
+|   |   |   |   |   panel_texture2.png
+|   |   |   |   |   physical.png
+|   |   |   |   |   plus.png
+|   |   |   |   |   poison.png
+|   |   |   |   |   progressbar-orange-large.png
+|   |   |   |   |   progressbar-orange-small.png
+|   |   |   |   |   progress_bar.png
+|   |   |   |   |   undefined_item.png
+|   |   |   |   |   underfined.png
+|   |   |   |   |   undiscoveredSlot.png
+|   |   |   |   |   window.png
+|   |   |   |   |   
+|   |   |   |   +---creatures
+|   |   |   |   |       -.---.png
+|   |   |   |   |       amphibic.png
+|   |   |   |   |       aquatic.png
+|   |   |   |   |       bird.png
+|   |   |   |   |       construct.png
+|   |   |   |   |       demon.png
+|   |   |   |   |       dragon.png
+|   |   |   |   |       elemental.png
+|   |   |   |   |       extra_dimensional.png
+|   |   |   |   |       fey.png
+|   |   |   |   |       giant.png
+|   |   |   |   |       human.png
+|   |   |   |   |       humanoid.png
+|   |   |   |   |       lycanthrope.png
+|   |   |   |   |       magical.png
+|   |   |   |   |       mammal.png
+|   |   |   |   |       plant.png
+|   |   |   |   |       reptile.png
+|   |   |   |   |       slime.png
+|   |   |   |   |       undead.png
+|   |   |   |   |       vermin.png
+|   |   |   |   |       
+|   |   |   |   \---icons
+|   |   |   |           monster-icon-agony-resist.png
+|   |   |   |           monster-icon-armor.png
+|   |   |   |           monster-icon-bonuspoints.png
+|   |   |   |           monster-icon-death-resist.png
+|   |   |   |           monster-icon-diamond-active.png
+|   |   |   |           monster-icon-diamond-inactive.png
+|   |   |   |           monster-icon-drowning-resist.png
+|   |   |   |           monster-icon-earth-resist.png
+|   |   |   |           monster-icon-energy-resist.png
+|   |   |   |           monster-icon-experience.png
+|   |   |   |           monster-icon-fire-resist.png
+|   |   |   |           monster-icon-healing-resist.png
+|   |   |   |           monster-icon-hitpoints.png
+|   |   |   |           monster-icon-holy-resist.png
+|   |   |   |           monster-icon-ice-resist.png
+|   |   |   |           monster-icon-lifedrain-resist.png
+|   |   |   |           monster-icon-manadrain-resist.png
+|   |   |   |           monster-icon-melee.png
+|   |   |   |           monster-icon-mitigation.png
+|   |   |   |           monster-icon-noattack.png
+|   |   |   |           monster-icon-physical-resist.png
+|   |   |   |           monster-icon-ranged.png
+|   |   |   |           monster-icon-speed.png
+|   |   |   |           monster-icon-spellcaster.png
+|   |   |   |           
+|   |   |   +---boss
+|   |   |   |       boss_base.png
+|   |   |   |       fill.png
+|   |   |   |       icon_archfoe.png
+|   |   |   |       icon_bane.png
+|   |   |   |       icon_nemesis.png
+|   |   |   |       icon_star.png
+|   |   |   |       icon_star_active.png
+|   |   |   |       icon_star_bronze.png
+|   |   |   |       icon_star_dark.png
+|   |   |   |       icon_star_gold.png
+|   |   |   |       icon_star_inactive.png
+|   |   |   |       icon_star_silver.png
+|   |   |   |       
+|   |   |   +---character_icons
+|   |   |   |       friend-badge-icons.png
+|   |   |   |       icon-character-battleresults-recentdeaths.png
+|   |   |   |       icon-character-battleresults-recentpvpkills.png
+|   |   |   |       icon-character-battleresults.png
+|   |   |   |       icon-character-generalstats-combatstats.png
+|   |   |   |       icon-character-generalstats-defence.png
+|   |   |   |       icon-character-generalstats-misc.png
+|   |   |   |       icon-character-generalstats-overview.png
+|   |   |   |       icon-character-store.png
+|   |   |   |       icon-character-titles.png
+|   |   |   |       icon-charactertrade.png
+|   |   |   |       icon_achievement.png
+|   |   |   |       icon_battleresults.png
+|   |   |   |       icon_generalstats.png
+|   |   |   |       icon_items.png
+|   |   |   |       icon_outfitsmounts.png
+|   |   |   |       
+|   |   |   +---charms
+|   |   |   |   |   icon-charms-major.png
+|   |   |   |   |   icon-charms-minor.png
+|   |   |   |   |   monster-bonus-effects.png
+|   |   |   |   |   
+|   |   |   |   \---border
+|   |   |   |           backdrop_charmgrade1.png
+|   |   |   |           backdrop_charmgrade2.png
+|   |   |   |           backdrop_charmgrade3.png
+|   |   |   |           border_charmgrades.png
+|   |   |   |           
+|   |   |   +---houses
+|   |   |   |       1001.png
+|   |   |   |       1002.png
+|   |   |   |       
+|   |   |   \---ui
+|   |   |       |   mosnter-bar.png
+|   |   |       |   
+|   |   |       +---itemcolor
+|   |   |       |       item-blue.png
+|   |   |       |       item-gold.png
+|   |   |       |       item-gray.png
+|   |   |       |       item-green.png
+|   |   |       |       item-purple.png
+|   |   |       |       
+|   |   |       \---names
+|   |   |               accept-transfer-label.png
+|   |   |               auction-label.png
+|   |   |               auction-window.png
+|   |   |               averagepreferresulting.png
+|   |   |               basicitem.png
+|   |   |               buyfrom.png
+|   |   |               cancel-transfer-labels.png
+|   |   |               house-list-label.png
+|   |   |               house-rental.png
+|   |   |               keep-house-labels.png
+|   |   |               lootwhen.png
+|   |   |               market-value.png
+|   |   |               move-pending.png
+|   |   |               name-categories.png
+|   |   |               name-items.png
+|   |   |               name-please-select.png
+|   |   |               name-search.png
+|   |   |               npc-value.png
+|   |   |               pending-transfer.png
+|   |   |               prowess.png
+|   |   |               reject-transfer-label.png
+|   |   |               sellto.png
+|   |   |               skipwhen.png
+|   |   |               trackdrops.png
+|   |   |               
+|   |   \---tab
+|   |       +---bestiary
+|   |       |       bestiary.lua
+|   |       |       bestiary.otui
+|   |       |       
+|   |       +---bosstiary
+|   |       |       bosstiary.lua
+|   |       |       bosstiary.otui
+|   |       |       
+|   |       +---boss_slots
+|   |       |       boss_slots.lua
+|   |       |       boss_slots.otui
+|   |       |       
+|   |       +---character
+|   |       |       character.lua
+|   |       |       character.otui
+|   |       |       
+|   |       +---charms
+|   |       |       charms.lua
+|   |       |       charms.otui
+|   |       |       charms1410.otui
+|   |       |       
+|   |       +---house
+|   |       |       house.lua
+|   |       |       house.otui
+|   |       |       
+|   |       +---items
+|   |       |       items.lua
+|   |       |       items.otui
+|   |       |       
+|   |       +---magicalArchives
+|   |       |       magicalArchives.lua
+|   |       |       magicalArchives.otui
+|   |       |       
+|   |       \---map
+|   |               map.lua
+|   |               map.otui
+|   |               
+|   +---game_features
+|   |       features.lua
+|   |       features.otmod
+|   |       
+|   +---game_forge
+|   |   |   game_forge.css
+|   |   |   game_forge.html
+|   |   |   game_forge.lua
+|   |   |   game_forge.otmod
+|   |   |   game_forge_helpers.lua
+|   |   |   
+|   |   \---images
+|   |       |   balanceBg.png
+|   |       |   bigger-button.png
+|   |       |   boxdragon.png
+|   |       |   button.png
+|   |       |   cardBg.png
+|   |       |   conversion-column-header.png
+|   |       |   conversion-column.png
+|   |       |   conversionButton.png
+|   |       |   fusionButton.png
+|   |       |   historyButton.png
+|   |       |   icon-currency-dust.png
+|   |       |   icon-currency-exaltedcore.png
+|   |       |   icon-currency-sliver.png
+|   |       |   info-bg.png
+|   |       |   item66.png
+|   |       |   scrollarea.png
+|   |       |   transferButton.png
+|   |       |   window-upper.png
+|   |       |   
+|   |       \---arrows
+|   |               icon-arrow-downlarge.png
+|   |               icon-arrow-rightlarge-filled.png
+|   |               icon-arrow-rightlarge.png
+|   |               icon-arrows.png
+|   |               
+|   +---game_healthcircle
+|   |       game_healthcircle.lua
+|   |       game_healthcircle.otmod
+|   |       game_healthcircle.otui
+|   |       game_healthcircle_monk.lua
+|   |       option_healthcircle.otui
+|   |       
+|   +---game_healthinfo
+|   |       healthinfo.lua
+|   |       healthinfo.otmod
+|   |       healthinfo.otui
+|   |       
+|   +---game_highscore
+|   |       game_highscore.lua
+|   |       game_highscore.otmod
+|   |       game_highscore.otui
+|   |       
+|   +---game_hotkeys
+|   |       hotkeys_manager.lua
+|   |       hotkeys_manager.otmod
+|   |       hotkeys_manager.otui
+|   |       
+|   +---game_htmlsample
+|   |       htmlsample.css
+|   |       htmlsample.html
+|   |       htmlsample.lua
+|   |       htmlsample.otmod
+|   |       
+|   +---game_imbuementtracker
+|   |       imbuementtracker.lua
+|   |       imbuementtracker.otmod
+|   |       imbuementtracker.otui
+|   |       
+|   +---game_imbuing
+|   |       imbuing.lua
+|   |       imbuing.otmod
+|   |       imbuing.otui
+|   |       
+|   +---game_interface
+|   |   |   gameinterface.lua
+|   |   |   gameinterface.otui
+|   |   |   interface.otmod
+|   |   |   
+|   |   +---styles
+|   |   |       countStashWindow.otui
+|   |   |       countwindow.otui
+|   |   |       
+|   |   \---widgets
+|   |           statsbar.lua
+|   |           uigamemap.lua
+|   |           uiitem.lua
+|   |           
+|   +---game_inventory
+|   |       inventory.lua
+|   |       inventory.otmod
+|   |       inventory.otui
+|   |       
+|   +---game_joystick
+|   |       joystick.lua
+|   |       joystick.otmod
+|   |       joystick.otui
+|   |       
+|   +---game_lootsplitter
+|   |       advanced.otui
+|   |       lootsplitter.lua
+|   |       lootsplitter.otmod
+|   |       lootsplitter.otui
+|   |       
+|   +---game_mainpanel
+|   |       mainoptionspanel.otui
+|   |       mainpanel.lua
+|   |       mainpanel.otmod
+|   |       option_control_buttons.otui
+|   |       
+|   +---game_market
+|   |   |   market_constants.lua
+|   |   |   market_helpers.lua
+|   |   |   t_market.lua
+|   |   |   t_market.otmod
+|   |   |   t_market.otui
+|   |   |   
+|   |   \---classes
+|   |           t_history.lua
+|   |           t_ownOffers.lua
+|   |           
+|   +---game_minimap
+|   |       minimap.lua
+|   |       minimap.otmod
+|   |       minimap.otui
+|   |       
+|   +---game_modaldialog
+|   |       modaldialog.html
+|   |       modaldialog.lua
+|   |       modaldialog.otmod
+|   |       
+|   +---game_npctrade
+|   |       npctrade.lua
+|   |       npctrade.otmod
+|   |       npctrade.otui
+|   |       
+|   +---game_outfit
+|   |       outfit.lua
+|   |       outfit.otmod
+|   |       outfitwindow.otui
+|   |       
+|   +---game_paperdolls
+|   |   |   lib.lua
+|   |   |   paperdolls.lua
+|   |   |   paperdolls.otmod
+|   |   |   setup.lua
+|   |   |   
+|   |   +---configs
+|   |   |       demon.lua
+|   |   |       
+|   |   \---server
+|   |           creature.cpp
+|   |           creature.h
+|   |           enums.h
+|   |           luascript.cpp
+|   |           luascript.h
+|   |           player.h
+|   |           protocolgame.cpp
+|   |           protocolgame.h
+|   |           
+|   +---game_playerdeath
+|   |       deathwindow.otui
+|   |       playerdeath.lua
+|   |       playerdeath.otmod
+|   |       
+|   +---game_playermount
+|   |       playermount.lua
+|   |       playermount.otmod
+|   |       
+|   +---game_playertrade
+|   |       playertrade.lua
+|   |       playertrade.otmod
+|   |       tradewindow.otui
+|   |       
+|   +---game_prey
+|   |       prey.lua
+|   |       prey.otmod
+|   |       prey.otui
+|   |       
+|   +---game_questlog
+|   |   |   game_questlog.css
+|   |   |   game_questlog.html
+|   |   |   game_questlog.lua
+|   |   |   game_questlog.otmod
+|   |   |   
+|   |   +---images
+|   |   |       icon-checkmark.png
+|   |   |       icon-pin.png
+|   |   |       icon-questtracker-widget.png
+|   |   |       icon-show-small-on.png
+|   |   |       icon-viewers.png
+|   |   |       
+|   |   \---styles
+|   |           game_questlog.otui
+|   |           
+|   +---game_quickloot
+|   |   |   quickloot.lua
+|   |   |   quickloot.otmod
+|   |   |   quickloot.otui
+|   |   |   
+|   |   \---images
+|   |           choose.png
+|   |           container.png
+|   |           getpremium.png
+|   |           remove.png
+|   |           
+|   +---game_rewardwall
+|   |   |   #displayUIPickReward.html
+|   |   |   game_rewardwall.css
+|   |   |   game_rewardwall.html
+|   |   |   game_rewardwall.lua
+|   |   |   game_rewardwall.otmod
+|   |   |   
+|   |   +---images
+|   |   |       blessingContainer.png
+|   |   |       ditherpattern.png
+|   |   |       getpremium.png
+|   |   |       icon-banner-premium.png
+|   |   |       icon-daily-reward-joker.png
+|   |   |       icon-dailyrewarddeactivated.png
+|   |   |       icon-dailyrewarddone.png
+|   |   |       icon-dailyrewardready.png
+|   |   |       icon-restingareabonuseslevels.png
+|   |   |       icon-reward-fixeditems.png
+|   |   |       icon-reward-pickitems.png
+|   |   |       icon-reward-xpboost.png
+|   |   |       icon-rewardarrow-loop-active.png
+|   |   |       icon-rewardarrow-loop-inactive.png
+|   |   |       icon-rewardarrow.png
+|   |   |       icon-rewardstreak-bronze.png
+|   |   |       icon-rewardstreak-default.png
+|   |   |       icon-rewardstreak-gold.png
+|   |   |       icon-rewardstreak-silver.png
+|   |   |       instant-reward-access-icon.png
+|   |   |       rewardButton.png
+|   |   |       
+|   |   \---styles
+|   |           pickreward.otui
+|   |           style.otui
+|   |           
+|   +---game_ruleviolation
+|   |       ruleviolation.lua
+|   |       ruleviolation.otmod
+|   |       ruleviolation.otui
+|   |       
+|   +---game_screenshot
+|   |       game_screenshot.lua
+|   |       game_screenshot.otmod
+|   |       game_screenshot.otui
+|   |       
+|   +---game_shaders
+|   |   |   shaders.html
+|   |   |   shaders.lua
+|   |   |   shaders.otmod
+|   |   |   text_styles_example.otui
+|   |   |   
+|   |   +---images
+|   |   |       clouds.png
+|   |   |       snow.png
+|   |   |       
+|   |   \---shaders
+|   |       +---core
+|   |       |   \---vertex
+|   |       |           default.vert
+|   |       |           
+|   |       +---fragment
+|   |       |       bloom.frag
+|   |       |       cyclopedia.frag
+|   |       |       fog.frag
+|   |       |       forge_donor.frag
+|   |       |       forge_failed.frag
+|   |       |       forge_success.frag
+|   |       |       grayscale.frag
+|   |       |       heat.frag
+|   |       |       noise.frag
+|   |       |       oldtv.frag
+|   |       |       outline.frag
+|   |       |       party.frag
+|   |       |       pulse.frag
+|   |       |       radialblur.frag
+|   |       |       rain.frag
+|   |       |       sepia.frag
+|   |       |       snow.frag
+|   |       |       text_black_outline.frag
+|   |       |       text_glow.frag
+|   |       |       text_golden_shadow_bold_fragment.frag
+|   |       |       zomg.frag
+|   |       |       
+|   |       \---vertex
+|   |               default.vert
+|   |               text_golden_shadow_bold_vertex.frag
+|   |               text_golden_shadow_solid_vertex.frag
+|   |               
+|   +---game_shop
+|   |   |   changename.otui
+|   |   |   game_shop.lua
+|   |   |   game_shop.otmod
+|   |   |   game_shop.otui
+|   |   |   gift.otui
+|   |   |   giftcoins.otui
+|   |   |   
+|   |   +---images
+|   |   |   |   180_days.png
+|   |   |   |   30_days.png
+|   |   |   |   360_days.png
+|   |   |   |   90_days.png
+|   |   |   |   All_regular_Blessings.png
+|   |   |   |   arrow_down.png
+|   |   |   |   arrow_right.png
+|   |   |   |   Blood_of_the_Mountain.png
+|   |   |   |   categories.png
+|   |   |   |   coin.png
+|   |   |   |   coin_second.png
+|   |   |   |   giftcoin.png
+|   |   |   |   Heart_of_the_Mountain.png
+|   |   |   |   mount.png
+|   |   |   |   Name_Change.png
+|   |   |   |   search.png
+|   |   |   |   Sex_Change.png
+|   |   |   |   Temple_Teleport.png
+|   |   |   |   The_Embrace_of_Tibia.png
+|   |   |   |   The_Fire_of_the_Suns.png
+|   |   |   |   The_Spark_of_the_Phoenix.png
+|   |   |   |   The_Spiritual_Shielding.png
+|   |   |   |   The_Wisdom_of_Solitude.png
+|   |   |   |   Twist_of_Fate.png
+|   |   |   |   XP_Boost.png
+|   |   |   |   
+|   |   |   \---ex
+|   |   |           00001[64x64x8BPP].png
+|   |   |           00002[64x64x8BPP].png
+|   |   |           00005[64x64x8BPP].png
+|   |   |           00010[64x64x8BPP].png
+|   |   |           00012[64x64x8BPP].png
+|   |   |           00013[64x64x8BPP].png
+|   |   |           00015[64x64x8BPP].png
+|   |   |           00017[64x64x8BPP].png
+|   |   |           00020[27x52x8BPP].png
+|   |   |           00021[64x64x8BPP].png
+|   |   |           00025[64x64x8BPP].png
+|   |   |           00026[64x64x8BPP].png
+|   |   |           00027[64x64x8BPP].png
+|   |   |           00029[64x64x8BPP].png
+|   |   |           00031[64x64x8BPP].png
+|   |   |           00036[64x64x8BPP].png
+|   |   |           00045[64x64x8BPP].png
+|   |   |           00051[64x64x8BPP].png
+|   |   |           00052[64x64x8BPP].png
+|   |   |           00053[64x64x8BPP].png
+|   |   |           00054[64x64x4BPP].png
+|   |   |           00057[64x64x8BPP].png
+|   |   |           00058[64x64x8BPP].png
+|   |   |           00060[64x64x8BPP].png
+|   |   |           00062[64x64x8BPP].png
+|   |   |           00063[64x64x4BPP].png
+|   |   |           
+|   |   \---serverSIDE
+|   |       |   server.txt
+|   |       |   
+|   |       \---data
+|   |           +---core
+|   |           |       mounts.lua
+|   |           |       
+|   |           +---lib
+|   |           |       json.lua
+|   |           |       
+|   |           \---scripts
+|   |                   game_shop.lua
+|   |                   
+|   +---game_shortcuts
+|   |       shortcuts.lua
+|   |       shortcuts.otmod
+|   |       shortcuts.otui
+|   |       
+|   +---game_skills
+|   |       skills.lua
+|   |       skills.otmod
+|   |       skills.otui
+|   |       
+|   +---game_spelllist
+|   |       spelllist.lua
+|   |       spelllist.otmod
+|   |       spelllist.otui
+|   |       
+|   +---game_stash
+|   |       game_stash.lua
+|   |       game_stash.otmod
+|   |       game_stash.otui
+|   |       
+|   +---game_store
+|   |   |   game_store.lua
+|   |   |   game_store.otmod
+|   |   |   game_store.otui
+|   |   |   
+|   |   +---images
+|   |   |   |   button-featured-offers-left-highlight.png
+|   |   |   |   button-featured-offers-left.png
+|   |   |   |   button-featured-offers-right-highlight.png
+|   |   |   |   button-featured-offers-right.png
+|   |   |   |   button.png
+|   |   |   |   dragon.png
+|   |   |   |   dynamic-image-error.png
+|   |   |   |   icon-store-home.png
+|   |   |   |   icon-tibiacointransferable.png
+|   |   |   |   icon-trade.png
+|   |   |   |   iconTransfer.png
+|   |   |   |   longButton.png
+|   |   |   |   panel.png
+|   |   |   |   panel_container.png
+|   |   |   |   panel_flat.png
+|   |   |   |   purchase_animation.png
+|   |   |   |   textedit.png
+|   |   |   |   window.png
+|   |   |   |   
+|   |   |   \---images
+|   |   |           put_images_here.txt
+|   |   |           
+|   |   \---style
+|   |           acceptwindow.otui
+|   |           changename.otui
+|   |           transferpoints.otui
+|   |           ui.otui
+|   |           
+|   +---game_tasks
+|   |   |   tasks.lua
+|   |   |   tasks.otmod
+|   |   |   tasks.otui
+|   |   |   
+|   |   +---images
+|   |   |       taskIcon.png
+|   |   |       taskIconColorless.png
+|   |   |       
+|   |   \---serverSIDE
+|   |       |   extendedopcode.txt
+|   |       |   taskSystem.lua
+|   |       |   
+|   |       \---lib
+|   |           \---core
+|   |                   json.lua
+|   |                   player.lua
+|   |                   
+|   +---game_textmessage
+|   |       textmessage.lua
+|   |       textmessage.otmod
+|   |       textmessage.otui
+|   |       
+|   +---game_textwindow
+|   |       textwindow.lua
+|   |       textwindow.otmod
+|   |       textwindow.otui
+|   |       
+|   +---game_things
+|   |       things.lua
+|   |       things.otmod
+|   |       
+|   +---game_unjustifiedpoints
+|   |       unjustifiedpoints.lua
+|   |       unjustifiedpoints.otmod
+|   |       unjustifiedpoints.otui
+|   |       
+|   +---game_viplist
+|   |       addgroup.otui
+|   |       addvip.otui
+|   |       editvip.otui
+|   |       viplist.lua
+|   |       viplist.otmod
+|   |       viplist.otui
+|   |       
+|   +---game_walk
+|   |       walk.lua
+|   |       walk.otmod
+|   |       
+|   +---game_wheel
+|   |   |   LICENSE
+|   |   |   wheel.lua
+|   |   |   wheel.otmod
+|   |   |   wheel.otui
+|   |   |   
+|   |   +---classes
+|   |   |       bonus.lua
+|   |   |       buttons.lua
+|   |   |       gematelier.lua
+|   |   |       geometry.lua
+|   |   |       icons.lua
+|   |   |       wheelclass.lua
+|   |   |       wheelnode.lua
+|   |   |       workshop.lua
+|   |   |       
+|   |   \---styles
+|   |           fragmentMenu.otui
+|   |           gemMenu.otui
+|   |           newPreset.otui
+|   |           renamePreset.otui
+|   |           wheelMenu.otui
+|   |           
+|   +---modulelib
+|   |       controller.lua
+|   |       eventcontroller.lua
+|   |       modulelib.otmod
+|   |       watchlist.lua
+|   |       
+|   +---startup
+|   |       startup.lua
+|   |       startup.otmod
+|   |       
+|   \---updater
+|           updater.lua
+|           updater.otmod
+|           updater.otui
+|           
++---records
+|       .gitignore
+|       README.md
+|       test1098.cam
+|       
++---src
+|   |   androidmain.cpp
+|   |   CMakeLists.txt
+|   |   gitinfo.h
+|   |   main.cpp
+|   |   otcicon.ico
+|   |   otcicon.rc
+|   |   
+|   +---client
+|   |       animatedtext.cpp
+|   |       animatedtext.h
+|   |       animator.cpp
+|   |       animator.h
+|   |       attachableobject.cpp
+|   |       attachableobject.h
+|   |       attachedeffect.cpp
+|   |       attachedeffect.h
+|   |       attachedeffectmanager.cpp
+|   |       attachedeffectmanager.h
+|   |       client.cpp
+|   |       client.h
+|   |       const.h
+|   |       container.cpp
+|   |       container.h
+|   |       creature.cpp
+|   |       creature.h
+|   |       creatures.cpp
+|   |       creatures.h
+|   |       declarations.h
+|   |       effect.cpp
+|   |       effect.h
+|   |       game.cpp
+|   |       game.h
+|   |       gameconfig.cpp
+|   |       gameconfig.h
+|   |       global.h
+|   |       houses.cpp
+|   |       houses.h
+|   |       item.cpp
+|   |       item.h
+|   |       itemtype.cpp
+|   |       itemtype.h
+|   |       lightview.cpp
+|   |       lightview.h
+|   |       localplayer.cpp
+|   |       localplayer.h
+|   |       luafunctions.cpp
+|   |       luavaluecasts_client.cpp
+|   |       luavaluecasts_client.h
+|   |       map.cpp
+|   |       map.h
+|   |       mapio.cpp
+|   |       mapview.cpp
+|   |       mapview.h
+|   |       minimap.cpp
+|   |       minimap.h
+|   |       missile.cpp
+|   |       missile.h
+|   |       outfit.cpp
+|   |       outfit.h
+|   |       paperdoll.cpp
+|   |       paperdoll.h
+|   |       paperdollmanager.cpp
+|   |       paperdollmanager.h
+|   |       player.cpp
+|   |       player.h
+|   |       position.cpp
+|   |       position.h
+|   |       protocolcodes.cpp
+|   |       protocolcodes.h
+|   |       protocolgame.cpp
+|   |       protocolgame.h
+|   |       protocolgameparse.cpp
+|   |       protocolgamesend.cpp
+|   |       shadermanager.cpp
+|   |       spriteappearances.cpp
+|   |       spriteappearances.h
+|   |       spritemanager.cpp
+|   |       spritemanager.h
+|   |       staticdata.h
+|   |       statictext.cpp
+|   |       statictext.h
+|   |       thing.cpp
+|   |       thing.h
+|   |       thingtype.cpp
+|   |       thingtype.h
+|   |       thingtypemanager.cpp
+|   |       thingtypemanager.h
+|   |       tile.cpp
+|   |       tile.h
+|   |       towns.cpp
+|   |       towns.h
+|   |       uicreature.cpp
+|   |       uicreature.h
+|   |       uieffect.cpp
+|   |       uieffect.h
+|   |       uigraph.cpp
+|   |       uigraph.h
+|   |       uiitem.cpp
+|   |       uiitem.h
+|   |       uimap.cpp
+|   |       uimap.h
+|   |       uimapanchorlayout.cpp
+|   |       uimapanchorlayout.h
+|   |       uiminimap.cpp
+|   |       uiminimap.h
+|   |       uimissile.cpp
+|   |       uimissile.h
+|   |       uiprogressrect.cpp
+|   |       uiprogressrect.h
+|   |       uisprite.cpp
+|   |       uisprite.h
+|   |       
+|   +---framework
+|   |   |   config.h
+|   |   |   const.h
+|   |   |   global.h
+|   |   |   luafunctions.cpp
+|   |   |   pch.cpp
+|   |   |   pch.h
+|   |   |   
+|   |   +---core
+|   |   |       adaptativeframecounter.cpp
+|   |   |       adaptativeframecounter.h
+|   |   |       application.cpp
+|   |   |       application.h
+|   |   |       asyncdispatcher.cpp
+|   |   |       asyncdispatcher.h
+|   |   |       binarytree.cpp
+|   |   |       binarytree.h
+|   |   |       clock.cpp
+|   |   |       clock.h
+|   |   |       config.cpp
+|   |   |       config.h
+|   |   |       configmanager.cpp
+|   |   |       configmanager.h
+|   |   |       consoleapplication.cpp
+|   |   |       consoleapplication.h
+|   |   |       declarations.h
+|   |   |       event.cpp
+|   |   |       event.h
+|   |   |       eventdispatcher.cpp
+|   |   |       eventdispatcher.h
+|   |   |       filestream.cpp
+|   |   |       filestream.h
+|   |   |       garbagecollection.cpp
+|   |   |       garbagecollection.h
+|   |   |       graphicalapplication.cpp
+|   |   |       graphicalapplication.h
+|   |   |       inputevent.h
+|   |   |       logger.cpp
+|   |   |       logger.h
+|   |   |       module.cpp
+|   |   |       module.h
+|   |   |       modulemanager.cpp
+|   |   |       modulemanager.h
+|   |   |       resourcemanager.cpp
+|   |   |       resourcemanager.h
+|   |   |       scheduledevent.cpp
+|   |   |       scheduledevent.h
+|   |   |       timer.cpp
+|   |   |       timer.h
+|   |   |       unzipper.cpp
+|   |   |       unzipper.h
+|   |   |       
+|   |   +---discord
+|   |   |       discord.cpp
+|   |   |       discord.h
+|   |   |       
+|   |   +---graphics
+|   |   |   |   animatedtexture.cpp
+|   |   |   |   animatedtexture.h
+|   |   |   |   apngloader.cpp
+|   |   |   |   apngloader.h
+|   |   |   |   bitmapfont.cpp
+|   |   |   |   bitmapfont.h
+|   |   |   |   bitmapfontwrapoptions.h
+|   |   |   |   cachedtext.cpp
+|   |   |   |   cachedtext.h
+|   |   |   |   coordsbuffer.cpp
+|   |   |   |   coordsbuffer.h
+|   |   |   |   declarations.h
+|   |   |   |   drawpool.cpp
+|   |   |   |   drawpool.h
+|   |   |   |   drawpoolmanager.cpp
+|   |   |   |   drawpoolmanager.h
+|   |   |   |   fontmanager.cpp
+|   |   |   |   fontmanager.h
+|   |   |   |   framebuffer.cpp
+|   |   |   |   framebuffer.h
+|   |   |   |   glutil.h
+|   |   |   |   graphics.cpp
+|   |   |   |   graphics.h
+|   |   |   |   image.cpp
+|   |   |   |   image.h
+|   |   |   |   painter.cpp
+|   |   |   |   painter.h
+|   |   |   |   paintershaderprogram.cpp
+|   |   |   |   paintershaderprogram.h
+|   |   |   |   particle.cpp
+|   |   |   |   particle.h
+|   |   |   |   particleaffector.cpp
+|   |   |   |   particleaffector.h
+|   |   |   |   particleeffect.cpp
+|   |   |   |   particleeffect.h
+|   |   |   |   particleemitter.cpp
+|   |   |   |   particleemitter.h
+|   |   |   |   particlemanager.cpp
+|   |   |   |   particlemanager.h
+|   |   |   |   particlesystem.cpp
+|   |   |   |   particlesystem.h
+|   |   |   |   particletype.cpp
+|   |   |   |   particletype.h
+|   |   |   |   shader.cpp
+|   |   |   |   shader.h
+|   |   |   |   shadermanager.cpp
+|   |   |   |   shadermanager.h
+|   |   |   |   shaderprogram.cpp
+|   |   |   |   shaderprogram.h
+|   |   |   |   texture.cpp
+|   |   |   |   texture.h
+|   |   |   |   textureatlas.cpp
+|   |   |   |   textureatlas.h
+|   |   |   |   texturemanager.cpp
+|   |   |   |   texturemanager.h
+|   |   |   |   ttfloader.cpp
+|   |   |   |   ttfloader.h
+|   |   |   |   vertexarray.h
+|   |   |   |   
+|   |   |   \---shader
+|   |   |           shadersources.h
+|   |   |           
+|   |   +---html
+|   |   |       cssparser.cpp
+|   |   |       cssparser.h
+|   |   |       declarations.h
+|   |   |       htmlmanager.cpp
+|   |   |       htmlmanager.h
+|   |   |       htmlnode.cpp
+|   |   |       htmlnode.h
+|   |   |       htmlparser.cpp
+|   |   |       htmlparser.h
+|   |   |       queryselector.cpp
+|   |   |       queryselector.h
+|   |   |       
+|   |   +---input
+|   |   |       mouse.cpp
+|   |   |       mouse.h
+|   |   |       
+|   |   +---luaengine
+|   |   |       declarations.h
+|   |   |       luabinder.h
+|   |   |       luaexception.cpp
+|   |   |       luaexception.h
+|   |   |       luainterface.cpp
+|   |   |       luainterface.h
+|   |   |       luaobject.cpp
+|   |   |       luaobject.h
+|   |   |       luavaluecasts.cpp
+|   |   |       luavaluecasts.h
+|   |   |       
+|   |   +---net
+|   |   |       connection.cpp
+|   |   |       connection.h
+|   |   |       declarations.h
+|   |   |       httplogin.cpp
+|   |   |       httplogin.h
+|   |   |       inputmessage.cpp
+|   |   |       inputmessage.h
+|   |   |       outputmessage.cpp
+|   |   |       outputmessage.h
+|   |   |       packet_player.cpp
+|   |   |       packet_player.h
+|   |   |       packet_recorder.cpp
+|   |   |       packet_recorder.h
+|   |   |       protocol.cpp
+|   |   |       protocol.h
+|   |   |       protocolhttp.cpp
+|   |   |       protocolhttp.h
+|   |   |       server.cpp
+|   |   |       server.h
+|   |   |       webconnection.cpp
+|   |   |       webconnection.h
+|   |   |       
+|   |   +---otml
+|   |   |       declarations.h
+|   |   |       otml.h
+|   |   |       otmldocument.cpp
+|   |   |       otmldocument.h
+|   |   |       otmlemitter.cpp
+|   |   |       otmlemitter.h
+|   |   |       otmlexception.cpp
+|   |   |       otmlexception.h
+|   |   |       otmlnode.cpp
+|   |   |       otmlnode.h
+|   |   |       otmlparser.cpp
+|   |   |       otmlparser.h
+|   |   |       
+|   |   +---platform
+|   |   |       androidgameactivity.cpp
+|   |   |       androidmanager.cpp
+|   |   |       androidmanager.h
+|   |   |       androidwindow.cpp
+|   |   |       androidwindow.h
+|   |   |       browserplatform.cpp
+|   |   |       browserwindow.cpp
+|   |   |       browserwindow.h
+|   |   |       const.h
+|   |   |       crashhandler.h
+|   |   |       platform.cpp
+|   |   |       platform.h
+|   |   |       platformwindow.cpp
+|   |   |       platformwindow.h
+|   |   |       staticdata.h
+|   |   |       unixcrashhandler.cpp
+|   |   |       unixplatform.cpp
+|   |   |       win32crashhandler.cpp
+|   |   |       win32platform.cpp
+|   |   |       win32window.cpp
+|   |   |       win32window.h
+|   |   |       x11window.cpp
+|   |   |       x11window.h
+|   |   |       
+|   |   +---proxy
+|   |   |       proxy.cpp
+|   |   |       proxy.h
+|   |   |       proxy_client.cpp
+|   |   |       proxy_client.h
+|   |   |       
+|   |   +---sound
+|   |   |       combinedsoundsource.cpp
+|   |   |       combinedsoundsource.h
+|   |   |       declarations.h
+|   |   |       oggsoundfile.cpp
+|   |   |       oggsoundfile.h
+|   |   |       soundbuffer.cpp
+|   |   |       soundbuffer.h
+|   |   |       soundchannel.cpp
+|   |   |       soundchannel.h
+|   |   |       soundeffect.cpp
+|   |   |       soundeffect.h
+|   |   |       soundfile.cpp
+|   |   |       soundfile.h
+|   |   |       soundmanager.cpp
+|   |   |       soundmanager.h
+|   |   |       soundsource.cpp
+|   |   |       soundsource.h
+|   |   |       streamsoundsource.cpp
+|   |   |       streamsoundsource.h
+|   |   |       
+|   |   +---stdext
+|   |   |       cast.h
+|   |   |       compiler.h
+|   |   |       demangle.cpp
+|   |   |       demangle.h
+|   |   |       exception.h
+|   |   |       hash.h
+|   |   |       math.cpp
+|   |   |       math.h
+|   |   |       net.cpp
+|   |   |       net.h
+|   |   |       qrcodegen.cpp
+|   |   |       qrcodegen.h
+|   |   |       stdext.h
+|   |   |       storage.h
+|   |   |       string.cpp
+|   |   |       string.h
+|   |   |       thread.h
+|   |   |       time.cpp
+|   |   |       time.h
+|   |   |       traits.h
+|   |   |       types.h
+|   |   |       uri.cpp
+|   |   |       uri.h
+|   |   |       
+|   |   +---ui
+|   |   |       declarations.h
+|   |   |       ui.h
+|   |   |       uianchorlayout.cpp
+|   |   |       uianchorlayout.h
+|   |   |       uiboxlayout.cpp
+|   |   |       uiboxlayout.h
+|   |   |       uigridlayout.cpp
+|   |   |       uigridlayout.h
+|   |   |       uihorizontallayout.cpp
+|   |   |       uihorizontallayout.h
+|   |   |       uilayout.cpp
+|   |   |       uilayout.h
+|   |   |       uilayoutflexbox.cpp
+|   |   |       uilayoutflexbox.h
+|   |   |       uimanager.cpp
+|   |   |       uimanager.h
+|   |   |       uiparticles.cpp
+|   |   |       uiparticles.h
+|   |   |       uiqrcode.cpp
+|   |   |       uiqrcode.h
+|   |   |       uitextedit.cpp
+|   |   |       uitextedit.h
+|   |   |       uitranslator.cpp
+|   |   |       uitranslator.h
+|   |   |       uiverticallayout.cpp
+|   |   |       uiverticallayout.h
+|   |   |       uiwidget.cpp
+|   |   |       uiwidget.h
+|   |   |       uiwidgetbasestyle.cpp
+|   |   |       uiwidgethtml.cpp
+|   |   |       uiwidgetimage.cpp
+|   |   |       uiwidgettext.cpp
+|   |   |       
+|   |   \---util
+|   |           BS_thread_pool.hpp
+|   |           color.cpp
+|   |           color.h
+|   |           crypt.cpp
+|   |           crypt.h
+|   |           matrix.h
+|   |           point.h
+|   |           rect.h
+|   |           size.h
+|   |           spinlock.h
+|   |           stats.cpp
+|   |           stats.h
+|   |           
+|   +---protobuf
+|   |       appearances.proto
+|   |       CMakeLists.txt
+|   |       generate.bat
+|   |       generate.sh
+|   |       sounds.proto
+|   |       staticdata.proto
+|   |       
+|   \---tools
+|           datdump.cpp
+|           datdump.h
+|           
++---tests
+|   |   CMakeLists.txt
+|   |   
+|   +---map
+|   |       CMakeLists.txt
+|   |       map_spectators_test.cpp
+|   |       
+|   +---otml
+|   |       ampersand_dual_purpose.otui
+|   |       CMakeLists.txt
+|   |       otml_alias_test.cpp
+|   |       
+|   \---stdext
+|           CMakeLists.txt
+|           string_encoding_test.cpp
+|           
++---tools
+|   |   emscripten-web-serve.py
+|   |   generate_git_version.bat
+|   |   gen_lang_template.sh
+|   |   gen_needed_translations.sh
+|   |   make_snapshot.sh
+|   |   tfs_extendedopcode.patch
+|   |   
+|   +---api
+|   |       status.php
+|   |       updater.php
+|   |       
+|   +---gimp-bitmap-generator
+|   |       generate_bitmap_font.py
+|   |       
+|   +---katepart-syntax
+|   |       lua.xml
+|   |       otml.xml
+|   |       README
+|   |       
+|   \---lua-binding-generator
+|           generate_lua_bindings.lua
+|           
+\---vc18
+        arch32.props
+        debug.props
+        otclient.sln
+        otclient.vcxproj
+        release.props
+        settings.props
