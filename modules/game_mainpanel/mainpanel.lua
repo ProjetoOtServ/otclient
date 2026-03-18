@@ -100,20 +100,30 @@ local function refreshOptionsSizes()
     reloadMainPanelSizes()
 end
 
+-- === CRIAÇÃO DE BOTÕES DA LOJA (SEM CLONES) ===
 local function createButton_large(id, description, image, callback, special, front)
     local panel = optionsController.ui.onPanel.store
-
-    storeAmount = storeAmount + 1
-
+    local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
+    
+    -- O SEGREDO 1: Procura o botão nas DUAS gavetas antes de criar um novo!
     local button = panel:getChildById(id)
+    if not button and rightGamePanel then
+        button = rightGamePanel:getChildById(id)
+    end
+
     if not button then
         button = g_ui.createWidget('largeToggleButton')
+        button.originalPanel = "specials" -- Carimbo de origem para não se perder
+        
+        -- Define onde ele deve nascer baseado no modo Widescreen
+        local target = (modules.game_interface.currentViewMode == 2) and rightGamePanel or panel
         if front then
-            panel:insertChild(1, button)
+            target:insertChild(1, button)
         else
-            panel:addChild(button)
+            target:addChild(button)
         end
     end
+    
     button:setId(id)
     button:setTooltip(description)
     button:setImageSource(image)
@@ -128,23 +138,35 @@ local function createButton_large(id, description, image, callback, special, fro
     return button
 end
 
+-- === CRIAÇÃO DE BOTÕES NORMAIS (SEM CLONES) ===
 local function createButton(id, description, image, callback, special, front, index)
     local panel
+    local panelName
     if special then
         panel = optionsController.ui.onPanel.specials
-        specialsAmount = specialsAmount + 1
+        panelName = "specials"
     else
         panel = optionsController.ui.onPanel.options
-        optionsAmount = optionsAmount + 1
+        panelName = "options"
     end
 
+    local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
+    
+    -- O SEGREDO 2: Busca onipresente!
     local button = panel:getChildById(id)
+    if not button and rightGamePanel then
+        button = rightGamePanel:getChildById(id)
+    end
+
     if not button then
         button = g_ui.createWidget('MainToggleButton')
+        button.originalPanel = panelName
+        
+        local target = (modules.game_interface.currentViewMode == 2) and rightGamePanel or panel
         if front then
-            panel:insertChild(1, button)
+            target:insertChild(1, button)
         else
-            panel:addChild(button)
+            target:addChild(button)
         end
     end
 
@@ -205,32 +227,34 @@ function optionsController:onGameStart()
     refreshOptionsSizes()
     modules.game_interface.setupOptionsMainButton()
     modules.client_options.setupOptionsMainButton()
-    local getOptionsPanel = optionsController.ui.onPanel.options
-    local children = getOptionsPanel:getChildren()
-    table.sort(children, function(a, b)
-        return (a.index or 1000) < (b.index or 1000)
-    end)
-    getOptionsPanel:reorderChildren(children)
+    
     optionsController:scheduleEvent(function()
         if optionPanel then
             local config = loadButtonConfig()
             buttonConfigs = config.buttons or {}
             buttonOrder = config.order or {}
+            
+            -- [CORREÇÃO 3 - CIDADE FANTASMA]: Ensina o código a procurar os botões 
+            -- na barra do Topo se o Widescreen estiver ativo!
+            local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
             local optionsPanel = optionsController.ui.onPanel.options
-            if optionsPanel then
-                for _, button in ipairs(optionsPanel:getChildren()) do
-                    local id = button:getId()
-                    if id and buttonConfigs[id] then
-                        button:setVisible(buttonConfigs[id].visible)
-                    end
+            local targetPanel = (modules.game_interface.currentViewMode == 2) and rightGamePanel or optionsPanel
+
+            for _, button in ipairs(targetPanel:getChildren()) do
+                local id = button:getId()
+                -- Só aplica a invisibilidade se NÃO for o botão da Store ("specials")
+                if id and buttonConfigs[id] and button.originalPanel ~= "specials" then
+                    button:setVisible(buttonConfigs[id].visible)
                 end
-                reorderButtons()
-                updateDisplayedButtonsList()
-                updateAvailableButtonsList()
-                reloadMainPanelSizes()
             end
+            
+            reorderButtons()
+            updateDisplayedButtonsList()
+            updateAvailableButtonsList()
+            reloadMainPanelSizes()
         end
     end, 50, "onGameStart")
+    
     if g_game.getClientVersion() >= 1400 and not controlButton1400 then
         controlButton1400 = modules.game_mainpanel.addToggleButton('controButtons', tr('Manage control buttons'),
         '/images/options/button_control', function() modules.client_options.openOptionsCategory("Interface", "Control Buttons") end, false, 1)
@@ -263,35 +287,61 @@ function getButton(id)
     return optionsController.ui.onPanel.options:recursiveGetChildById(id)
 end
 
+-- Função que decide o que vai pra barra superior no modo Widescreen
 function toggleExtendedViewButtons(extended)
     local optionsPanel = optionsController.ui.onPanel.options
     local specialsPanel = optionsController.ui.onPanel.store
     local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
+    
+    -- [CORREÇÃO 1]: Forçamos o carregamento do save ANTES de mover os botões!
+    if not buttonConfigs or table.empty(buttonConfigs) then
+        local config = loadButtonConfig()
+        buttonConfigs = config.buttons or {}
+        buttonOrder = config.order or {}
+    end
+
     if extended then
+        -- Movemos os botões NORMAIS (Inventário, Mapa, etc)
         local optionChildren = optionsPanel:getChildren()
         for _, button in ipairs(optionChildren) do
             if not button:isDestroyed() then
                 button.originalPanel = "options"
                 rightGamePanel:addChild(button)
+                
+                -- Aplica a visibilidade do save. Se não existir, mostra por padrão.
+                if buttonConfigs[button:getId()] ~= nil then
+                    button:setVisible(buttonConfigs[button:getId()].visible)
+                else
+                    button:setVisible(true) 
+                end
             end
         end
+        
+        -- [CORREÇÃO 2]: Movemos os botões ESPECIAIS (Store) garantindo que NÃO fiquem invisíveis!
         local specialChildren = specialsPanel:getChildren()
         for _, button in ipairs(specialChildren) do
             if not button:isDestroyed() then
                 button.originalPanel = "specials"
                 rightGamePanel:addChild(button)
+                button:setVisible(true) -- A Loja é imune ao Displayed Buttons, sempre visível!
             end
         end
+        
         optionsController.ui:hide()
         optionsController.ui:setHeight(0)
     else
+        -- Quando desloga, devolve os botões pra direita...
         local children = rightGamePanel:getChildren()
         for _, button in ipairs(children) do
             if not button:isDestroyed() then
                 if button.originalPanel == "options" then
                     optionsPanel:addChild(button)
+                    if buttonConfigs[button:getId()] ~= nil then
+                        button:setVisible(buttonConfigs[button:getId()].visible)
+                    end
                 elseif button.originalPanel == "specials" then
                     specialsPanel:addChild(button)
+                    button:setVisible(true) -- Loja sempre visível ao deslogar
                 end
             end
         end
@@ -302,6 +352,8 @@ function toggleExtendedViewButtons(extended)
             mainRightPanel:moveChildToIndex(optionsController.ui, 4)
         end
     end
+    
+    reorderButtons()
     refreshOptionsSizes()
 end
 
@@ -321,11 +373,14 @@ function saveButtonConfig()
     for i, id in ipairs(buttonOrder) do
         config.order[tostring(i)] = id
     end
-    g_settings.setNode('control_buttons', config)
+    -- MUDANÇA: Salva globalmente em um nó novo e blindado
+    g_settings.setNode('global_control_buttons', config)
+    g_settings.save() -- Força a gravação no disco na mesma hora!
 end
 
 function loadButtonConfig()
-    local config = g_settings.getNode('control_buttons') or {
+    -- MUDANÇA: Lê do nó global
+    local config = g_settings.getNode('global_control_buttons') or {
         buttons = {},
         order = {}
     }
@@ -424,17 +479,23 @@ function updateAvailableButtonsList()
     updateList(optionPanel.panelAvailableButtons.displayedAvailableButtonsList, false)
 end
 
+-- === ESCONDER BOTÃO ===
 function moveToAvailable()
     local displayedList = optionPanel.panelDisplayedButtons.displayedButtonsList
     local selectedItem = displayedList:getFocusedChild()
 
-    if not selectedItem then
-        return
-    end
+    if not selectedItem then return end
 
     local buttonId = selectedItem.buttonId
+    local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
     local optionsPanel = optionsController.ui.onPanel.options
+    
+    -- O SEGREDO 3: Acha o botão quer ele esteja na lateral ou no topo
     local button = optionsPanel:getChildById(buttonId)
+    if not button and rightGamePanel then
+        button = rightGamePanel:getChildById(buttonId)
+    end
+
     if button then
         button:setVisible(false)
         buttonConfigs[buttonId].visible = false
@@ -447,17 +508,22 @@ function moveToAvailable()
     end
 end
 
+-- === MOSTRAR BOTÃO ===
 function moveToDisplayed()
     local availableList = optionPanel.panelAvailableButtons.displayedAvailableButtonsList
     local selectedItem = availableList:getFocusedChild()
 
-    if not selectedItem then
-        return
-    end
+    if not selectedItem then return end
 
     local buttonId = selectedItem.buttonId
+    local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
     local optionsPanel = optionsController.ui.onPanel.options
+    
+    -- Mesma busca onipresente
     local button = optionsPanel:getChildById(buttonId)
+    if not button and rightGamePanel then
+        button = rightGamePanel:getChildById(buttonId)
+    end
 
     if button then
         button:setVisible(true)
@@ -527,45 +593,88 @@ function moveButtonDown()
     end
 end
 
+-- Função que coloca os botões em fila indiana de acordo com sua escolha
 function reorderButtons()
-    if not g_game.isOnline() then
-        return
-    end
+    if not g_game.isOnline() then return end
+    
     local optionsPanel = optionsController.ui.onPanel.options
-    local children = {}
+    local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
+    local targetPanel = (modules.game_interface.currentViewMode == 2) and rightGamePanel or optionsPanel
+    
+    local currentChildren = targetPanel:getChildren()
+    local childrenSet = {}
+    
+    -- Mapeia todos os filhos que existem fisicamente no painel
+    for _, child in ipairs(currentChildren) do
+        local key = child:getId() or tostring(child)
+        childrenSet[key] = child
+    end
+    
+    local sortedChildren = {}
+    
+    -- 1. Garante os Especiais (Store) no começo
+    for _, child in ipairs(currentChildren) do
+        if child.originalPanel == "specials" then
+            table.insert(sortedChildren, child)
+            local key = child:getId() or tostring(child)
+            childrenSet[key] = nil -- Tira da lista de pendentes
+        end
+    end
+    
+    -- 2. Coloca os botões na sua ordem customizada
     for _, id in ipairs(buttonOrder) do
-        local button = optionsPanel:getChildById(id)
-        if button then
-            table.insert(children, button)
+        local child = childrenSet[id]
+        if child then
+            table.insert(sortedChildren, child)
+            childrenSet[id] = nil
         end
     end
-    for _, button in ipairs(optionsPanel:getChildren()) do
-        local id = button:getId()
-        if not table.find(buttonOrder, id) then
-            table.insert(children, button)
-        end
+    
+    -- 3. Tudo o que sobrou (botões novos de atualizações, etc) vai pro final
+    for key, child in pairs(childrenSet) do
+        table.insert(sortedChildren, child)
     end
-    optionsPanel:reorderChildren(children)
+    
+    -- A trava de segurança contra o crash de memória
+    if #sortedChildren == #currentChildren then
+        targetPanel:reorderChildren(sortedChildren)
+    else
+        print("Protecao ativada: falha na engine do reorderChildren prevenida.")
+    end
 end
 
+-- === O RESET QUE NÃO TRAVA E NÃO LIMPA A LOJA ===
+-- === O RESET QUE NÃO TRAVA E NÃO LIMPA A LOJA ===
 function reset()
-    g_settings.setNode('control_buttons', {})
     buttonConfigs = {}
     buttonOrder = {}
+    
+    local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
     local optionsPanel = optionsController.ui.onPanel.options
-    if optionsPanel then
-        for _, button in ipairs(optionsPanel:getChildren()) do
-            local id = button:getId()
-            if id then
-                button:setVisible(true)
-                buttonConfigs[id] = {
-                    visible = true,
-                    tooltip = button:getTooltip() or id
-                }
-                table.insert(buttonOrder, id)
+    
+    local function clearPanel(panel)
+        if not panel then return end
+        for _, button in ipairs(panel:getChildren()) do
+            if button.originalPanel ~= "specials" then
+                local id = button:getId()
+                if id then
+                    -- A MÁGICA DO RESET: Puxa todos os botões escondidos de volta para a tela
+                    button:setVisible(true) 
+                    
+                    buttonConfigs[id] = {
+                        visible = true,
+                        tooltip = button:getTooltip() or id
+                    }
+                    table.insert(buttonOrder, id)
+                end
             end
         end
     end
+    
+    clearPanel(optionsPanel)
+    clearPanel(rightGamePanel)
+    
+    saveButtonConfig()
     updateDisplayedButtonsList()
     updateAvailableButtonsList()
     reorderButtons()
@@ -577,21 +686,27 @@ function initControlButtons()
     buttonConfigs = config.buttons or {}
     buttonOrder = config.order or {}
     local currentButtons = {}
-    for _, button in ipairs(optionsController.ui.onPanel.options:getChildren()) do
-        local id = button:getId()
-        if id then
-            currentButtons[id] = true
-            if not buttonConfigs[id] then
-                buttonConfigs[id] = {
-                    visible = button:isVisible(),
-                    tooltip = button:getTooltip() or id
-                }
+    
+    local rightGamePanel = modules.client_topmenu.getRightGameButtonsPanel()
+    local optionsPanel = optionsController.ui.onPanel.options
+    local targetPanel = (modules.game_interface.currentViewMode == 2) and rightGamePanel or optionsPanel
 
-                if button:isVisible() and not table.find(buttonOrder, id) then
+    for _, button in ipairs(targetPanel:getChildren()) do
+        if button.originalPanel ~= "specials" then
+            local id = button:getId()
+            if id then
+                currentButtons[id] = true
+                if not buttonConfigs[id] then
+                    -- A MÁGICA: Botões novos nascem 100% visíveis por padrão!
+                    buttonConfigs[id] = {
+                        visible = true,
+                        tooltip = button:getTooltip() or id
+                    }
                     table.insert(buttonOrder, id)
+                    button:setVisible(true)
+                else
+                    button:setVisible(buttonConfigs[id].visible)
                 end
-            else
-                button:setVisible(buttonConfigs[id].visible)
             end
         end
     end

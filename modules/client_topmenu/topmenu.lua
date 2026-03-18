@@ -473,7 +473,7 @@ function getTopMenu()
 end
 
 function getRightGameButtonsPanel()
-    return topLeftTogglesPanel
+    return rightGameButtonsPanel -- Agora sim, o painel correto que some no Login!
 end
 
 function toggle()
