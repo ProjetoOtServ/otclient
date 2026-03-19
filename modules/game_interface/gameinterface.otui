@@ -281,10 +281,10 @@ UIWidget
     anchors.left: gameLeftExtraPanel.right
     anchors.right: gameRightExtraPanel.left
     anchors.bottom: parent.bottom
-    height: 6
+    height: 0
     image-source: /images/ui/actionbar/splitterActBottom
-    size: 300 6
-    opacity: 100
+    size: 300 0
+    opacity: 0
     margin-right: 1
     relative-margin: bottom
     margin-bottom: 200

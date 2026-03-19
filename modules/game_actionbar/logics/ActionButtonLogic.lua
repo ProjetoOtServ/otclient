@@ -639,6 +639,40 @@ function configureButtonMouseRelease(button)
                     clearButton(button, true)
                 end)
             end
+
+            menu:addSeparator()
+            local barID, _ = string.match(button:getId(), "(%d+)%.(%d+)")
+            local barIndex = tonumber(barID)
+            local actionBar = actionBars[barIndex]
+            
+            if actionBar then
+                local lockText = actionBar.locked and tr('Unlock Action Bar') or tr('Lock Action Bar')
+                menu:addOption(lockText, function()
+                    local optionKey, startPos, endPos
+                    if barIndex >= 1 and barIndex <= 3 then
+                        optionKey, startPos, endPos = "actionBarBottomLocked", 1, 3
+                    elseif barIndex >= 4 and barIndex <= 6 then
+                        optionKey, startPos, endPos = "actionBarLeftLocked", 4, 6
+                    elseif barIndex >= 7 and barIndex <= 9 then
+                        optionKey, startPos, endPos = "actionBarRightLocked", 7, 9
+                    end
+                    
+                    if optionKey then
+                        local newState = ApiJson.toggleLockGroup(optionKey, startPos, endPos)
+                        for i = startPos, endPos do
+                            local bar = actionBars[i]
+                            if bar then
+                                bar.locked = newState
+                                local handle = bar:getChildById('dragHandle')
+                                if handle then
+                                    handle:setVisible(not newState)
+                                end
+                            end
+                        end
+                    end
+                end)
+            end
+
             if button.item and button.item:getItemId() > 100 then
                 if modules.game_bot then
                     menu:addSeparator()

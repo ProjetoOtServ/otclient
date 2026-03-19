@@ -258,7 +258,7 @@ end
 function extendedView(extendedView)
     if extendedView then
         if not iconTopMenu then
-            iconTopMenu = modules.client_topmenu.addTopRightToggleButton('miniMap', tr('Show miniMap'),
+            iconTopMenu = modules.client_topmenu.addRightGameToggleButton('miniMap', tr('Show miniMap'),
                 '/images/topbuttons/minimap', toggle)
             iconTopMenu:setOn(mapController.ui:isVisible())
             mapController.ui:setBorderColor('black')

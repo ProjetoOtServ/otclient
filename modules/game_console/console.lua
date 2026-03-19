@@ -177,6 +177,25 @@ local communicationSettings = {
     whitelistedPlayers = {}
 }
 
+-- === MEMÓRIA DO CONSOLE FLUTUANTE ===
+function saveConsolePosition(pos)
+    -- Usamos o setNode (que sabemos que a sua versão suporta) para salvar a tabela
+    local posNode = {x = pos.x, y = pos.y}
+    g_settings.setNode("consolePosition", posNode)
+end
+
+function getConsolePosition()
+    -- Lemos o nó inteiro e verificamos se ele existe em vez de usar hasNode
+    local posNode = g_settings.getNode("consolePosition")
+    if posNode and posNode.x and posNode.y then
+        return {
+            x = posNode.x,
+            y = posNode.y
+        }
+    end
+    return nil
+end
+
 function init()
     connect(g_game, {
         onTalk = onTalk,
@@ -1721,6 +1740,16 @@ function onTalk(name, level, mode, message, channelId, creaturePos)
         addText(composedMessage, speaktype, name .. '\'...', name)
     elseif speaktype.private then
         addPrivateText(composedMessage, speaktype, name, false, name)
+
+        if modules.client_options.getOption('openChatOnPrivate') then
+            if not gameBottomPanel:isVisible() then
+                extendedViewHide(false)
+            end
+            if consoleToggleChat and consoleToggleChat:isChecked() then
+                toggleChat()
+            end
+        end
+
         if modules.client_options.getOption('showPrivateMessagesOnScreen') and speaktype ~=
             SpeakTypesSettings.privateNpcToPlayer then
             modules.game_textmessage.displayPrivateMessage(name .. ':\n' .. message)
@@ -2189,22 +2218,66 @@ function onTextChange(text)
     end
 end
 
+-- === ATIVA/DESATIVA O MODO JANELA LIVRE DO CHAT ===
 function setExtendedView(bool)
+    if not consolePanel then return end
+
+    -- Busca os botões com segurança, sem forçar erros se eles não existirem
+    local btnDrag = consolePanel:getChildById('extendedViewDraggable')
+    local btnHide = consolePanel:getChildById('extendedViewHide')
+
     if bool then
-        consolePanel:setMarginRight(10)
-        consolePanel:setMarginBottom(10)
-        consolePanel:getChildById('extendedViewDraggable'):show()
-        consolePanel:getChildById('extendedViewHide'):show()
-        consolePanel:getChildById('extendedViewHide'):setChecked(not gameBottomPanel:isVisible())
+        -- MODO LIVRE
+        gameBottomPanel:removeAnchor(AnchorBottom)
+        gameBottomPanel:removeAnchor(AnchorLeft)
+        gameBottomPanel:removeAnchor(AnchorRight)
+        gameBottomPanel:removeAnchor(AnchorTop)
+        
+        gameBottomPanel:setSize({width = 450, height = 200})
+        
+        local savedPos = getConsolePosition()
+        if savedPos then
+            gameBottomPanel:setPosition(savedPos)
+        else
+            local rootSize = modules.game_interface.getRootPanel():getSize()
+            gameBottomPanel:setPosition({x = 50, y = rootSize.height - 250})
+        end
+
+        gameBottomPanel:setDraggable(true)
+        
+        gameBottomPanel.onPositionChange = function(widget)
+            if widget:getX() > 0 and widget:getY() > 0 then
+                saveConsolePosition(widget:getPosition())
+            end
+        end
+
+        -- Mostra os botões apenas se eles tiverem sido carregados com sucesso no .otui
+        if btnDrag then btnDrag:show() end
+        if btnHide then 
+            btnHide:show()
+            -- Proteção extra para não chamar funções inexistentes
+            if btnHide.setChecked then
+                btnHide:setChecked(not gameBottomPanel:isVisible())
+            end
+        end
     else
-        consolePanel:setMarginRight(0)
-        consolePanel:setMarginBottom(0)
-        consolePanel:getChildById('extendedViewDraggable'):hide()
-        consolePanel:getChildById('extendedViewHide'):hide()
+        -- MODO FIXO
+        gameBottomPanel.onPositionChange = nil
+        
+        gameBottomPanel:addAnchor(AnchorBottom, "parent", AnchorBottom)
+        gameBottomPanel:addAnchor(AnchorLeft, "parent", AnchorLeft)
+        gameBottomPanel:addAnchor(AnchorRight, "parent", AnchorRight)
+        
+        gameBottomPanel:setHeight(160) 
+        gameBottomPanel:setDraggable(false)
+
+        -- Oculta os botões apenas se eles existirem
+        if btnDrag then btnDrag:hide() end
+        if btnHide then btnHide:hide() end
+        
         gameBottomPanel:show(true)
-        destroyButtonChat()
+        if destroyButtonChat then destroyButtonChat() end
     end
-    gameBottomPanel:setDraggable(not bool)
 end
 
 function extendedViewDraggable(bool)
@@ -2271,19 +2344,21 @@ function returnChat()
     gameBottomPanel:setPhantom(false)
 end
 
+-- === SISTEMA DE MINIMIZAR O CHAT FLUTUANTE ===
 function extendedViewHide(bool)
     if bool then
+        -- MODO MINIMIZADO: Esconde a caixa do chat e cria o ícone na tela
         gameBottomPanel:hide()
         createButtonChat()
-        extendedViewCanSee(extendedViewButtonShowAlphaChat:isOn())
+        
+        if consoleToggleChat and not consoleToggleChat.isChecked then
+            toggleChat()
+        end
+        modules.game_interface.getRootPanel():focus()
     else
+        -- MODO RESTAURADO: Mostra o chat de volta, desmarca o botão e destrói o ícone
         consolePanel:getChildById('extendedViewHide'):setChecked(false)
         gameBottomPanel:show(true)
-        extendedViewCanSee(false)
-        returnChat()
-        if extendedViewButtonShowAlphaChat then
-            extendedViewButtonShowAlphaChat:setOn(false)
-        end
         destroyButtonChat()
     end
 end
@@ -2292,49 +2367,36 @@ function createButtonChat()
     if extendedViewButtonToggleChat then
         return
     end
+    
     local mapPanel = modules.game_interface.getMapPanel()
+    
+    -- Checagem de segurança que já existia no seu código para rodar no Mobile/PC
     local stringNameMobileOrPc = g_platform.isMobile() and "GameAction" or "MainToggleButton"
+    
     extendedViewButtonToggleChat = g_ui.createWidget(stringNameMobileOrPc, mapPanel)
-    extendedViewButtonToggleChat:setId("test")
-    local hightMobileWidget = 0
+    extendedViewButtonToggleChat:setId("restoreChatButton")
+    
     if g_platform.isMobile() then
-        hightMobileWidget = modules.game_joystick.getPanel():getHeight()
+        local hightMobileWidget = modules.game_joystick.getPanel():getHeight()
         extendedViewButtonToggleChat.image:setImageSource("/images/game/mobile/chat")
         extendedViewButtonToggleChat:addAnchor(AnchorRight, "parent", AnchorRight)
-        extendedViewButtonToggleChat:setMarginBottom(hightMobileWidget)
         extendedViewButtonToggleChat:setMarginRight(15)
         extendedViewButtonToggleChat:setMarginBottom(hightMobileWidget)
         extendedViewButtonToggleChat:setSize("60 60")
     else
         extendedViewButtonToggleChat:setIcon("/images/game/npcicons/icon_chat")
+        -- Ancoramos o botão de restaurar no canto esquerdo da tela do jogo para ficar fácil de achar
+        extendedViewButtonToggleChat:addAnchor(AnchorLeft, "parent", AnchorLeft)
+        extendedViewButtonToggleChat:setMarginLeft(10)
         extendedViewButtonToggleChat:setMarginBottom(10)
         extendedViewButtonToggleChat:setSize("30 23")
-        extendedViewButtonToggleChat:addAnchor(AnchorLeft, "parent", AnchorLeft)
     end
+    
     extendedViewButtonToggleChat:addAnchor(AnchorBottom, "parent", AnchorBottom)
-    extendedViewButtonToggleChat.onClick = function(a, b)
-        extendedViewHide(modules.game_interface.currentViewMode ~= 2)
-    end
-    extendedViewButtonShowAlphaChat = g_ui.createWidget(stringNameMobileOrPc, mapPanel)
-    extendedViewButtonShowAlphaChat:setIcon("/images/game/npcicons/icon_chat")
-    extendedViewButtonShowAlphaChat:addAnchor(AnchorBottom, "parent", AnchorBottom)
-    if g_platform.isMobile() then
-        extendedViewButtonShowAlphaChat:setMarginBottom(hightMobileWidget)
-        extendedViewButtonShowAlphaChat:setSize("60 60")
-        extendedViewButtonShowAlphaChat:addAnchor(AnchorRight, "test", AnchorLeft)
-    else
-        extendedViewButtonShowAlphaChat:setSize("30 23")
-        extendedViewButtonShowAlphaChat:addAnchor(AnchorLeft, "test", AnchorRight)
-        extendedViewButtonShowAlphaChat:setMarginBottom(10)
-    end
-    extendedViewButtonShowAlphaChat:setMarginLeft(5)
-    extendedViewButtonShowAlphaChat.onClick = function(a, b)
-        if extendedViewButtonShowAlphaChat:isOn() then
-            extendedViewButtonShowAlphaChat:setOn(false)
-        else
-            extendedViewButtonShowAlphaChat:setOn(true)
-        end
-        extendedViewCanSee(extendedViewButtonShowAlphaChat:isOn())
+    
+    -- Quando o jogador clicar no ícone, ele chama a função para desocultar
+    extendedViewButtonToggleChat.onClick = function()
+        extendedViewHide(false)
     end
 end
 
@@ -2342,10 +2404,6 @@ function destroyButtonChat()
     if extendedViewButtonToggleChat and not extendedViewButtonToggleChat:isDestroyed() then
         extendedViewButtonToggleChat:destroy()
         extendedViewButtonToggleChat = nil
-    end
-    if extendedViewButtonShowAlphaChat and not extendedViewButtonShowAlphaChat:isDestroyed() then
-        extendedViewButtonShowAlphaChat:destroy()
-        extendedViewButtonShowAlphaChat = nil
     end
 end
 

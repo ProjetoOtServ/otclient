@@ -96,6 +96,17 @@ UIWidget
     height: 22
   
     OptionCheckBox
+      id: openChatOnPrivate
+      !text: tr('Open Chat on Private Message')
+
+  SmallReversedQtPanel
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 7
+    height: 22
+  
+    OptionCheckBox
       id: showLootMessagesOnScreen
       !text: tr('Show loot messages on screen')
 

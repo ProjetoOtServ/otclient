@@ -165,6 +165,7 @@ return {
     showPrivateMessagesInConsole      = true,
     showOthersStatusMessagesInConsole = false,
     showPrivateMessagesOnScreen       = true,
+    openChatOnPrivate                 = true,
     showLootMessagesOnScreen          = true,
     showHighlightedUnderline          = {
         value = false,

@@ -122,6 +122,12 @@ function setupActionBar(n)
     local locked = barState.isLocked and true or false
     actionbar.tabBar.onMouseWheel = nil
     actionbar.locked = locked
+    
+    local handle = actionbar:getChildById('dragHandle')
+    if handle then
+        handle:setVisible(not locked)
+    end
+    
     local items = {}
     for i = 1, 50 do
         local layout = n < 4 and 'ActionButton' or 'SideActionButton'
@@ -263,6 +269,14 @@ ActionBarController = Controller:new()
 function ActionBarController:onInit()
     g_ui.importStyle("otui/style.otui")
     gameRootPanel = modules.game_interface.getRootPanel()
+    
+    connect(g_app, { 
+        onExit = function()
+            ApiJson.saveData()
+            g_settings.save()
+        end 
+    })
+
     mouseGrabberWidget = g_ui.createWidget('UIWidget')
     mouseGrabberWidget:setVisible(false)
     mouseGrabberWidget:setFocusable(false)
@@ -271,6 +285,7 @@ end
 
 function ActionBarController:onTerminate()
     ApiJson.saveData()
+    g_settings.save()
     for _, actionbar in pairs(actionBars) do
         if actionbar and not actionbar:isDestroyed() then
             actionbar:destroy()

@@ -138,50 +138,46 @@ BottomSliders < Panel
     size: 17 17
     anchors.top: parent.top
     anchors.left: parent.left
-    anchors.right: parent.horizontalCenter
-    margin-right: 1
     @onClick: modules.game_actionbar.moveActionButtons(self)
     image-source: /images/game/actionbar/arrow-down
     image-clip: 0 0 17 17
     on: true
-
     $pressed:
       image-clip: 0 17 17 17
-
     $!on:
       image-clip: 0 34 17 17
-      tooltip: No further action buttons in this direction
-
     $on:
-      tooltip: Move to the next action button
+      tooltip: Mover para a próxima hotkey
 
   UIButton
     id: last
     size: 17 17
     anchors.top: parent.top
-    anchors.left: parent.horizontalCenter
     anchors.right: parent.right
-    @onClick: modules.game_actionbar.moveActionButtons(self)
-    image-source: /images/game/actionbar/double-arrow-down
-    image-clip: 0 0 17 17
-    on: true
-
+    @onClick: modules.game_actionbar.toggleActionBar(self:getParent():getParent())
+    image-source: /images/ui/console_buttons
+    image-clip: 0 0 16 16
+    tooltip: Mostrar/Ocultar Action Bar
     $pressed:
-      image-clip: 0 17 17 17
+      image-clip: 16 0 16 16
 
-    $!on:
-      image-clip: 0 34 17 17
-      tooltip: No further action buttons in this direction
-
-    $on:
-      tooltip: Move to the last action button
-
-Panel
+UIWindow
   id: actionBar
-  focusable: false
+  focusable: true
+  phantom: true
+  draggable: true
+
+  UIWidget
+    id: dragHandle
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    width: 10
+    background-color: #585858AA
+    draggable: true
 
   $on:
-    width: 34
+    width: 44
     visible: true
 
   $!on:
@@ -191,16 +187,16 @@ Panel
   TopSliders
     id: prevPanel
     anchors.top: parent.top
-    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.right: parent.right
+    margin-right: 2
 
   ScrollablePanel
     id: tabBar
-    anchors.top: prev.bottom
+    anchors.top: prevPanel.bottom
     anchors.bottom: nextPanel.top
-    anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 1
-    margin-bottom: 4
+    width: 34
+    margin-right: 2
     clipping: true
     vertical-scrollbar: actionScroll
     layout: verticalBox
@@ -218,5 +214,5 @@ Panel
   BottomSliders
     id: nextPanel
     anchors.bottom: parent.bottom
-    anchors.horizontalCenter: parent.horizontalCenter
-    margin-bottom: 2
+    anchors.right: parent.right
+    margin-right: 2

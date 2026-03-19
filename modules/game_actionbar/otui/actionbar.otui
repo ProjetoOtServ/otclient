@@ -139,55 +139,48 @@ RightSliders < Panel
     size: 17 17
     anchors.top: parent.top
     anchors.right: parent.right
-    margin-right: -1
     @onClick: modules.game_actionbar.moveActionButtons(self)
     image-source: /images/game/actionbar/arrow-right
     image-clip: 0 0 17 17
     on: true
-
     $pressed:
       image-clip: 0 17 17 17
-
     $!on:
       image-clip: 0 34 17 17
-      tooltip: No further action buttons in this direction
-
     $on:
-      tooltip: Move to the next action button
+      tooltip: Mover para a próxima hotkey
 
   UIButton
     id: last
     size: 17 17
-    anchors.top: parent.top
+    anchors.bottom: parent.bottom
     anchors.right: parent.right
-    margin-right: -1
-    margin-top: 17
-    @onClick: modules.game_actionbar.moveActionButtons(self)
-    on: true
-    image-source: /images/game/actionbar/double-arrow-right
-    image-clip: 0 0 17 17
-
+    @onClick: modules.game_actionbar.toggleActionBar(self:getParent():getParent())
+    image-source: /images/ui/console_buttons
+    image-clip: 0 0 16 16
+    tooltip: Mostrar/Ocultar Action Bar
     $pressed:
-      image-clip: 0 17 17 17
+      image-clip: 16 0 16 16
 
-    $!on:
-      image-clip: 0 34 17 17
-      tooltip: No further action buttons in this direction
-
-    $on:
-      tooltip: Move to the last action button
-
-Panel
+UIWindow
   id: actionBar
-  focusable: false
+  focusable: true
+  phantom: true
+  draggable: true
   image-source: /images/ui/actionbar/actionbar_background-light
   image-border: 1
-  //margin-top: 2
-  padding-top: 3
-  padding-bottom: 1
+
+  UIWidget
+    id: dragHandle
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 10
+    background-color: #585858AA
+    draggable: true
 
   $on:
-    height: 36
+    height: 44
     visible: true
 
   $!on:
@@ -197,19 +190,17 @@ Panel
   LeftSliders
     id: prevPanel
     anchors.left: parent.left
-    anchors.verticalCenter: parent.verticalCenter
+    anchors.bottom: parent.bottom
     margin-left: 1
-    margin-top: -1
+    margin-bottom: 2
 
   ScrollablePanel
     id: tabBar
-    anchors.top: parent.top
     anchors.bottom: parent.bottom
-    anchors.left: prev.right
+    anchors.left: prevPanel.right
     anchors.right: nextPanel.left
-    //margin-left: 1
-    margin-right: 4
-    margin-top: -2
+    height: 34
+    margin-bottom: 2
     horizontal-scrollbar: actionScroll
     layout: horizontalBox
     @onGeometryChange: modules.game_actionbar.updateVisibleWidgets()
@@ -226,6 +217,6 @@ Panel
   RightSliders
     id: nextPanel
     anchors.right: parent.right
-    anchors.verticalCenter: parent.verticalCenter
+    anchors.bottom: parent.bottom
     margin-right: 1
-    margin-top: -1
+    margin-bottom: 2

@@ -173,7 +173,13 @@ local function createButton(id, description, image, callback, special, front, in
     button:setId(id)
     button:setTooltip(description)
     button:setSize('20 20')
-    button:setImageSource(image)
+    if string.find(image, "topbuttons") then
+        button:setImageSource('/images/options/button_empty')
+        button:setIcon(image)
+        button:setIconColor('#ffffffff')
+    else
+        button:setImageSource(image)
+    end
     button:setImageClip('0 0 20 20')
     button.onMouseRelease = function(widget, mousePos, mouseButton)
         if widget:containsPoint(mousePos) and mouseButton ~= MouseMidButton then
