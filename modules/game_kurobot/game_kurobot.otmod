@@ -1,0 +1,12 @@
+Module
+  name: game_kurobot
+  description: KuroBot advanced helper module
+  author: AI
+  website: https://github.com/edubart/otclient
+  sandboxed: true
+  autoload: true
+  autoload-priority: 1000
+  dependencies: [ game_interface, client_topmenu, game_mainpanel ]
+  scripts: [ kurobot, heal ]
+  @onLoad: init()
+  @onUnload: terminate()

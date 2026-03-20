@@ -1,0 +1,180 @@
+Panel
+  layout:
+    type: verticalBox
+    spacing: 6
+    fit-children: true
+
+  // ── Tools Helper Section ─────────────────────────────
+  KuroBotSection
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+    KuroBotSectionTitle
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      text: Tools Helper
+
+    // 2x2 grid row 1: Mana Training (left) | Auto Haste (right)
+    Panel
+      id: toolsRow1
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 70
+      margin: 4
+      background-color: alpha
+
+      // Mana Training
+      Label
+        id: manaLabel
+        anchors.top: parent.top
+        anchors.left: parent.left
+        text: Mana Training
+        color: #d4d4d8
+        font: verdana-11px-rounded
+
+      KuroBotIconSlot
+        id: manaIcon
+        anchors.top: manaLabel.bottom
+        anchors.left: parent.left
+        margin-top: 4
+        image-source: /images/icons/mana_training.png
+
+      KuroBotCheckBox
+        id: manaEnable
+        anchors.top: manaIcon.top
+        anchors.left: manaIcon.right
+        margin-left: 8
+        text: Enable
+
+      KuroBotSpinBox
+        id: manaPercent
+        anchors.top: manaEnable.bottom
+        anchors.left: manaIcon.right
+        margin-left: 8
+        margin-top: 4
+
+      KuroBotInfoButton
+        anchors.verticalCenter: prev.verticalCenter
+        anchors.left: prev.right
+        margin-left: 4
+
+      // Auto Haste
+      Label
+        id: hasteLabel
+        anchors.top: parent.top
+        anchors.right: parent.right
+        margin-right: 4
+        text: Auto Haste
+        color: #d4d4d8
+        font: verdana-11px-rounded
+
+      KuroBotIconSlot
+        id: hasteIcon
+        anchors.top: hasteLabel.bottom
+        anchors.right: parent.right
+        margin-top: 4
+
+      KuroBotCheckBox
+        id: hasteEnable
+        anchors.top: hasteIcon.top
+        anchors.right: hasteIcon.left
+        margin-right: 8
+        text: Enable
+
+      KuroBotCheckBox
+        id: hastePZCast
+        anchors.top: hasteEnable.bottom
+        anchors.right: hasteIcon.left
+        margin-right: 8
+        margin-top: 4
+        text: PZ Cast
+
+    // 2x2 grid row 2: Exercise Training (left) | Others Tools (right)
+    Panel
+      id: toolsRow2
+      anchors.top: toolsRow1.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 80
+      margin: 4
+      margin-top: 6
+      background-color: alpha
+
+      // Exercise Training
+      Label
+        id: exerciseLabel
+        anchors.top: parent.top
+        anchors.left: parent.left
+        text: Exercise Training
+        color: #d4d4d8
+        font: verdana-11px-rounded
+
+      KuroBotIconSlot
+        id: exerciseIcon
+        anchors.top: exerciseLabel.bottom
+        anchors.left: parent.left
+        margin-top: 4
+        image-source: /images/icons/exercise_weapon.png
+
+      KuroBotCheckBox
+        id: exerciseEnable
+        anchors.top: exerciseIcon.top
+        anchors.left: exerciseIcon.right
+        margin-left: 8
+        text: Enable
+
+      KuroBotComboBox
+        id: exerciseSelect
+        anchors.top: exerciseEnable.bottom
+        anchors.left: exerciseIcon.right
+        margin-left: 8
+        margin-top: 4
+        width: 100
+
+      KuroBotInfoButton
+        anchors.verticalCenter: prev.verticalCenter
+        anchors.left: prev.right
+        margin-left: 4
+
+      // Others Tools
+      Label
+        id: othersLabel
+        anchors.top: parent.top
+        anchors.right: parent.right
+        margin-right: 4
+        text: Others Tools
+        color: #d4d4d8
+        font: verdana-11px-rounded
+
+      KuroBotInfoButton
+        anchors.verticalCenter: othersLabel.verticalCenter
+        anchors.left: othersLabel.right
+        margin-left: 4
+
+      KuroBotCheckBox
+        id: changeGoldCheck
+        anchors.top: othersLabel.bottom
+        anchors.right: parent.right
+        margin-right: 4
+        margin-top: 6
+        text: Change Gold
+        checked: true
+
+      KuroBotCheckBox
+        id: autoEatFoodCheck
+        anchors.top: prev.bottom
+        anchors.right: parent.right
+        margin-right: 4
+        margin-top: 4
+        text: Auto Eat Food
+        checked: true
+
+      KuroBotCheckBox
+        id: autoReconnectCheck
+        anchors.top: prev.bottom
+        anchors.right: parent.right
+        margin-right: 4
+        margin-top: 4
+        text: Auto Reconnect

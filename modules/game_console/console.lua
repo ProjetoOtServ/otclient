@@ -1745,7 +1745,7 @@ function onTalk(name, level, mode, message, channelId, creaturePos)
             if not gameBottomPanel:isVisible() then
                 extendedViewHide(false)
             end
-            if consoleToggleChat and consoleToggleChat:isChecked() then
+            if consoleToggleChat and consoleToggleChat.isChecked then
                 toggleChat()
             end
         end
