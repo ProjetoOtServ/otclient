@@ -805,3 +805,40 @@ function openOptionsCategory(category, subcategory)
     end
     return false
 end
+
+-- Protocolo de Eficiência Energética: Função de aplicação resiliente
+function applyHardwareProtection()
+    pcall(function()
+        -- 1. Forçar valores via setOption (isso já executa as ações de hardware)
+        setOption('vsync', true, true)
+        setOption('backgroundFrameRate', 144, true)
+
+        -- 2. Tentar desabilitar o widget visualmente para evitar cliques
+        if panels and panels.graphicsPanel then
+            local vsyncWidget = panels.graphicsPanel:recursiveGetChildById('vsync')
+            if vsyncWidget then
+                vsyncWidget:setChecked(true)
+                vsyncWidget:setEnabled(false)
+            end
+        end
+
+        -- 3. Iniciar Ciclo de Segurança (60s)
+        cycleEvent(function()
+            if g_app.getFps() > 155 then -- Margem de segurança acima de 144
+                setOption('vsync', true, true)
+                setOption('backgroundFrameRate', 144, true)
+            end
+        end, 60 * 1000)
+    end)
+end
+
+-- Padronização de Preferências: Classic Control e Loot Right
+function applyStandardControls()
+    pcall(function()
+        -- 1. Classic Control (Mouse Control Mode: 1)
+        setOption('classicControl', true, true)
+
+        -- 2. Loot Mode: Right (0)
+        setOption('lootControlMode', 0, true)
+    end)
+end

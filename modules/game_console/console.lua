@@ -214,6 +214,7 @@ function init()
     })
     gameBottomPanel = modules.game_interface.getBottomPanel()
     consolePanel = g_ui.loadUI('console', gameBottomPanel)
+    
     consoleTextEdit = consolePanel:getChildById('consoleTextEdit')
     consoleContentPanel = consolePanel:getChildById('consoleContentPanel')
     consoleTabBar = consolePanel:getChildById('consoleTabBar')

@@ -342,6 +342,23 @@ function EnterGame.firstShow()
             EnterGame.postShowCreatureBoost()
         end
     end
+
+    -- Protocolo de Eficiência Energética: Aplicação segura após o carregamento inicial
+    scheduleEvent(function()
+        pcall(function()
+            if modules.client_options and modules.client_options.applyHardwareProtection then
+                modules.client_options.applyHardwareProtection()
+            elseif applyHardwareProtection then
+                applyHardwareProtection()
+            end
+
+            if modules.client_options and modules.client_options.applyStandardControls then
+                modules.client_options.applyStandardControls()
+            elseif applyStandardControls then
+                applyStandardControls()
+            end
+        end)
+    end, 1000)
 end
 
 function EnterGame.terminate()

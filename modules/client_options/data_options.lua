@@ -2,7 +2,17 @@ return {
     vsync                             = {
         value = true,
         action = function(value, options, controller, panels, extraWidgets)
-            g_window.setVerticalSync(value)
+            -- Protocolo de Eficiência Energética: Sempre ativo
+            g_window.setVerticalSync(true)
+
+            -- Forçar visual do checkbox se o painel estiver carregado
+            if panels and panels.graphicsPanel then
+                local widget = panels.graphicsPanel:recursiveGetChildById('vsync')
+                if widget then
+                    widget:setChecked(true)
+                    widget:setEnabled(false)
+                end
+            end
         end
     },
     showFps                           = {
@@ -186,7 +196,7 @@ return {
     },
     openMaximized                     = false,
     backgroundFrameRate               = {
-        value = 501,
+        value = 144,
         action = function(value, options, controller, panels, extraWidgets)
             local text, v = value, value
             if value <= 0 or value >= 501 then

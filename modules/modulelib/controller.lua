@@ -68,7 +68,7 @@ Controller = {
     htmlId = nil,
     keyboardAnchor = nil,
     scheduledEvents = nil,
-    keyboardEvents = nil
+    keyboardEvents = nil,
 }
 
 if not G_CONTROLLER_CALLED then
@@ -200,6 +200,7 @@ function Controller:loadUI(name, parent)
     end
 
     self.ui = g_ui.loadUI('/' .. self.name .. '/' .. self.dataUI.name, self.dataUI.parent or g_ui.getRootWidget())
+    
 end
 
 function Controller:setKeyboardAnchor(widget)
