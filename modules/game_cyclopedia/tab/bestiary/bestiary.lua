@@ -13,7 +13,7 @@ Cyclopedia.storedTrackerData = Cyclopedia.storedTrackerData or nil
 Cyclopedia.storedBosstiaryTrackerData = Cyclopedia.storedBosstiaryTrackerData or nil
 local animusMasteryPoints = 0
 
-function Cyclopedia.loadBestiaryOverview(name, creatures, animusMasteryPoints)
+function Cyclopedia.loadBestiaryOverview(name, creatures, masteryPoints)
     if (name == "Result" or name == "") and #creatures > 0 then
         if #creatures == 1 then
             g_game.requestBestiarySearch(creatures[1].id)
@@ -25,8 +25,8 @@ function Cyclopedia.loadBestiaryOverview(name, creatures, animusMasteryPoints)
         Cyclopedia.loadBestiaryCreatures(creatures)
     end
 
-    if animusMasteryPoints and animusMasteryPoints > 0 then
-        animusMasteryPoints = animusMasteryPoints
+    if masteryPoints and masteryPoints > 0 then
+        animusMasteryPoints = masteryPoints
     end
 end
 
@@ -139,14 +139,10 @@ function Cyclopedia.CreateCreatureItems(data)
             widget.Title:setText(tr("Very Rare") .. ":")
         end
 
-        for i = 1, 15 do
-            local item = g_ui.createWidget("BestiaryItem", widget.Items)
-            item:setId(i)
-        end
-
         for itemIndex, itemData in ipairs(data[index]) do
             local thing = g_things.getThingType(itemData.id, ThingCategoryItem)
-            local itemWidget = UI.ListBase.CreatureInfo.ItemsBase.Itemlist[index].Items[itemIndex]
+            local itemWidget = g_ui.createWidget("BestiaryItem", widget.Items)
+            itemWidget:setId(itemIndex)
             itemWidget:setItemId(itemData.id)
             itemWidget.id = itemData.id
             itemWidget.classification = thing:getClassification()

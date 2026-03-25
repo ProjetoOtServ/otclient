@@ -1056,15 +1056,9 @@ BestiaryItem < UIItem
   image-source: /images/ui/2pixel_up_frame_borderimage
   image-border: 10
   size: 34 34
-  anchors.verticalCenter: parent.verticalCenter
   padding: 1
   $checked:
     image-source: /images/ui/panel_flat
-  $first:
-    anchors.left: parent.left
-  $!first:
-    anchors.left: prev.right
-    margin-left: 2
   UIWidget
     id: undefinedItem
     image-source: /images/ui/undefined_item
@@ -1089,6 +1083,10 @@ BestiaryItemGroup < UIWidget
     id: Items
     anchors.fill: parent
     margin-left: 108
+    layout:
+      type: horizontalBox
+      spacing: 2
+      align-center: true
   Label
     id: Title
     anchors.left: parent.left
