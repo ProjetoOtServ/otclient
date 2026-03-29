@@ -116,6 +116,10 @@ void UIMap::setDrawManaBar(const bool enable) { m_mapView->setDrawManaBar(enable
 
 void UIMap::setDrawHarmony(const bool enable) { m_mapView->setDrawHarmony(enable); }
 
+void UIMap::setDrawLocalPlayerInformation(const bool enable) { m_mapView->setDrawLocalPlayerInformation(enable); }
+
+void UIMap::setDrawCreaturesInformation(const bool enable) { m_mapView->setDrawCreaturesInformation(enable); }
+
 void UIMap::setShader(std::string_view name, float fadein, float fadeout) { m_mapView->setShader(name, fadein, fadeout); }
 
 void UIMap::setMinimumAmbientLight(const float intensity) { m_mapView->setMinimumAmbientLight(intensity); }
@@ -133,6 +137,10 @@ bool UIMap::isLimitedVisibleDimension() { return m_mapView->isLimitedVisibleDime
 bool UIMap::isDrawingManaBar() { return m_mapView->isDrawingManaBar(); }
 
 bool UIMap::isSwitchingShader() { return m_mapView->isSwitchingShader(); }
+
+bool UIMap::isDrawingLocalPlayerInformation() { return m_mapView->isDrawingLocalPlayerInformation(); }
+
+bool UIMap::isDrawingCreaturesInformation() { return m_mapView->isDrawingCreaturesInformation(); }
 
 void UIMap::setShadowFloorIntensity(const float intensity) { m_mapView->setShadowFloorIntensity(intensity); }
 

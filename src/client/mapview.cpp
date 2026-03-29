@@ -236,6 +236,12 @@ void MapView::drawCreatureInformation() {
 
         creature->setCovered(isCovered);
 
+        if (creature->isLocalPlayer()) {
+            if (!m_drawLocalPlayerInformation) continue;
+        } else {
+            if (!m_drawCreaturesInformation) continue;
+        }
+
         creature->drawInformation(m_posInfo, transformPositionTo2D(creature->getPosition()), flags);
     }
 }

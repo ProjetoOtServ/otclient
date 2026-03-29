@@ -49,12 +49,16 @@ public:
     void setShader(std::string_view name, float fadein, float fadeout);
     void setMinimumAmbientLight(float intensity);
     void setDrawViewportEdge(bool force);
+    void setDrawLocalPlayerInformation(bool enable);
+    void setDrawCreaturesInformation(bool enable);
     bool isDrawingNames();
     bool isDrawingHealthBars();
     bool isDrawingLights();
     bool isLimitedVisibleDimension();
     bool isDrawingManaBar();
     bool isSwitchingShader();
+    bool isDrawingLocalPlayerInformation();
+    bool isDrawingCreaturesInformation();
     void setShadowFloorIntensity(float intensity);
     std::vector<CreaturePtr> getSpectators(bool multiFloor = false);
     std::vector<CreaturePtr> getSightSpectators(bool multiFloor = false);

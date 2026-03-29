@@ -303,6 +303,21 @@ return {
             panels.gameMapPanel:setDrawHarmony(value)
         end
     },
+    drawLocalPlayerInformation = {
+        value = true,
+        action = function(value, options, controller, panels, extraWidgets)
+            panels.gameMapPanel:setDrawLocalPlayerInformation(value)
+        end
+    },
+    drawCreaturesInformation = {
+        value = true,
+        action = function(value, options, controller, panels, extraWidgets)
+            panels.gameMapPanel:setDrawCreaturesInformation(value)
+        end
+    },
+    informationMode = {
+        value = 0,
+    },
     displayText                       = {
         value = true,
         action = function(value, options, controller, panels, extraWidgets)

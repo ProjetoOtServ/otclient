@@ -258,8 +258,8 @@ function init()
         navigateMessageHistory(-1)
     end, consolePanel)
   
-    g_keyboard.bindKeyDown('Enter', switchChatOnCall, consolePanel)
-    g_keyboard.bindKeyDown('Escape', disableChatOnCall, consolePanel)
+    g_keyboard.bindKeyDown('Enter', switchChatOnCall, gameRootPanel)
+    g_keyboard.bindKeyDown('Escape', disableChatOnCall, gameRootPanel)
     g_keyboard.bindKeyPress('Ctrl+A', function()
         consoleTextEdit:clearText()
     end, consolePanel)
@@ -438,19 +438,39 @@ end
 
 function switchChatOnCall()
     if not g_game.isOnline() or modules.game_hotkeys.areHotkeysDisabled() then
-        return
+        return false
     end
 
-    if isChatEnabled() and consoleToggleChat.isChecked then
-        toggleChat()
-    else
-        local message = consoleTextEdit:getText()
-        if message == '' then
-            if not isChatEnabled() or modules.client_options.getOption('returnDisablesChat') then
-                toggleChat()
-            end
-        end
+    -- Restaurar console se estiver escondido (minimizado)
+    if not gameBottomPanel:isVisible() then
+        extendedViewHide(false)
     end
+
+    -- Forçar Chat ON (WASD OFF) se estiver no modo WASD
+    if consoleToggleChat.isChecked then -- isChecked true significa 'Chat Off' (WASD On)
+        toggleChat()
+    end
+    
+    -- Dar foco imadiato para a caixa de texto para digitação (Garante o cursor piscando)
+    -- Adicionamos um pequeno delay (addEvent) para garantir que o widget esteja renderizado
+    addEvent(function()
+        if consoleTextEdit then
+            -- [DIAGNÓSTICO] Informa qual widget roubou o foco inicialmente
+            local focused = g_ui.getFocusedWidget()
+            if focused then
+                print("Foco atual antes de forçar: " .. focused:getId())
+            else
+                print("Foco atual: nil")
+            end
+
+            -- [RESOLUÇÃO] Força ativação, elevação e foco
+            consoleTextEdit:setActive(true)
+            consoleTextEdit:raise()
+            consoleTextEdit:focus()
+        end
+    end)
+    
+    return true -- Aceita o evento do Enter para não vazar
 end
 
 function disableChatOnCall()
@@ -1440,16 +1460,25 @@ end
 
 function sendCurrentMessage()
     local message = consoleTextEdit:getText()
-    if #message == 0 then
-        return
+    
+    -- Processar e enviar mensagem se houver texto
+    if #message > 0 then
+        sendMessage(message)
     end
-    if not isChatEnabled() then
-        return
-    end
+    
+    -- Limpar o texto e devolver o foco para o jogo (Ativando WASD)
     consoleTextEdit:clearText()
-
-    -- send message
-    sendMessage(message)
+    
+    -- Se o chat estava ON (WASD OFF), voltar para WASD
+    if not consoleToggleChat.isChecked then
+        toggleChat()
+    end
+    
+    -- Remover foco do chat e devolver para a janela principal (WASD Funcional)
+    -- Transfere o foco explicitamente para o mapa do jogo para liberar o WASD
+    modules.game_interface.getRootPanel():focus()
+    
+    return true -- Aceita o evento do Hotkey para não vazar
 end
 
 function addFilter(filter)
@@ -1742,14 +1771,9 @@ function onTalk(name, level, mode, message, channelId, creaturePos)
     elseif speaktype.private then
         addPrivateText(composedMessage, speaktype, name, false, name)
 
-        if modules.client_options.getOption('openChatOnPrivate') then
-            if not gameBottomPanel:isVisible() then
-                extendedViewHide(false)
-            end
-            if consoleToggleChat and consoleToggleChat.isChecked then
-                toggleChat()
-            end
-        end
+        -- Removido: O recebimento de mensagens privadas NÃO deve restaurar o console nem mudar para o Chat ON.
+        -- Isso garante que o WASD não seja interrompido por PMs.
+        -- if modules.client_options.getOption('openChatOnPrivate') then ... end
 
         if modules.client_options.getOption('showPrivateMessagesOnScreen') and speaktype ~=
             SpeakTypesSettings.privateNpcToPlayer then

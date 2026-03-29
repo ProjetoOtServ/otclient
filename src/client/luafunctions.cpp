@@ -1131,6 +1131,8 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<UIMap>("setDrawLights", &UIMap::setDrawLights);
     g_lua.bindClassMemberFunction<UIMap>("setLimitVisibleDimension", &UIMap::setLimitVisibleDimension);
     g_lua.bindClassMemberFunction<UIMap>("setDrawManaBar", &UIMap::setDrawManaBar);
+    g_lua.bindClassMemberFunction<UIMap>("setDrawLocalPlayerInformation", &UIMap::setDrawLocalPlayerInformation);
+    g_lua.bindClassMemberFunction<UIMap>("setDrawCreaturesInformation", &UIMap::setDrawCreaturesInformation);
     g_lua.bindClassMemberFunction<UIMap>("setKeepAspectRatio", &UIMap::setKeepAspectRatio);
     g_lua.bindClassMemberFunction<UIMap>("setShader", &UIMap::setShader);
     g_lua.bindClassMemberFunction<UIMap>("getShader", &UIMap::getShader);
@@ -1145,6 +1147,8 @@ void Client::registerLuaFunctions()
     g_lua.bindClassMemberFunction<UIMap>("isDrawingLights", &UIMap::isDrawingLights);
     g_lua.bindClassMemberFunction<UIMap>("isLimitedVisibleDimension", &UIMap::isLimitedVisibleDimension);
     g_lua.bindClassMemberFunction<UIMap>("isDrawingManaBar", &UIMap::isDrawingManaBar);
+    g_lua.bindClassMemberFunction<UIMap>("isDrawingLocalPlayerInformation", &UIMap::isDrawingLocalPlayerInformation);
+    g_lua.bindClassMemberFunction<UIMap>("isDrawingCreaturesInformation", &UIMap::isDrawingCreaturesInformation);
     g_lua.bindClassMemberFunction<UIMap>("isLimitVisibleRangeEnabled", &UIMap::isLimitVisibleRangeEnabled);
     g_lua.bindClassMemberFunction<UIMap>("isKeepAspectRatioEnabled", &UIMap::isKeepAspectRatioEnabled);
     g_lua.bindClassMemberFunction<UIMap>("isInRange", &UIMap::isInRange);

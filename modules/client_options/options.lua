@@ -88,20 +88,38 @@ local extraWidgets = {
 }
 
 local function toggleDisplays()
-    if options['displayNames'].value and options['displayHealth'].value and options['displayMana'].value and options['displayHarmony'].value then
-        setOption('displayNames', false)
-    elseif options['displayHealth'].value then
-        setOption('displayHealth', false)
-        setOption('displayMana', false)
-        setOption('displayHarmony', false)
-    else
-        if not options['displayNames'].value and not options['displayHealth'].value then
-            setOption('displayNames', true)
-        else
-            setOption('displayHealth', true)
-            setOption('displayMana', true)
-            setOption('displayHarmony', true)
-        end
+    local mode = (getOption('informationMode') or 0) + 1
+    if mode > 3 then mode = 0 end
+    
+    setOption('informationMode', mode)
+
+    local showPlayer = true
+    local showCreatures = true
+    local msg = ""
+
+    if mode == 0 then
+        showPlayer = true
+        showCreatures = true
+        msg = "Exibindo: Tudo"
+    elseif mode == 1 then
+        showPlayer = true
+        showCreatures = false
+        msg = "Exibindo: Somente Jogador"
+    elseif mode == 2 then
+        showPlayer = false
+        showCreatures = true
+        msg = "Exibindo: Somente Criaturas"
+    elseif mode == 3 then
+        showPlayer = false
+        showCreatures = false
+        msg = "Exibindo: Nada"
+    end
+
+    setOption('drawLocalPlayerInformation', showPlayer)
+    setOption('drawCreaturesInformation', showCreatures)
+
+    if modules.game_textmessage then
+        modules.game_textmessage.displayStatusMessage(msg)
     end
 end
 
