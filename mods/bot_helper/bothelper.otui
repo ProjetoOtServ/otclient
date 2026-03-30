@@ -1,0 +1,1891 @@
+// ===========================================================================
+// BOT HELPER — Interface v2.0
+// Fonte: mockup_interface_bot_helper/components/otbot-interface.tsx
+// Mapeamento: React Components -> OTClient Native Widgets
+// ===========================================================================
+
+MainWindow
+  id: botHelperWindow
+  !text: tr('Bot Helper')
+  size: 400 540
+  anchors.centerIn: parent
+  image-source: /images/ui/window
+  image-border: 6
+  image-border-top: 27
+  padding-top: 36
+  padding-left: 16
+  padding-right: 16
+  padding-bottom: 16
+  @onEscape: BotHelper.toggle()
+
+  // =========================================================================
+  // [1] BARRA DE ABAS (Tab Bar) — 44px, topo da janela
+  // =========================================================================
+  Panel
+    id: botHelperTabBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 44
+    margin-top: 2
+    margin-left: 5
+    margin-right: 5
+    clipping: true
+    background-color: #3f3f46
+    border-width: 0 0 1 0
+    border-color: #52525b
+
+    // Aba: Tools
+    Button
+      id: tabTools
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      size: 56 34
+      text: Tools
+      @onClick: BotHelper.showTab('tools')
+
+    // Aba: Healing
+    Button
+      id: tabHealing
+      anchors.left: tabTools.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 3
+      size: 56 34
+      text: Healing
+      @onClick: BotHelper.showTab('healing')
+
+    // Aba: SpellCaster
+    Button
+      id: tabCaster
+      anchors.left: tabHealing.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 3
+      size: 72 34
+      text: SpellCaster
+      @onClick: BotHelper.showTab('caster')
+
+    // Titulo dinamico da aba ativa — atualizado via BotHelper.showTab()
+    Label
+      id: tabLabelText
+      anchors.left: tabCaster.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 12
+      color: #a1a1aa
+      text: Tools Helper
+
+  // =========================================================================
+  // [2] RODAPÉ (Footer) — 36px, fundo da janela
+  // DECLARADO ANTES do Content para permitir ancora botHelperFooter.top
+  // =========================================================================
+  Panel
+    id: botHelperFooter
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 36
+    margin-left: 5
+    margin-right: 5
+    margin-bottom: 5
+    clipping: true
+    background-color: #3f3f46
+    border-width: 1 0 0 0
+    border-color: #52525b
+
+    // Grupo esquerdo: Status (clicavel — toggle por aba)
+    Label
+      id: lblStatusKey
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 8
+      color: #a1a1aa
+      text: Status:
+
+    Label
+      id: lblHelperStatusVal
+      anchors.left: lblStatusKey.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      color: #4ade80
+      text: ON
+      @onClick: BotHelper.toggleTabStatus()
+
+    Button
+      id: btnSetKey
+      anchors.left: lblHelperStatusVal.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 8
+      text: Set Key
+
+    // Grupo direito: acoes
+    Button
+      id: btnClose
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 6
+      text: Close
+      @onClick: BotHelper.toggle()
+
+    Button
+      id: btnHelperStats
+      anchors.right: btnClose.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 4
+      text: Stats
+      @onClick: print('[BotHelper] Stats placeholder.')
+
+  // =========================================================================
+  // [3] ÁREA DE CONTEÚDO — preenche entre TabBar e Footer
+  // Contém 3 ScrollablePanels sobrepostos (um visível por vez)
+  // =========================================================================
+  Panel
+    id: botHelperTabContent
+    anchors.top: botHelperTabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: botHelperFooter.top
+    margin-top: 3
+    margin-left: 5
+    margin-right: 5
+    clipping: true
+    background-color: #18181b
+
+    // =========================================================================
+    // ABA: TOOLS
+    // =========================================================================
+    ScrollablePanel
+      id: toolsPanel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin-right: 12
+      visible: true
+      vertical-scrollbar: toolsScrollBar
+
+      // --- Secao: Tools Helper -------------------------------------------
+      Panel
+        id: sectionToolsHelper
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 182
+        background-color: #27272a
+        border-width: 1
+        border-color: #3f3f46
+        margin: 4 0 0 0
+
+        Panel
+          id: toolsHeader
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 24
+          background-color: #52525b
+          Label
+            anchors.centerIn: parent
+            color: #e4e4e7
+            text: Tools Helper
+
+        // Coluna Esquerda: Mana Training + Exercise Training
+        Panel
+          id: toolsLeftCol
+          anchors.top: toolsHeader.bottom
+          anchors.left: parent.left
+          anchors.bottom: parent.bottom
+          width: 184
+          padding: 4 4 4 8
+
+          Label
+            id: lblManaTraining
+            anchors.top: parent.top
+            anchors.left: parent.left
+            color: #d4d4d8
+            text: Mana Training
+
+          Panel
+            id: rowMana
+            anchors.top: lblManaTraining.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 42
+            margin-top: 3
+
+            // Slot de icone (verde = HP/mana)
+            Panel
+              id: iconMana
+              size: 34 34
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              background-color: #14532d
+              border-width: 1
+              border-color: #16a34a
+
+            CheckBox
+              id: chkManaEnable
+              anchors.left: iconMana.right
+              anchors.top: parent.top
+              margin-left: 6
+              margin-top: 5
+              text: Enable
+              text-auto-resize: true
+
+            SpinBox
+              id: spinManaPct
+              anchors.left: iconMana.right
+              anchors.top: chkManaEnable.bottom
+              margin-left: 6
+              margin-top: 2
+              width: 50
+              minimum: 0
+              maximum: 100
+              value: 90
+
+            Label
+              anchors.left: spinManaPct.right
+              anchors.verticalCenter: spinManaPct.verticalCenter
+              margin-left: 2
+              color: #71717a
+              text: %
+
+            Button
+              id: btnInfoMana
+              anchors.left: prev.right
+              anchors.verticalCenter: spinManaPct.verticalCenter
+              margin-left: 4
+              size: 14 14
+              text: ?
+
+          Label
+            id: lblExerciseTraining
+            anchors.top: rowMana.bottom
+            anchors.left: parent.left
+            margin-top: 8
+            color: #d4d4d8
+            text: Exercise Training
+
+          Panel
+            id: rowExercise
+            anchors.top: lblExerciseTraining.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 42
+            margin-top: 3
+
+            // Slot de icone (amarelo = treino fisico)
+            Panel
+              id: iconExercise
+              size: 34 34
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              background-color: #713f12
+              border-width: 1
+              border-color: #ca8a04
+
+            CheckBox
+              id: chkExerciseEnable
+              anchors.left: iconExercise.right
+              anchors.top: parent.top
+              margin-left: 6
+              margin-top: 5
+              text: Enable
+              text-auto-resize: true
+
+            // Placeholder para UIComboBox (populado via Lua em setupUI)
+            Panel
+              id: cmbWeaponTypeSlot
+              anchors.left: iconExercise.right
+              anchors.top: chkExerciseEnable.bottom
+              margin-left: 6
+              margin-top: 2
+              width: 68
+              height: 18
+              background-color: #3f3f46
+              border-width: 1
+              border-color: #71717a
+
+            Button
+              id: btnInfoExercise
+              anchors.left: cmbWeaponTypeSlot.right
+              anchors.verticalCenter: cmbWeaponTypeSlot.verticalCenter
+              margin-left: 4
+              size: 14 14
+              text: ?
+
+        // Coluna Direita: Auto Haste + Others Tools
+        Panel
+          id: toolsRightCol
+          anchors.top: toolsHeader.bottom
+          anchors.left: toolsLeftCol.right
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          padding: 4 4 4 6
+
+          Label
+            id: lblAutoHaste
+            anchors.top: parent.top
+            anchors.left: parent.left
+            color: #d4d4d8
+            text: Auto Haste
+
+          Panel
+            id: rowHaste
+            anchors.top: lblAutoHaste.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 42
+            margin-top: 3
+
+            // Slot de icone (azul = velocidade)
+            Panel
+              id: iconHaste
+              size: 34 34
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              background-color: #1e3a5f
+              border-width: 1
+              border-color: #3b82f6
+
+            CheckBox
+              id: chkHasteEnable
+              anchors.left: iconHaste.right
+              anchors.top: parent.top
+              margin-left: 6
+              margin-top: 5
+              text: Enable
+              text-auto-resize: true
+
+            CheckBox
+              id: chkHastePZ
+              anchors.left: iconHaste.right
+              anchors.top: chkHasteEnable.bottom
+              margin-left: 6
+              margin-top: 2
+              text: PZ Cast
+              text-auto-resize: true
+
+          Panel
+            id: rowOthersTitle
+            anchors.top: rowHaste.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 16
+            margin-top: 8
+
+            Label
+              id: lblOthersTools
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              color: #d4d4d8
+              text: Others Tools
+
+            Button
+              id: btnInfoOthers
+              anchors.left: lblOthersTools.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 14 14
+              text: ?
+
+          CheckBox
+            id: chkChangeGold
+            anchors.top: rowOthersTitle.bottom
+            anchors.left: parent.left
+            margin-top: 5
+            text: Change Gold
+            text-auto-resize: true
+
+          CheckBox
+            id: chkAutoEatFood
+            anchors.top: chkChangeGold.bottom
+            anchors.left: parent.left
+            margin-top: 3
+            text: Auto Eat Food
+            text-auto-resize: true
+
+          CheckBox
+            id: chkAutoReconnect
+            anchors.top: chkAutoEatFood.bottom
+            anchors.left: parent.left
+            margin-top: 3
+            text: Auto Reconnect
+            text-auto-resize: true
+
+    VerticalScrollBar
+      id: toolsScrollBar
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      width: 12
+      step: 14
+      pixels-scroll: true
+
+    // =========================================================================
+    // ABA: HEALING
+    // =========================================================================
+    ScrollablePanel
+      id: healingPanel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin-right: 12
+      visible: false
+      vertical-scrollbar: healingScrollBar
+
+      // --- Secao: Auto Healing Helper ------------------------------------
+      Panel
+        id: sectionAutoHeal
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 195
+        background-color: #27272a
+        border-width: 1
+        border-color: #3f3f46
+        margin: 4 0 0 0
+
+        Panel
+          id: autoHealHeader
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 24
+          background-color: #52525b
+          Label
+            anchors.centerIn: parent
+            color: #e4e4e7
+            text: Auto Healing Helper
+
+        // Coluna Esquerda: Spell Healing
+        Panel
+          id: autoHealLeft
+          anchors.top: autoHealHeader.bottom
+          anchors.left: parent.left
+          anchors.bottom: parent.bottom
+          width: 184
+          padding: 4 4 4 8
+
+          Label
+            anchors.top: parent.top
+            anchors.left: parent.left
+            color: #d4d4d8
+            text: Spell Healing
+
+          Panel
+            id: rowSpellHeal1
+            anchors.top: prev.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 38
+            margin-top: 4
+
+            UIButton
+              id: iconSpellHeal1
+              size: 34 34
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              image-source: /images/game/actionbar/actionbarslot
+              image-clip: 0 0 34 34
+              @onClick: BotHelper.Healing.spellSlotMenu(self, 1)
+              @onRightClick: BotHelper.Healing.spellSlotMenu(self, 1)
+              $hover !disabled:
+                image-color: #ffffff
+
+              UIWidget
+                id: spellIcon
+                anchors.centerIn: parent
+                phantom: true
+                size: 32 32
+
+              Label
+                id: slotPreviewLabel
+                anchors.fill: parent
+                text-align: center
+                color: #e2e8f0
+                font: verdana-11px-rounded
+                text-offset: 0 2
+                phantom: true
+
+            SpinBox
+              id: spinSpellHeal1
+              anchors.left: iconSpellHeal1.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              width: 50
+              minimum: 0
+              maximum: 100
+              value: 80
+
+            Label
+              anchors.left: spinSpellHeal1.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 2
+              color: #71717a
+              text: %
+
+            UIWidget
+              id: btnInfoSpellHeal1
+              anchors.left: prev.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 12 12
+              image-source: /images/icons/show_gui_help_grey
+              !tooltip: tr('Permitido apenas magias de cura instantanea.')
+
+          Panel
+            id: rowSpellHeal2
+            anchors.top: rowSpellHeal1.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 38
+            margin-top: 5
+
+            UIButton
+              id: iconSpellHeal2
+              size: 34 34
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              image-source: /images/game/actionbar/actionbarslot
+              image-clip: 0 0 34 34
+              @onClick: BotHelper.Healing.spellSlotMenu(self, 2)
+              @onRightClick: BotHelper.Healing.spellSlotMenu(self, 2)
+              $hover !disabled:
+                image-color: #ffffff
+
+              UIWidget
+                id: spellIcon
+                anchors.centerIn: parent
+                phantom: true
+                size: 32 32
+
+              Label
+                id: slotPreviewLabel
+                anchors.fill: parent
+                text-align: center
+                color: #e2e8f0
+                font: verdana-11px-rounded
+                text-offset: 0 2
+                phantom: true
+
+            SpinBox
+              id: spinSpellHeal2
+              anchors.left: iconSpellHeal2.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              width: 50
+              minimum: 0
+              maximum: 100
+              value: 99
+
+            Label
+              anchors.left: spinSpellHeal2.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 2
+              color: #71717a
+              text: %
+
+            UIWidget
+              id: btnInfoSpellHeal2
+              anchors.left: prev.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 12 12
+              image-source: /images/icons/show_gui_help_grey
+              !tooltip: tr('Permitido apenas magias de cura instantanea.')
+
+          Panel
+            id: rowSpellHeal3
+            anchors.top: rowSpellHeal2.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 38
+            margin-top: 5
+
+            UIButton
+              id: iconSpellHeal3
+              size: 34 34
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              image-source: /images/game/actionbar/actionbarslot
+              image-clip: 0 0 34 34
+              @onClick: BotHelper.Healing.spellSlotMenu(self, 3)
+              @onRightClick: BotHelper.Healing.spellSlotMenu(self, 3)
+              $hover !disabled:
+                image-color: #ffffff
+
+              UIWidget
+                id: spellIcon
+                anchors.centerIn: parent
+                phantom: true
+                size: 32 32
+
+              Label
+                id: slotPreviewLabel
+                anchors.fill: parent
+                text-align: center
+                color: #e2e8f0
+                font: verdana-11px-rounded
+                text-offset: 0 2
+                phantom: true
+
+            SpinBox
+              id: spinSpellHeal3
+              anchors.left: iconSpellHeal3.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              width: 50
+              minimum: 0
+              maximum: 100
+              value: 50
+
+            Label
+              anchors.left: spinSpellHeal3.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 2
+              color: #71717a
+              text: %
+
+            UIWidget
+              id: btnInfoSpellHeal3
+              anchors.left: prev.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 12 12
+              image-source: /images/icons/show_gui_help_grey
+              !tooltip: tr('Permitido apenas magias de cura instantanea.')
+
+        // Coluna Direita: Potion Healing
+        Panel
+          id: autoHealRight
+          anchors.top: autoHealHeader.bottom
+          anchors.left: autoHealLeft.right
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          padding: 4 4 4 6
+
+          Label
+            anchors.top: parent.top
+            anchors.left: parent.left
+            color: #d4d4d8
+            text: Potion Healing
+
+          Panel
+            id: rowPotionHeal1
+            anchors.top: prev.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 38
+            margin-top: 4
+
+            UIButton
+              id: iconPotionHeal1
+              size: 34 34
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              image-source: /images/game/actionbar/actionbarslot
+              image-clip: 0 0 34 34
+              @onClick: BotHelper.Healing.potionSlotMenu(self, 1)
+              @onRightClick: BotHelper.Healing.potionSlotMenu(self, 1)
+              $hover !disabled:
+                image-color: #ffffff
+
+              Item
+                id: potionItem
+                anchors.centerIn: parent
+                phantom: true
+                virtual: true
+                size: 32 32
+
+            SpinBox
+              id: spinPotionHeal1
+              anchors.left: iconPotionHeal1.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              width: 50
+              minimum: 0
+              maximum: 100
+              value: 60
+
+            Label
+              anchors.left: spinPotionHeal1.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 2
+              color: #71717a
+              text: %
+
+            UIWidget
+              id: btnInfoPotionHeal1
+              anchors.left: prev.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 12 12
+              image-source: /images/icons/show_gui_help_grey
+              !tooltip: tr('Permitido apenas pocoes de Vida, Mana ou Spirit.')
+
+          Panel
+            id: rowPotionHeal2
+            anchors.top: rowPotionHeal1.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 38
+            margin-top: 5
+
+            UIButton
+              id: iconPotionHeal2
+              size: 34 34
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              image-source: /images/game/actionbar/actionbarslot
+              image-clip: 0 0 34 34
+              @onClick: BotHelper.Healing.potionSlotMenu(self, 2)
+              @onRightClick: BotHelper.Healing.potionSlotMenu(self, 2)
+              $hover !disabled:
+                image-color: #ffffff
+
+              Item
+                id: potionItem
+                anchors.centerIn: parent
+                phantom: true
+                virtual: true
+                size: 32 32
+
+            SpinBox
+              id: spinPotionHeal2
+              anchors.left: iconPotionHeal2.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              width: 50
+              minimum: 0
+              maximum: 100
+              value: 30
+
+            Label
+              anchors.left: spinPotionHeal2.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 2
+              color: #71717a
+              text: %
+
+            UIWidget
+              id: btnInfoPotionHeal2
+              anchors.left: prev.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 12 12
+              image-source: /images/icons/show_gui_help_grey
+              !tooltip: tr('Permitido apenas pocoes de Vida, Mana ou Spirit.')
+
+          Panel
+            id: rowPotionHeal3
+            anchors.top: rowPotionHeal2.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 38
+            margin-top: 5
+
+            UIButton
+              id: iconPotionHeal3
+              size: 34 34
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              image-source: /images/game/actionbar/actionbarslot
+              image-clip: 0 0 34 34
+              @onClick: BotHelper.Healing.potionSlotMenu(self, 3)
+              @onRightClick: BotHelper.Healing.potionSlotMenu(self, 3)
+              $hover !disabled:
+                image-color: #ffffff
+
+              Item
+                id: potionItem
+                anchors.centerIn: parent
+                phantom: true
+                virtual: true
+                size: 32 32
+
+            SpinBox
+              id: spinPotionHeal3
+              anchors.left: iconPotionHeal3.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              width: 50
+              minimum: 0
+              maximum: 100
+              value: 30
+
+            Label
+              anchors.left: spinPotionHeal3.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 2
+              color: #71717a
+              text: %
+
+            UIWidget
+              id: btnInfoPotionHeal3
+              anchors.left: prev.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 4
+              size: 12 12
+              image-source: /images/icons/show_gui_help_grey
+              !tooltip: tr('Permitido apenas pocoes de Vida, Mana ou Spirit.')
+
+      // --- Secao: Friend Healing Helper ----------------------------------
+      Panel
+        id: sectionFriendHeal
+        anchors.top: sectionAutoHeal.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 148
+        background-color: #27272a
+        border-width: 1
+        border-color: #3f3f46
+        margin-top: 6
+
+        Panel
+          id: friendHealHeader
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 24
+          background-color: #52525b
+          Label
+            anchors.centerIn: parent
+            color: #e4e4e7
+            text: Friend Healing Helper
+
+        // Coluna Esquerda: lista de amigos disponiveis
+        Panel
+          id: friendHealLeft
+          anchors.top: friendHealHeader.bottom
+          anchors.left: parent.left
+          anchors.bottom: parent.bottom
+          width: 144
+          padding: 4 4 6 8
+
+          Panel
+            id: rowSelectFriendTitle
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 16
+
+            Label
+              id: lblSelectFriend
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              color: #d4d4d8
+              text: Select Friend
+
+            Button
+              id: btnInfoSelectFriend
+              anchors.left: lblSelectFriend.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 3
+              size: 14 14
+              text: ?
+
+          // Lista de party members — populada via Lua
+          Panel
+            id: friendSioList
+            anchors.top: rowSelectFriendTitle.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            margin-top: 4
+            background-color: #09090b
+            border-width: 1
+            border-color: #3f3f46
+
+        // Coluna Direita: slots de cura de amigos
+        Panel
+          id: friendHealRight
+          anchors.top: friendHealHeader.bottom
+          anchors.left: friendHealLeft.right
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          padding: 4 4 4 6
+
+          Label
+            anchors.top: parent.top
+            anchors.left: parent.left
+            color: #d4d4d8
+            text: Heal Friend List
+
+          Panel
+            id: rowFriendSio1
+            anchors.top: prev.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 22
+            margin-top: 5
+
+            Button
+              id: btnAddSio1
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              size: 18 18
+              text: +
+
+            CheckBox
+              id: chkSio1Enable
+              anchors.left: btnAddSio1.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              text: Sio
+
+            SpinBox
+              id: spinSio1Pct
+              anchors.left: chkSio1Enable.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              width: 42
+              minimum: 0
+              maximum: 100
+              value: 99
+
+            Button
+              id: btnInfoSio1
+              anchors.left: spinSio1Pct.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 3
+              size: 14 14
+              text: ?
+
+          Panel
+            id: rowFriendSio2
+            anchors.top: rowFriendSio1.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 22
+            margin-top: 5
+
+            Button
+              id: btnAddSio2
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              size: 18 18
+              text: +
+
+            CheckBox
+              id: chkSio2Enable
+              anchors.left: btnAddSio2.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              text: Sio
+
+            SpinBox
+              id: spinSio2Pct
+              anchors.left: chkSio2Enable.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              width: 42
+              minimum: 0
+              maximum: 100
+              value: 99
+
+            Button
+              id: btnInfoSio2
+              anchors.left: spinSio2Pct.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 3
+              size: 14 14
+              text: ?
+
+      // --- Secao: Exura Gran Sio Helper ----------------------------------
+      Panel
+        id: sectionSioHeal
+        anchors.top: sectionFriendHeal.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 118
+        background-color: #27272a
+        border-width: 1
+        border-color: #3f3f46
+        margin-top: 6
+
+        Panel
+          id: sioHealHeader
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 24
+          background-color: #52525b
+          Label
+            anchors.centerIn: parent
+            color: #e4e4e7
+            text: Exura Gran Sio Helper
+
+        // Coluna Esquerda: selecao de alvo
+        Panel
+          id: sioHealLeft
+          anchors.top: sioHealHeader.bottom
+          anchors.left: parent.left
+          anchors.bottom: parent.bottom
+          width: 144
+          padding: 4 4 6 8
+
+          Panel
+            id: rowGranSioTitle
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 16
+
+            Label
+              id: lblGranSioSelect
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              color: #d4d4d8
+              text: Select Friend
+
+            Button
+              id: btnInfoGranSioSelect
+              anchors.left: lblGranSioSelect.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 3
+              size: 14 14
+              text: ?
+
+          Panel
+            id: granSioList
+            anchors.top: rowGranSioTitle.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            margin-top: 4
+            background-color: #09090b
+            border-width: 1
+            border-color: #3f3f46
+
+        // Coluna Direita: slot Exura Gran Sio
+        Panel
+          id: sioHealRight
+          anchors.top: sioHealHeader.bottom
+          anchors.left: sioHealLeft.right
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          padding: 4 4 4 6
+
+          Label
+            anchors.top: parent.top
+            anchors.left: parent.left
+            color: #d4d4d8
+            text: Heal Friend List
+
+          Panel
+            id: rowGranSio1
+            anchors.top: prev.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 22
+            margin-top: 5
+
+            Button
+              id: btnAddGranSio1
+              anchors.left: parent.left
+              anchors.verticalCenter: parent.verticalCenter
+              size: 18 18
+              text: +
+
+            CheckBox
+              id: chkGranSioEnable
+              anchors.left: btnAddGranSio1.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              text: Enable
+
+            SpinBox
+              id: spinGranSioPct
+              anchors.left: chkGranSioEnable.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 5
+              width: 42
+              minimum: 0
+              maximum: 100
+              value: 99
+
+            Button
+              id: btnInfoGranSio1
+              anchors.left: spinGranSioPct.right
+              anchors.verticalCenter: parent.verticalCenter
+              margin-left: 3
+              size: 14 14
+              text: ?
+
+    VerticalScrollBar
+      id: healingScrollBar
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      width: 12
+      step: 14
+      pixels-scroll: true
+
+    // =========================================================================
+    // ABA: RTCASTER
+    // =========================================================================
+    ScrollablePanel
+      id: casterPanel
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin-right: 12
+      visible: false
+      vertical-scrollbar: casterScrollBar
+
+      // --- Barra de Presets (placeholder estatico) -----------------------
+      Panel
+        id: sectionPresets
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 72
+        background-color: #27272a
+        border-width: 1
+        border-color: #3f3f46
+        margin: 4 0 0 0
+        padding: 6
+
+        // Linha 1: label Presets + botoes de gerenciamento
+        Panel
+          id: rowPresetsTop
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 24
+
+          Label
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            color: #d4d4d8
+            text: Presets:
+
+          Button
+            id: btnPresetSetKey
+            anchors.left: prev.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            text: Set Key
+
+          Button
+            id: btnInfoPreset
+            anchors.left: btnPresetSetKey.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            size: 14 14
+            text: ?
+
+          Button
+            id: btnNewPreset
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            text: New Preset
+
+          Button
+            id: btnRenamePreset
+            anchors.right: btnNewPreset.left
+            anchors.verticalCenter: parent.verticalCenter
+            margin-right: 4
+            text: Rename
+
+        // Linha 2: seletor de preset ativo
+        Panel
+          id: rowPresetsBottom
+          anchors.top: rowPresetsTop.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 24
+          margin-top: 6
+
+          // Placeholder para UIComboBox do preset (populado via Lua)
+          Panel
+            id: cmbPresetSlot
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            width: 100
+            height: 18
+            background-color: #3f3f46
+            border-width: 1
+            border-color: #71717a
+
+          Button
+            id: btnDeletePreset
+            anchors.left: cmbPresetSlot.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            size: 18 18
+            text: X
+
+      // --- Secao: Spell Shooter Helper -----------------------------------
+      Panel
+        id: sectionSpellShooter
+        anchors.top: sectionPresets.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 248
+        background-color: #27272a
+        border-width: 1
+        border-color: #3f3f46
+        margin-top: 6
+        padding-bottom: 6
+
+        Panel
+          id: spellShooterHeader
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 24
+          background-color: #52525b
+          Label
+            anchors.centerIn: parent
+            color: #e4e4e7
+            text: Spell Shooter Helper
+
+        // Header de colunas — centralizados sobre cada coluna
+        Panel
+          id: spellShooterColHeaders
+          anchors.top: spellShooterHeader.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 18
+          margin-top: 4
+          padding: 0 4 0 6
+
+          Label
+            id: hdrSpell
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            width: 36
+            text-align: center
+            color: #71717a
+            text: Spell
+
+          Label
+            id: hdrMana
+            anchors.left: hdrSpell.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 8
+            width: 56
+            text-align: center
+            color: #71717a
+            text: Mana %
+
+          Label
+            id: hdrCreatures
+            anchors.left: hdrMana.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            width: 58
+            text-align: center
+            color: #71717a
+            text: Creatures
+
+          Label
+            id: hdrPriority
+            anchors.left: hdrCreatures.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            width: 52
+            text-align: center
+            color: #71717a
+            text: Priority
+
+        // Linha de Spell 1
+        Panel
+          id: rowSpellCaster1
+          anchors.top: spellShooterColHeaders.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 30
+          margin-top: 3
+          padding: 0 4 0 6
+
+          UIButton
+            id: iconSpellCaster1
+            size: 34 26
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            image-source: /images/game/actionbar/actionbarslot
+            image-clip: 0 0 34 34
+            @onClick: BotHelper.SpellCaster.spellSlotMenu(self, 1)
+            @onRightClick: BotHelper.SpellCaster.spellSlotMenu(self, 1)
+            $hover !disabled:
+              image-color: #ffffff
+
+            UIWidget
+              id: spellIcon
+              anchors.centerIn: parent
+              phantom: true
+              size: 22 22
+
+            Label
+              id: slotPreviewLabel
+              anchors.fill: parent
+              text-align: center
+              color: #e2e8f0
+              font: verdana-11px-rounded
+              text-offset: 0 2
+              phantom: true
+
+          SpinBox
+            id: spinSpellMana1
+            anchors.left: iconSpellCaster1.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 42
+            minimum: 0
+            maximum: 100
+            value: 10
+
+          Label
+            anchors.left: spinSpellMana1.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 2
+            color: #71717a
+            text: %
+
+          ComboBox
+            id: cmbCreatures1
+            anchors.left: prev.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 52
+
+          ComboBox
+            id: cmbPriority1
+            anchors.left: cmbCreatures1.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            width: 50
+
+        // Linha de Spell 2
+        Panel
+          id: rowSpellCaster2
+          anchors.top: rowSpellCaster1.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 30
+          margin-top: 4
+          padding: 0 4 0 6
+
+          UIButton
+            id: iconSpellCaster2
+            size: 34 26
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            image-source: /images/game/actionbar/actionbarslot
+            image-clip: 0 0 34 34
+            @onClick: BotHelper.SpellCaster.spellSlotMenu(self, 2)
+            @onRightClick: BotHelper.SpellCaster.spellSlotMenu(self, 2)
+            $hover !disabled:
+              image-color: #ffffff
+
+            UIWidget
+              id: spellIcon
+              anchors.centerIn: parent
+              phantom: true
+              size: 22 22
+
+            Label
+              id: slotPreviewLabel
+              anchors.fill: parent
+              text-align: center
+              color: #e2e8f0
+              font: verdana-11px-rounded
+              text-offset: 0 2
+              phantom: true
+
+          SpinBox
+            id: spinSpellMana2
+            anchors.left: iconSpellCaster2.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 42
+            minimum: 0
+            maximum: 100
+            value: 5
+
+          Label
+            anchors.left: spinSpellMana2.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 2
+            color: #71717a
+            text: %
+
+          ComboBox
+            id: cmbCreatures2
+            anchors.left: prev.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 52
+
+          ComboBox
+            id: cmbPriority2
+            anchors.left: cmbCreatures2.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            width: 50
+
+        // Linha de Spell 3
+        Panel
+          id: rowSpellCaster3
+          anchors.top: rowSpellCaster2.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 30
+          margin-top: 4
+          padding: 0 4 0 6
+
+          UIButton
+            id: iconSpellCaster3
+            size: 34 26
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            image-source: /images/game/actionbar/actionbarslot
+            image-clip: 0 0 34 34
+            @onClick: BotHelper.SpellCaster.spellSlotMenu(self, 3)
+            @onRightClick: BotHelper.SpellCaster.spellSlotMenu(self, 3)
+            $hover !disabled:
+              image-color: #ffffff
+
+            UIWidget
+              id: spellIcon
+              anchors.centerIn: parent
+              phantom: true
+              size: 22 22
+
+            Label
+              id: slotPreviewLabel
+              anchors.fill: parent
+              text-align: center
+              color: #e2e8f0
+              font: verdana-11px-rounded
+              text-offset: 0 2
+              phantom: true
+
+          SpinBox
+            id: spinSpellMana3
+            anchors.left: iconSpellCaster3.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 42
+            minimum: 0
+            maximum: 100
+            value: 1
+
+          Label
+            anchors.left: spinSpellMana3.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 2
+            color: #71717a
+            text: %
+
+          ComboBox
+            id: cmbCreatures3
+            anchors.left: prev.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 52
+
+          ComboBox
+            id: cmbPriority3
+            anchors.left: cmbCreatures3.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            width: 50
+
+        // Linha de Spell 4
+        Panel
+          id: rowSpellCaster4
+          anchors.top: rowSpellCaster3.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 30
+          margin-top: 4
+          padding: 0 4 0 6
+
+          UIButton
+            id: iconSpellCaster4
+            size: 34 26
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            image-source: /images/game/actionbar/actionbarslot
+            image-clip: 0 0 34 34
+            @onClick: BotHelper.SpellCaster.spellSlotMenu(self, 4)
+            @onRightClick: BotHelper.SpellCaster.spellSlotMenu(self, 4)
+            $hover !disabled:
+              image-color: #ffffff
+
+            UIWidget
+              id: spellIcon
+              anchors.centerIn: parent
+              phantom: true
+              size: 22 22
+
+            Label
+              id: slotPreviewLabel
+              anchors.fill: parent
+              text-align: center
+              color: #e2e8f0
+              font: verdana-11px-rounded
+              text-offset: 0 2
+              phantom: true
+
+          SpinBox
+            id: spinSpellMana4
+            anchors.left: iconSpellCaster4.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 42
+            minimum: 0
+            maximum: 100
+            value: 1
+
+          Label
+            anchors.left: spinSpellMana4.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 2
+            color: #71717a
+            text: %
+
+          ComboBox
+            id: cmbCreatures4
+            anchors.left: prev.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 52
+
+          ComboBox
+            id: cmbPriority4
+            anchors.left: cmbCreatures4.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            width: 50
+
+        // Linha de Spell 5
+        Panel
+          id: rowSpellCaster5
+          anchors.top: rowSpellCaster4.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 30
+          margin-top: 4
+          padding: 0 4 0 6
+
+          UIButton
+            id: iconSpellCaster5
+            size: 34 26
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            image-source: /images/game/actionbar/actionbarslot
+            image-clip: 0 0 34 34
+            @onClick: BotHelper.SpellCaster.spellSlotMenu(self, 5)
+            @onRightClick: BotHelper.SpellCaster.spellSlotMenu(self, 5)
+            $hover !disabled:
+              image-color: #ffffff
+
+            UIWidget
+              id: spellIcon
+              anchors.centerIn: parent
+              phantom: true
+              size: 22 22
+
+            Label
+              id: slotPreviewLabel
+              anchors.fill: parent
+              text-align: center
+              color: #e2e8f0
+              font: verdana-11px-rounded
+              text-offset: 0 2
+              phantom: true
+
+          SpinBox
+            id: spinSpellMana5
+            anchors.left: iconSpellCaster5.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 42
+            minimum: 0
+            maximum: 100
+            value: 1
+
+          Label
+            anchors.left: spinSpellMana5.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 2
+            color: #71717a
+            text: %
+
+          ComboBox
+            id: cmbCreatures5
+            anchors.left: prev.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 52
+
+          ComboBox
+            id: cmbPriority5
+            anchors.left: cmbCreatures5.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            width: 50
+
+      // --- Secao: Rune Shooter Helper ------------------------------------
+      Panel
+        id: sectionRuneShooter
+        anchors.top: sectionSpellShooter.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 120
+        background-color: #27272a
+        border-width: 1
+        border-color: #3f3f46
+        margin-top: 6
+        padding-bottom: 6
+
+        Panel
+          id: runeShooterHeader
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 24
+          background-color: #52525b
+          Label
+            anchors.centerIn: parent
+            color: #e4e4e7
+            text: Rune Shooter Helper
+
+        // Header de colunas da rune
+        Panel
+          id: runeShooterColHeaders
+          anchors.top: runeShooterHeader.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 18
+          margin-top: 4
+          padding: 0 4 0 8
+
+          Label
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            width: 44
+            color: #71717a
+            text: Rune
+
+          Label
+            anchors.left: prev.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 20
+            width: 72
+            color: #71717a
+            text: Creatures
+
+          Label
+            anchors.left: prev.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            color: #71717a
+            text: Priority
+
+        // Linha de Rune 1
+        Panel
+          id: rowRuneCaster1
+          anchors.top: runeShooterColHeaders.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 30
+          margin-top: 3
+          padding: 0 4 0 8
+
+          Panel
+            id: iconRuneCaster1
+            size: 30 26
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            background-color: #312e81
+            border-width: 1
+            border-color: #6366f1
+
+          Panel
+            id: cmbRuneCreatures1Slot
+            anchors.left: iconRuneCaster1.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 8
+            width: 70
+            height: 18
+            background-color: #3f3f46
+            border-width: 1
+            border-color: #71717a
+
+          Panel
+            id: cmbRunePriority1Slot
+            anchors.left: cmbRuneCreatures1Slot.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 60
+            height: 18
+            background-color: #3f3f46
+            border-width: 1
+            border-color: #71717a
+
+          Button
+            id: btnInfoRune1
+            anchors.left: cmbRunePriority1Slot.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            size: 14 14
+            text: ?
+
+        // Linha de Rune 2
+        Panel
+          id: rowRuneCaster2
+          anchors.top: rowRuneCaster1.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 30
+          margin-top: 4
+          padding: 0 4 0 8
+
+          Panel
+            id: iconRuneCaster2
+            size: 30 26
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            background-color: #312e81
+            border-width: 1
+            border-color: #6366f1
+
+          Panel
+            id: cmbRuneCreatures2Slot
+            anchors.left: iconRuneCaster2.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 8
+            width: 70
+            height: 18
+            background-color: #3f3f46
+            border-width: 1
+            border-color: #71717a
+
+          Panel
+            id: cmbRunePriority2Slot
+            anchors.left: cmbRuneCreatures2Slot.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 6
+            width: 60
+            height: 18
+            background-color: #3f3f46
+            border-width: 1
+            border-color: #71717a
+
+          Button
+            id: btnInfoRune2
+            anchors.left: cmbRunePriority2Slot.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            size: 14 14
+            text: ?
+
+      // --- Painel de Controles RTCaster ----------------------------------
+      Panel
+        id: sectionCasterControls
+        anchors.top: sectionRuneShooter.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 86
+        background-color: #27272a
+        border-width: 1
+        border-color: #3f3f46
+        margin-top: 6
+        padding: 6 8 6 8
+
+        // Linha 1: Auto Target
+        Panel
+          id: rowAutoTarget
+          anchors.top: parent.top
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 22
+
+          CheckBox
+            id: chkAutoTarget
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            text: Auto Target
+            text-auto-resize: true
+
+          ComboBox
+            id: cmbAutoTargetMode
+            anchors.left: chkAutoTarget.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 8
+            width: 44
+
+          UIWidget
+            id: btnInfoAutoTarget
+            anchors.left: cmbAutoTargetMode.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            size: 12 12
+            image-source: /images/icons/show_gui_help_grey
+            !tooltip: tr('Modo A = Mais Proximo\nModo B = Mais Longe\nModo C = Menos Vida\nModo D = Mais Vida\nModo E = Melhor alvo para Runas/AOE\nModo F = Mais proximo com Menos vida\nModo G = Mais proximo com Mais vida\nModo H = Mais longe com Menos vida\nModo I = Mais longe com Mais vida')
+
+          Button
+            id: btnSetKeyAutoTarget
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            text: Set Key
+
+        // Linha 2: Enable Shooter
+        Panel
+          id: rowEnableShooter
+          anchors.top: rowAutoTarget.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 22
+          margin-top: 5
+
+          CheckBox
+            id: chkEnableShooter
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            text: Enable Shooter Helper
+            text-auto-resize: true
+
+          Button
+            id: btnSetKeyShooter
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            text: Set Key
+
+        // Linha 3: Set Key combinado
+        Panel
+          id: rowCombinedKey
+          anchors.top: rowEnableShooter.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          height: 22
+          margin-top: 5
+
+          Button
+            id: btnSetKeyCombined
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            text: Set Key (Target/Shooter)
+
+          Button
+            id: btnInfoCombined
+            anchors.left: btnSetKeyCombined.right
+            anchors.verticalCenter: parent.verticalCenter
+            margin-left: 4
+            size: 14 14
+            text: ?
+
+    VerticalScrollBar
+      id: casterScrollBar
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      width: 12
+      step: 14
+      pixels-scroll: true

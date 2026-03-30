@@ -1,0 +1,12 @@
+Module
+  name: bot_helper
+  description: Official Bot Helper UI Frame
+  author: Antigravity
+  website: https://github.com/
+  version: 1.0
+  autoload: true
+  reloadable: true
+  dependencies: [ client_locales, game_interface, game_mainpanel ]
+  scripts: [ bothelper ]
+  @onLoad: BotHelper.init()
+  @onUnload: BotHelper.terminate()

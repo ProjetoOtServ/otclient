@@ -1,0 +1,69 @@
+BotHelperSpellSelectorItem < Button
+  height: 34
+  text-wrap: true
+  focusable: true
+  text-align: left
+  text-offset: 42 2
+  margin-bottom: 2
+  background-color: alpha
+
+  $hover !disabled:
+    background-color: #ffffff22
+    color: #ffffff
+
+  $pressed:
+    background-color: #585858
+    color: #f4f4f4
+
+  UIWidget
+    id: spellIcon
+    anchors.left: parent.left
+    anchors.top: parent.top
+    phantom: true
+    padding: 1
+    size: 32 32
+
+MainWindow
+  id: spellSelectorWindow
+  !text: tr('Assign Spell')
+  size: 380 440
+  @onEscape: self:destroy()
+  color: #dfdfdf
+
+  Panel
+    id: backgroundPanel
+    anchors.fill: parent
+    background-color: #00000033
+    margin-bottom: 35
+    margin-top: 5
+
+  ScrollablePanel
+    id: spellList
+    anchors.fill: backgroundPanel
+    margin-bottom: 5
+    margin-right: 15
+    margin-left: 5
+    margin-top: 5
+    vertical-scrollbar: spellListScrollBar
+    layout:
+      type: grid
+      cell-size: 165 34
+      cell-spacing: 2
+      flow: true
+
+  VerticalScrollBar
+    id: spellListScrollBar
+    anchors.top: spellList.top
+    anchors.bottom: spellList.bottom
+    anchors.right: parent.right
+    margin-right: -10
+    step: 36
+    pixels-scroll: true
+
+  Button
+    id: buttonCancel
+    !text: tr('Close')
+    width: 60
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    @onClick: self:getParent():destroy()

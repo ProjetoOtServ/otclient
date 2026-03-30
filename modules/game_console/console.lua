@@ -455,17 +455,7 @@ function switchChatOnCall()
     -- Adicionamos um pequeno delay (addEvent) para garantir que o widget esteja renderizado
     addEvent(function()
         if consoleTextEdit then
-            -- [DIAGNÓSTICO] Informa qual widget roubou o foco inicialmente
-            local focused = g_ui.getFocusedWidget()
-            if focused then
-                print("Foco atual antes de forçar: " .. focused:getId())
-            else
-                print("Foco atual: nil")
-            end
-
             -- [RESOLUÇÃO] Força ativação, elevação e foco
-            consoleTextEdit:setActive(true)
-            consoleTextEdit:raise()
             consoleTextEdit:focus()
         end
     end)
