@@ -1228,69 +1228,74 @@ local function countVisibleCreatures()
 end
 
 -- =============================================================
--- MOTOR DO SPELL SHOOTER — cascata de prioridade + cooldowns
+-- MOTOR DO SPELL SHOOTER — rotacao local por cronometro matematico
+-- Totalmente independente da UI/servidor (sem modules.game_cooldown)
 -- =============================================================
 
--- Timers locais (fonte primaria — confiavel mesmo com CD window oculta)
-local spellTimers      = {}   -- { [spellText] = millis do ultimo cast }
-local globalAttackTimer = 0   -- millis do ultimo cast de qualquer spell de ataque
+-- ┌─────────────────────────────────────────────────────────────┐
+-- │  CONFIGURACAO DO BOT — AJUSTE AQUI PARA O SEU SERVIDOR      │
+-- │                                                             │
+-- │  GCD_ATTACK: Global Cooldown do grupo de ataque (ms).       │
+-- │    Tibia Global  = 2000ms                                   │
+-- │    Servidores BR = 1000ms ou 1500ms (teste e ajuste!)       │
+-- │                                                             │
+-- │  PING_COMPENSATION: Antecipacao do envio em ms.             │
+-- │    Localhost / LAN  = 20ms  (valor atual)                   │
+-- │    Internet (~80ms) = 0ms   (sem antecipacao)               │
+-- └─────────────────────────────────────────────────────────────┘
+local GCD_ATTACK        = 2000  -- << AJUSTE AQUI se seu servidor usa GCD diferente
+local PING_COMPENSATION = 20    -- << AJUSTE AQUI baseado na sua latencia (ms)
 
-local GLOBAL_CD = 2000        -- ms de exaustao global (GCD padrao Tibia ataque)
-local SPELL_CD  = 4000        -- ms de CD individual conservador (fallback)
+-- Rastreadores locais de tempo ("memoria" do bot)
+local nextGlobalAttack = 0   -- quando o GCD global libera o proximo cast
+local nextSpellCast    = {}  -- [words] = timestamp em ms do proximo cast permitido
 
--- Tenta obter o exhaustion real da spell pelo DB do client
-local function getSpellExhaustion(spell)
-  if Spells and type(Spells.getSpellDataByParamWords) == 'function' then
-    local data = Spells.getSpellDataByParamWords(spell.text:lower())
-    if data and data.exhaustion and data.exhaustion > 0 then
-      return data.exhaustion
+-- Banco de cooldowns: busca primeiro no SpellInfo do cliente;
+-- se ausente, usa a tabela hardcoded de fallback (Knight).
+local SPELL_CD_FALLBACK = {
+  ['exori']      = 4000,
+  ['exori gran'] = 6000,
+  ['exori mas']  = 8000,
+  ['exori min']  = 6000,
+  ['exevo gran mas san'] = 2000,
+  ['exori ico']  = 2000,
+  ['utito tempo'] = 2000,
+}
+
+local function getSpellCooldown(words)
+  if not words then return GCD_ATTACK end
+  local w = string.lower(words)
+
+  -- Tenta o SpellInfo do cliente (campo cooldown em ms)
+  local spellsTbl = nil
+  if _G.SpellInfo and _G.SpellInfo['Default'] then
+    spellsTbl = _G.SpellInfo['Default']
+  elseif modules.gamelib and modules.gamelib.SpellInfo then
+    spellsTbl = modules.gamelib.SpellInfo['Default']
+  end
+
+  if spellsTbl then
+    for _, info in pairs(spellsTbl) do
+      if info.words and string.lower(info.words) == w then
+        -- cooldown geralmente em ms; se vier em segundos (< 100) converte
+        local cd = tonumber(info.cooldown)
+        if cd and cd > 0 then
+          return (cd < 100) and (cd * 1000) or cd
+        end
+      end
     end
   end
-  return SPELL_CD
-end
 
--- ==================================================================
--- isOnGlobalCD(): true → aborta o ciclo inteiro (nenhum cast possivel)
--- ==================================================================
-local function isOnGlobalCD()
-  local now = g_clock.millis()
-
-  -- Fonte 1: modulo nativo (Attack group = 1) — bonus quando visivel
-  local gc = modules.game_cooldown
-  if gc and type(gc.isGroupCooldownIconActive) == 'function' then
-    if gc.isGroupCooldownIconActive(1) then return true end
-  end
-
-  -- Fonte 2: cronometro local (sempre confiavel)
-  return (now - globalAttackTimer) < GLOBAL_CD
-end
-
--- ==================================================================
--- isSpellOnCD(spell): true → pula APENAS este slot, testa proximo
--- ==================================================================
-local function isSpellOnCD(spell)
-  local now = g_clock.millis()
-
-  -- Fonte 1: modulo nativo por iconId (quando window visivel e dados populados)
-  local gc = modules.game_cooldown
-  if gc and type(gc.isCooldownIconActive) == 'function' then
-    if spell.icon and spell.icon > 0 then
-      if gc.isCooldownIconActive(spell.icon) then return true end
-    end
-  end
-
-  -- Fonte 2: cronometro local por nome da magia (sempre confiavel)
-  local last = spellTimers[spell.text]
-  if last then
-    local cd = getSpellExhaustion(spell)
-    if (now - last) < cd then return true end
-  end
-
-  return false
+  -- Fallback hardcoded
+  return SPELL_CD_FALLBACK[w] or GCD_ATTACK
 end
 
 function BotHelper.startCasterEngine()
   BotHelper.stopCasterEngine()
+
+  -- Zera os rastreadores ao (re)iniciar o motor
+  nextGlobalAttack = 0
+  nextSpellCast    = {}
 
   BotHelper.casterCycle = cycleEvent(function()
     if not isTabEnabled('caster') then return end
@@ -1299,44 +1304,71 @@ function BotHelper.startCasterEngine()
     local player = g_game.getLocalPlayer()
     if not player then return end
 
-    -- === TRAVA 1: GCD global — aborta o ciclo inteiro ===
-    -- Nao adianta testar nenhuma spell enquanto o GCD nao limpar
-    if isOnGlobalCD() then return end
+    -- TRAVA ABSOLUTA: GCD global — bot silencioso ate o timestamp liberar
+    local now = g_clock.millis()
+    if now < nextGlobalAttack then return end
 
-    -- === Coleta e ordena slots configurados por prioridade ===
-    local orderedSlots = {}
+    -- Monta lista de spells ativas ordenada estritamente por prioridade
+    local activeSpells = {}
     for i = 1, 5 do
       local s = BotHelper.SpellCaster.spells[i]
-      if s and s.text and s.text ~= '' then
-        local prioNum = tonumber(s.priority:match('%d+')) or i
-        table.insert(orderedSlots, { prio = prioNum, data = s })
+      if s and type(s.text) == 'string' and s.text ~= '' then
+        local pNum = tonumber(s.priority:match('%d+')) or i
+        table.insert(activeSpells, {
+          priorityValue     = pNum,
+          words             = s.text,
+          manaPct           = s.manaPct or 80,
+          requiredCreatures = tonumber((s.creatures or '1+'):match('%d+')) or 1,
+        })
       end
     end
-    if #orderedSlots == 0 then return end
-    table.sort(orderedSlots, function(a, b) return a.prio < b.prio end)
+    if #activeSpells == 0 then return end
 
-    -- === Recursos do jogador (calculados uma unica vez por ciclo) ===
+    -- Ordenacao rigorosa: menor priorityValue = mais urgente
+    table.sort(activeSpells, function(a, b)
+      return a.priorityValue < b.priorityValue
+    end)
+
+    -- Recursos do jogador (calculados uma unica vez por tick)
     local maxMana = player:getMaxMana()
     local manaPct = (maxMana > 0) and math.floor(player:getMana() * 100 / maxMana) or 0
-    local creaturesNaTela = countVisibleCreatures()
+    local criaturas = countVisibleCreatures()
 
-    -- === CASCATA: itera por prioridade, pula CD individuais ===
-    for _, entry in ipairs(orderedSlots) do
-      local s = entry.data
-      local requiredCreatures = tonumber(s.creatures:match('%d+')) or 1
+    -- CASCATA DE PRIORIDADE: percorre 1st → 5th
+    -- repeat/break/until true = "continue" compativel com Lua 5.1
+    -- O cronometro individual permite PULAR para a proxima magia no mesmo tick.
+    for _, spellCfg in ipairs(activeSpells) do
+      repeat
+        local words = spellCfg.words
+        local spellReadyTime = nextSpellCast[words] or 0
 
-      if manaPct >= s.manaPct and creaturesNaTela >= requiredCreatures and not isSpellOnCD(s) then
-        -- ✅ GCD limpo + CD limpo + recursos OK → DISPARA
-        g_game.talk(s.text)
-        spellTimers[s.text] = g_clock.millis()
-        globalAttackTimer   = g_clock.millis()
-        return  -- 1 cast por ciclo; retorna e aguarda o proximo tick
-      end
-      -- Condicao nao atendida: continua automaticamente para o proximo slot
+        -- Trava de mana
+        if manaPct < spellCfg.manaPct then break end
+
+        -- Trava de criaturas
+        if criaturas < spellCfg.requiredCreatures then break end
+
+        -- Trava local de cooldown individual (cronometro matematico)
+        if now < spellReadyTime then break end
+
+        -- TODAS AS TRAVAS PASSARAM → CAST!
+        g_game.talk(words)
+
+        -- Atualiza cronometros locais IMEDIATAMENTE (sem esperar resposta do servidor)
+        -- PING_COMPENSATION: dispara um pouco antes do tempo exato para compensar latencia local
+        local spellCD = getSpellCooldown(words)
+        nextGlobalAttack     = now + (GCD_ATTACK - PING_COMPENSATION)
+        nextSpellCast[words] = now + (spellCD    - PING_COMPENSATION)
+
+        return  -- Encerra o tick. GCD bloqueia o proximo tick.
+
+      until true
+      -- break cai aqui: continua para o proximo ipairs
     end
-  end, 200)
 
-  -- Sincronizacao de UI num ciclo separado e mais lento
+  end, 50)  -- 50ms: loop rapido para capturar o exato milissegundo de liberacao do CD
+
+  -- Sincronizacao de UI em ciclo proprio e mais lento
   BotHelper.casterSyncCycle = cycleEvent(function()
     if not isTabEnabled('caster') then return end
     BotHelper.SpellCaster.syncFromUI()
@@ -1353,5 +1385,6 @@ function BotHelper.stopCasterEngine()
     BotHelper.casterSyncCycle = nil
   end
 end
+
 
 
