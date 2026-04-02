@@ -23,6 +23,7 @@
 #pragma once
 
 #include "player.h"
+#include <atomic>
 
  // @bindclass
 class LocalPlayer final : public Player
@@ -92,6 +93,8 @@ public:
     uint16_t getRegenerationTime() { return m_regenerationTime; }
     uint16_t getOfflineTrainingTime() { return m_offlineTrainingTime; }
     uint16_t getStoreExpBoostTime() { return m_storeExpBoostTime; }
+    int getAtomicHp() { return m_atomicHp; }
+    int getAtomicMana() { return m_atomicMana; }
 
     auto getStates() { return m_states; }
     uint32_t getMana() { return m_mana; }
@@ -245,4 +248,6 @@ private:
 
     friend class Game;
     friend class Creature;
+    std::atomic<int> m_atomicHp{0};
+    std::atomic<int> m_atomicMana{0};
 };

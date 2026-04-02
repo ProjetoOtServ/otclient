@@ -188,6 +188,7 @@ public:
 
     int getRecivedPacketsCount() { return m_recivedPackeds; }
     int getRecivedPacketsSize() { return m_recivedPackedsSize; }
+    Otc::Direction getLastSentDirection() const { return m_lastSentDirection; }
 
 private:
     void parseStoreButtonIndicators(const InputMessagePtr& msg);
@@ -416,6 +417,8 @@ private:
     ticks_t m_lastPartyAnalyzerCall{ 0 };
     int m_recivedPackeds = 0;
     int m_recivedPackedsSize = 0;
+
+    Otc::Direction m_lastSentDirection{ Otc::InvalidDirection };
 
     std::string m_accountName;
     std::string m_accountPassword;

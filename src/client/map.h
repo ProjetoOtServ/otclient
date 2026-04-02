@@ -227,6 +227,9 @@ public:
     std::map<std::string, std::tuple<int, int, int, std::string>> findEveryPath(const Position& start, int maxDistance, const std::map<std::string, std::string>& params);
     std::vector<CreaturePtr> getSpectatorsByPattern(const Position& centerPos, const std::string& pattern, Otc::Direction direction);
 
+    // AoE helper: offsets are relative to center, defined as for facing North (negative y = north).
+    int getEnemiesInArea(const std::vector<Point>& areaOffsets, const Position& centerPos, Otc::Direction direction);
+
     int getMinimapColor(const Position& pos);
     bool isSightClear(const Position& fromPos, const Position& toPos);
 

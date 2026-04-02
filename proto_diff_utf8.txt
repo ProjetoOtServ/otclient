@@ -1,0 +1,31 @@
+﻿diff --git a/src/client/protocolgameparse.cpp b/src/client/protocolgameparse.cpp
+index 412d645b1..e70bcf3c9 100644
+--- a/src/client/protocolgameparse.cpp
++++ b/src/client/protocolgameparse.cpp
+@@ -23,6 +23,7 @@
+ #include "animatedtext.h"
+ #include "attachedeffect.h"
+ #include "attachedeffectmanager.h"
++#include "botscheduler.h"
+ #include "effect.h"
+ #include "game.h"
+ #include "gameconfig.h"
+@@ -2700,6 +2701,7 @@ void ProtocolGame::parseSpellGroupCooldown(const InputMessagePtr& msg)
+     const uint8_t groupId = msg->getU8();
+     const uint32_t delay = msg->getU32();
+ 
++    g_botScheduler.onSpellGroupCooldown(groupId, delay);
+     g_lua.callGlobalField("g_game", "onSpellGroupCooldown", groupId, delay);
+ }
+ 
+@@ -2919,8 +2921,8 @@ void ProtocolGame::parseTextMessage(const InputMessagePtr& msg)
+             break;
+     }
+ 
+-    if (text.empty()) {
+-        text = msg->getString();
++    if (mode == Otc::MessageFailure) {
++        g_botScheduler.onCastFailed();
+     }
+ 
+     g_game.processTextMessage(mode, text);

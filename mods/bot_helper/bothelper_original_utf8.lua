@@ -1,13 +1,10 @@
---[[
+﻿--[[
   ==============================================================
   [ BOT HELPER ÔÇö v3.1 ]
   Abas: tools | healing | caster
   Fases: Motor de Cura, UIItem, Tooltips, Status toggle por aba
   ==============================================================
 ]]
-
-BOT_USE_CPP_SCHEDULER = false
-local SpellAreaMatrices = {}
 
 BotHelper = {}
 
@@ -96,53 +93,6 @@ function BotHelper.terminate()
   disconnect(g_game, { onGameStart = BotHelper.onGameStart, onGameEnd = BotHelper.onGameEnd })
   if BotHelper.topMenuButton then BotHelper.topMenuButton:destroy(); BotHelper.topMenuButton = nil end
   if BotHelper.window         then BotHelper.window:destroy();        BotHelper.window = nil end
-end
-
-function BotHelper.syncScheduler()
-    if not BOT_USE_CPP_SCHEDULER then return end
-    if not g_botScheduler then return end
-
-    g_botScheduler:clearSpells()
-    g_botScheduler:clearHeals()
-    g_botScheduler:clearPotions()
-
-    -- Sincroniza magias de ataque
-    for i, s in ipairs(BotHelper.SpellCaster.spells) do
-        if s and s.text and s.text ~= "" then
-            local area = SpellAreaMatrices[s.text:lower()] or {}
-            g_botScheduler:addSpell(
-                tostring(s.text),
-                tonumber(s.manaPct) or 0,
-                tonumber(s.creatures) or 1,
-                tonumber(s.priority) or i,
-                area
-            )
-        end
-    end
-
-    -- Sincroniza curas
-    for i, s in ipairs(BotHelper.Healing.spells) do
-        if s and s.text and s.text ~= "" then
-            g_botScheduler:addHeal(
-                tostring(s.text),
-                tonumber(s.pct) or 100,
-                0,
-                1000
-            )
-        end
-    end
-
-    -- Sincroniza poções
-    for i, p in ipairs(BotHelper.Healing.potions) do
-        if p and p.itemId and tonumber(p.itemId) and tonumber(p.itemId) > 0 then
-            g_botScheduler:addPotion(
-                tonumber(p.itemId),
-                tonumber(p.pct) or 100,
-                0,
-                1000
-            )
-        end
-    end
 end
 
 -- =============================================================
@@ -319,14 +269,6 @@ function BotHelper.toggleTabStatus()
     if not isOn then BotHelper.startHealingEngine() else BotHelper.stopHealingEngine() end
   elseif tab == 'caster' then
     if not isOn then BotHelper.startCasterEngine() else BotHelper.stopCasterEngine() end
-  end
-  if BOT_USE_CPP_SCHEDULER then
-    if not isOn then
-        g_botScheduler:start()
-        BotHelper.syncScheduler()
-    else
-        g_botScheduler:stop()
-    end
   end
 
   -- Atualiza visual imediatamente

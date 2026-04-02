@@ -204,6 +204,7 @@ void ProtocolGame::sendAutoWalk(const std::vector<Otc::Direction>& path)
 
 void ProtocolGame::sendWalkNorth()
 {
+    m_lastSentDirection = Otc::North;
     const auto& msg = std::make_shared<OutputMessage>();
     msg->addU8(Proto::ClientWalkNorth);
     send(msg);
@@ -211,6 +212,7 @@ void ProtocolGame::sendWalkNorth()
 
 void ProtocolGame::sendWalkEast()
 {
+    m_lastSentDirection = Otc::East;
     const auto& msg = std::make_shared<OutputMessage>();
     msg->addU8(Proto::ClientWalkEast);
     send(msg);
@@ -218,6 +220,7 @@ void ProtocolGame::sendWalkEast()
 
 void ProtocolGame::sendWalkSouth()
 {
+    m_lastSentDirection = Otc::South;
     const auto& msg = std::make_shared<OutputMessage>();
     msg->addU8(Proto::ClientWalkSouth);
     send(msg);
@@ -225,6 +228,7 @@ void ProtocolGame::sendWalkSouth()
 
 void ProtocolGame::sendWalkWest()
 {
+    m_lastSentDirection = Otc::West;
     const auto& msg = std::make_shared<OutputMessage>();
     msg->addU8(Proto::ClientWalkWest);
     send(msg);
@@ -267,6 +271,7 @@ void ProtocolGame::sendWalkNorthWest()
 
 void ProtocolGame::sendTurnNorth()
 {
+    m_lastSentDirection = Otc::North;
     const auto& msg = std::make_shared<OutputMessage>();
     msg->addU8(Proto::ClientTurnNorth);
     send(msg);
@@ -274,6 +279,7 @@ void ProtocolGame::sendTurnNorth()
 
 void ProtocolGame::sendTurnEast()
 {
+    m_lastSentDirection = Otc::East;
     const auto& msg = std::make_shared<OutputMessage>();
     msg->addU8(Proto::ClientTurnEast);
     send(msg);
@@ -281,6 +287,7 @@ void ProtocolGame::sendTurnEast()
 
 void ProtocolGame::sendTurnSouth()
 {
+    m_lastSentDirection = Otc::South;
     const auto& msg = std::make_shared<OutputMessage>();
     msg->addU8(Proto::ClientTurnSouth);
     send(msg);
@@ -288,6 +295,7 @@ void ProtocolGame::sendTurnSouth()
 
 void ProtocolGame::sendTurnWest()
 {
+    m_lastSentDirection = Otc::West;
     const auto& msg = std::make_shared<OutputMessage>();
     msg->addU8(Proto::ClientTurnWest);
     send(msg);

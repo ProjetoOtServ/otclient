@@ -33,6 +33,8 @@
 #include "localplayer.h"
 #include "luavaluecasts_client.h"
 #include "map.h"
+#include "creaturecache.h"
+#include "botscheduler.h"
 #include "minimap.h"
 #include "missile.h"
 #include "outfit.h"
@@ -198,6 +200,59 @@ void Client::registerLuaFunctions()
 
     g_lua.bindSingletonFunction("g_map", "findEveryPath", &Map::findEveryPath, &g_map);
     g_lua.bindSingletonFunction("g_map", "getSpectatorsByPattern", &Map::getSpectatorsByPattern, &g_map);
+    g_lua.bindSingletonFunction("g_map", "getEnemiesInArea", &Map::getEnemiesInArea, &g_map);
+
+    g_lua.registerSingletonClass("g_creatureCache");
+    g_lua.bindSingletonFunction("g_creatureCache", "getEnemiesInArea", &CreatureCache::getEnemiesInArea, &g_creatureCache);
+
+    g_lua.registerSingletonClass("g_botScheduler");
+    g_lua.bindSingletonFunction("g_botScheduler", "start", &BotScheduler::start, &g_botScheduler);
+    g_lua.bindSingletonFunction("g_botScheduler", "stop", &BotScheduler::stop, &g_botScheduler);
+    g_lua.bindSingletonFunction("g_botScheduler", "pause", &BotScheduler::pause, &g_botScheduler);
+    g_lua.bindSingletonFunction("g_botScheduler", "resume", &BotScheduler::resume, &g_botScheduler);
+    g_lua.registerClassMemberFunction("g_botScheduler", "clearSpells", [](LuaInterface* lua) -> int {
+        if (lua->stackSize() > 0) lua->clearStack();
+        g_botScheduler.clearSpells();
+        return 0;
+    });
+    g_lua.registerClassMemberFunction("g_botScheduler", "addSpell", [](LuaInterface* lua) -> int {
+        if (lua->stackSize() > 5) lua->remove(1);
+        auto area = lua->polymorphicPop<std::vector<Point>>();
+        int minCreatures = lua->polymorphicPop<int>();
+        int cooldown = lua->polymorphicPop<int>();
+        int minMana = lua->polymorphicPop<int>();
+        std::string words = lua->polymorphicPop<std::string>();
+        g_botScheduler.addSpell(words, minMana, cooldown, minCreatures, area);
+        return 0;
+    });
+    g_lua.registerClassMemberFunction("g_botScheduler", "clearHeals", [](LuaInterface* lua) -> int {
+        if (lua->stackSize() > 0) lua->clearStack();
+        g_botScheduler.clearHeals();
+        return 0;
+    });
+    g_lua.registerClassMemberFunction("g_botScheduler", "addHeal", [](LuaInterface* lua) -> int {
+        if (lua->stackSize() > 4) lua->remove(1);
+        int cooldown = lua->polymorphicPop<int>();
+        int minMana = lua->polymorphicPop<int>();
+        int minHp = lua->polymorphicPop<int>();
+        std::string words = lua->polymorphicPop<std::string>();
+        g_botScheduler.addHeal(words, minHp, minMana, cooldown);
+        return 0;
+    });
+    g_lua.registerClassMemberFunction("g_botScheduler", "clearPotions", [](LuaInterface* lua) -> int {
+        if (lua->stackSize() > 0) lua->clearStack();
+        g_botScheduler.clearPotions();
+        return 0;
+    });
+    g_lua.registerClassMemberFunction("g_botScheduler", "addPotion", [](LuaInterface* lua) -> int {
+        if (lua->stackSize() > 4) lua->remove(1);
+        int cooldown = lua->polymorphicPop<int>();
+        int minMana = lua->polymorphicPop<int>();
+        int minHp = lua->polymorphicPop<int>();
+        uint16_t itemId = lua->polymorphicPop<uint16_t>();
+        g_botScheduler.addPotion(itemId, minHp, minMana, cooldown);
+        return 0;
+    });
 
     g_lua.registerSingletonClass("g_minimap");
     g_lua.bindSingletonFunction("g_minimap", "clean", &Minimap::clean, &g_minimap);
@@ -238,6 +293,7 @@ void Client::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_game", "forceWalk", &Game::forceWalk, &g_game);
     g_lua.bindSingletonFunction("g_game", "turn", &Game::turn, &g_game);
     g_lua.bindSingletonFunction("g_game", "stop", &Game::stop, &g_game);
+    g_lua.bindSingletonFunction("g_game", "getServerDirection", &Game::getServerDirection, &g_game);
     g_lua.bindSingletonFunction("g_game", "look", &Game::look, &g_game);
     g_lua.bindSingletonFunction("g_game", "move", &Game::move, &g_game);
     g_lua.bindSingletonFunction("g_game", "moveToParentContainer", &Game::moveToParentContainer, &g_game);
@@ -260,6 +316,7 @@ void Client::registerLuaFunctions()
     g_lua.bindSingletonFunction("g_game", "talk", &Game::talk, &g_game);
     g_lua.bindSingletonFunction("g_game", "talkChannel", &Game::talkChannel, &g_game);
     g_lua.bindSingletonFunction("g_game", "talkPrivate", &Game::talkPrivate, &g_game);
+    g_lua.bindSingletonFunction("g_game", "castSpell", &Game::castSpell, &g_game);
     g_lua.bindSingletonFunction("g_game", "openPrivateChannel", &Game::openPrivateChannel, &g_game);
     g_lua.bindSingletonFunction("g_game", "requestChannels", &Game::requestChannels, &g_game);
     g_lua.bindSingletonFunction("g_game", "joinChannel", &Game::joinChannel, &g_game);

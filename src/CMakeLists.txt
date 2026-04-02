@@ -273,6 +273,7 @@ set(SOURCE_FILES
 
         client/animatedtext.cpp
         client/animator.cpp
+        client/botscheduler.cpp
         client/attachableobject.cpp
         client/attachedeffect.cpp
         client/attachedeffectmanager.cpp
@@ -280,6 +281,7 @@ set(SOURCE_FILES
         client/container.cpp
         client/creature.cpp
         client/creatures.cpp
+        client/creaturecache.cpp
         client/effect.cpp
         client/game.cpp
         client/gameconfig.cpp

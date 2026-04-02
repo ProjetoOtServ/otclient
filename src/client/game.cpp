@@ -1021,6 +1021,18 @@ void Game::talkPrivate(const Otc::MessageMode mode, const std::string_view recei
     m_protocolGame->sendTalk(mode, 0, receiver, message);
 }
 
+void Game::castSpell(const std::string_view words)
+{
+    if (!canPerformGameAction() || words.empty())
+        return;
+
+    const uint8_t spellModeServer = Proto::translateMessageModeToServer(Otc::MessageSpell);
+    const Otc::MessageMode mode = spellModeServer != static_cast<uint8_t>(Otc::MessageInvalid)
+                                      ? Otc::MessageSpell
+                                      : Otc::MessageSay;
+    m_protocolGame->sendTalk(mode, 0, "", words);
+}
+
 void Game::openPrivateChannel(const std::string_view receiver)
 {
     if (!canPerformGameAction() || receiver.empty())

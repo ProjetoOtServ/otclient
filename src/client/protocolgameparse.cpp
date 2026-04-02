@@ -23,6 +23,7 @@
 #include "animatedtext.h"
 #include "attachedeffect.h"
 #include "attachedeffectmanager.h"
+#include "botscheduler.h"
 #include "effect.h"
 #include "game.h"
 #include "gameconfig.h"
@@ -2700,6 +2701,7 @@ void ProtocolGame::parseSpellGroupCooldown(const InputMessagePtr& msg)
     const uint8_t groupId = msg->getU8();
     const uint32_t delay = msg->getU32();
 
+    g_botScheduler.onSpellGroupCooldown(groupId, delay);
     g_lua.callGlobalField("g_game", "onSpellGroupCooldown", groupId, delay);
 }
 
@@ -2921,6 +2923,10 @@ void ProtocolGame::parseTextMessage(const InputMessagePtr& msg)
 
     if (text.empty()) {
         text = msg->getString();
+    }
+
+    if (mode == Otc::MessageFailure) {
+        g_botScheduler.onCastFailed();
     }
 
     g_game.processTextMessage(mode, text);

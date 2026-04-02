@@ -310,6 +310,7 @@ void LocalPlayer::setHealth(const uint32_t health, const uint32_t maxHealth)
         const uint32_t oldMaxHealth = m_maxHealth;
         m_health = health;
         m_maxHealth = maxHealth;
+        m_atomicHp.store(health);
 
         callLuaField("onHealthChange", health, maxHealth, oldHealth, oldMaxHealth);
 
@@ -377,6 +378,7 @@ void LocalPlayer::setMana(const uint32_t mana, const uint32_t maxMana)
     const uint32_t oldMaxMana = m_maxMana;
     m_mana = mana;
     m_maxMana = maxMana;
+    m_atomicMana.store(mana);
 
     callLuaField("onManaChange", mana, maxMana, oldMana, oldMaxMana);
 }

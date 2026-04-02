@@ -53,6 +53,49 @@ namespace
             ++it;
         }
     }
+
+    // Spell pattern in "north-facing" space (same as map axes: -y = north, +x = east).
+    Point rotateSpellPatternOffset(const Point& offset, const Otc::Direction direction)
+    {
+        switch (direction) {
+            case Otc::North:
+                return offset;
+            case Otc::East:
+                return { -offset.y, offset.x };
+            case Otc::South:
+                return { -offset.x, -offset.y };
+            case Otc::West:
+                return { offset.y, -offset.x };
+            default:
+                return offset;
+        }
+    }
+
+    bool isAreaSpellEnemyTarget(const CreaturePtr& creature)
+    {
+        if (!creature || creature->isRemoved() || !creature->canBeSeen() || creature->isDead())
+            return false;
+        if (creature->isLocalPlayer())
+            return false;
+        if (creature->isNpc())
+            return false;
+
+        const auto& localPlayer = g_game.getLocalPlayer();
+        if (!localPlayer)
+            return false;
+
+        const uint32_t masterId = creature->getMasterId();
+        if (masterId != 0 && masterId == localPlayer->getId())
+            return false;
+
+        if (creature->isPlayer()) {
+            const uint8_t shield = creature->getShield();
+            if (shield >= Otc::ShieldWhiteYellow && shield <= Otc::ShieldYellowNoSharedExp)
+                return false;
+        }
+
+        return creature->isMonster() || creature->isPlayer();
+    }
 }
 
 #ifdef FRAMEWORK_EDITOR
@@ -1529,6 +1572,40 @@ std::vector<CreaturePtr> Map::getSpectatorsByPattern(const Position& centerPos, 
         }
     }
     return creatures;
+}
+
+int Map::getEnemiesInArea(const std::vector<Point>& areaOffsets, const Position& centerPos, const Otc::Direction direction)
+{
+    if (!centerPos.isMapPosition() || areaOffsets.empty())
+        return 0;
+
+    std::unordered_set<uint32_t> counted;
+    counted.reserve(areaOffsets.size() * 2);
+
+    thread_local std::vector<CreaturePtr> tileCreatures;
+    tileCreatures.clear();
+
+    for (const Point& offset : areaOffsets) {
+        const Point rotated = rotateSpellPatternOffset(offset, direction);
+        const Position tilePos = centerPos + rotated;
+        if (!tilePos.isMapPosition())
+            continue;
+
+        const TilePtr& tile = getTile(tilePos);
+        if (!tile || !tile->hasCreatures())
+            continue;
+
+        tileCreatures.clear();
+        tile->appendSpectators(tileCreatures);
+
+        for (const CreaturePtr& creature : tileCreatures) {
+            if (!isAreaSpellEnemyTarget(creature))
+                continue;
+            counted.insert(creature->getId());
+        }
+    }
+
+    return static_cast<int>(counted.size());
 }
 
 const TilePtr& TileBlock::create(const Position& pos)

@@ -202,6 +202,8 @@ public:
     void talk(std::string_view message);
     void talkChannel(Otc::MessageMode mode, uint16_t channelId, std::string_view message);
     void talkPrivate(Otc::MessageMode mode, std::string_view receiver, std::string_view message);
+    /// Sends spell words as ClientTalk with MessageSpell (not MessageSay); avoids chat UI path for normal speech.
+    void castSpell(std::string_view words);
 
     // channel related
     void openPrivateChannel(std::string_view receiver);
@@ -245,6 +247,7 @@ public:
     Otc::FightModes getFightMode() { return m_fightMode; }
     bool isSafeFight() { return m_safeFight; }
     Otc::PVPModes getPVPMode() { return m_pvpMode; }
+    Otc::Direction getServerDirection() const { return m_protocolGame ? m_protocolGame->getLastSentDirection() : Otc::InvalidDirection; }
 
     // pvp related
     void setUnjustifiedPoints(UnjustifiedPoints unjustifiedPoints);
