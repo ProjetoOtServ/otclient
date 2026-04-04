@@ -108,6 +108,7 @@ private:
     std::atomic<int> m_playerX{0}, m_playerY{0};
     std::atomic<int> m_playerZ{0};
     std::atomic<Otc::Direction> m_playerDir{Otc::South};
+    std::atomic<int> m_consecutiveFailures{0};
 
     // Cooldown trackers (ticks)
     std::atomic<uint64_t> m_lastAttackTime{0};

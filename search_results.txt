@@ -1,0 +1,8 @@
+﻿163:   if isTabEnabled('healing') then BotHelper.startHealingEngine() else BotHelper.stopHealingEngine() end
+164:   if isTabEnabled('caster')  then BotHelper.startCasterEngine()  else BotHelper.stopCasterEngine()  end
+324:     if not isOn then BotHelper.startHealingEngine() else BotHelper.stopHealingEngine() end
+326:     if not isOn then BotHelper.startCasterEngine() else BotHelper.stopCasterEngine() end
+669: function BotHelper.startHealingEngine()
+672:     g_logger.info("[BotHelper] startHealingEngine chamado, CPP=" .. tostring(BOT_USE_CPP_SCHEDULER))
+1359: function BotHelper.startCasterEngine()
+1362:     g_logger.info("[BotHelper] startCasterEngine chamado, CPP=" .. tostring(BOT_USE_CPP_SCHEDULER))

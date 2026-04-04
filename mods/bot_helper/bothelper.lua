@@ -10,6 +10,7 @@ BOT_USE_CPP_SCHEDULER = false
 local SpellAreaMatrices = {}
 
 BotHelper = {}
+BotHelper.lastHealTime = 0
 
 -- === REFER├èNCIAS DE MEM├ôRIA ===
 BotHelper.window        = nil
@@ -102,6 +103,10 @@ function BotHelper.syncScheduler()
     if not BOT_USE_CPP_SCHEDULER then return end
     if not g_botScheduler then return end
 
+    g_logger.info("[BotHelper] syncScheduler chamado - spells: " 
+        .. #BotHelper.SpellCaster.spells 
+        .. " heals: " .. #BotHelper.Healing.spells)
+
     g_botScheduler:clearSpells()
     g_botScheduler:clearHeals()
     g_botScheduler:clearPotions()
@@ -159,6 +164,14 @@ function BotHelper.onGameStart()
   if isTabEnabled('healing') then BotHelper.startHealingEngine() else BotHelper.stopHealingEngine() end
   if isTabEnabled('caster')  then BotHelper.startCasterEngine()  else BotHelper.stopCasterEngine()  end
   
+  if BOT_USE_CPP_SCHEDULER then
+    local anyEnabled = isTabEnabled('healing') or isTabEnabled('caster')
+    if anyEnabled then
+      g_botScheduler:start()
+      BotHelper.syncScheduler()
+    end
+  end
+  
   -- Atualiza o painel de rodape visivel
   BotHelper.refreshFooter()
 end
@@ -167,6 +180,10 @@ function BotHelper.onGameEnd()
   BotHelper.stopToolsEngine()
   BotHelper.stopHealingEngine()
   BotHelper.stopCasterEngine()
+
+  if BOT_USE_CPP_SCHEDULER then
+    g_botScheduler:stop()
+  end
   -- Em caso de deslogar, reverter UI para o estado "Default" limpo
   BotHelper.Tools.loadConfigToUI()
   BotHelper.Healing.loadConfigToUI()
@@ -308,6 +325,7 @@ end
 function BotHelper.toggleTabStatus()
   local tab  = BotHelper.currentTab
   local isOn = isTabEnabled(tab)
+  g_logger.info("[BotHelper] toggle chamado, tab=" .. tostring(tab) .. " isOn=" .. tostring(isOn))
 
   -- Inverte e salva imediatamente
   cfgSet(tab, 'enabled', not isOn)
@@ -556,9 +574,10 @@ BotHelper.Healing = {}
 -- Dados em memoria dos slots (sincronizados com g_settings + UI)
 BotHelper.Healing.spells  = {}   -- {text='', pct=80}  ├ù 3
 BotHelper.Healing.potions = {}   -- {itemId=0, pct=60, isMana=false} ├ù 3
+BotHelper.lastHealTime = 0
 
 -- Cooldowns (ms)
-local SPELL_COOLDOWN  = 700
+local SPELL_COOLDOWN  = 1050
 local POTION_COOLDOWN = 500
 local lastSpellTime   = 0
 local lastPotionTime  = 0
@@ -656,13 +675,17 @@ end
 -- =============================================================
 -- MOTOR DE CURA ÔÇö ciclo 150ms com cascata de prioridade
 -- =============================================================
-local SPELL_COOLDOWN  = 1000
+local SPELL_COOLDOWN  = 1050
 local POTION_COOLDOWN = 1000
 local lastSpellTime   = 0
 local lastPotionTime  = 0
 
 function BotHelper.startHealingEngine()
   BotHelper.stopHealingEngine()
+  if BOT_USE_CPP_SCHEDULER then 
+    g_logger.info("[BotHelper] startHealingEngine chamado, CPP=" .. tostring(BOT_USE_CPP_SCHEDULER))
+    return 
+  end
 
   BotHelper.healingCycle = cycleEvent(function()
     -- ÔòÉÔòÉ GUARDA-PORT├âO ABSOLUTO ÔòÉÔòÉ
@@ -697,6 +720,7 @@ function BotHelper.startHealingEngine()
       if bestSlot then
         g_game.talk(BotHelper.Healing.spells[bestSlot].text)
         lastSpellTime = now
+        BotHelper.lastHealTime = now -- Sincroniza com motor de ataque
       end
     end
 
@@ -1293,7 +1317,7 @@ end
 local spellTimers      = {}   -- { [spellText] = millis do ultimo cast }
 local globalAttackTimer = 0   -- millis do ultimo cast de qualquer spell de ataque
 
-local GLOBAL_CD = 2000        -- ms de exaustao global (GCD padrao Tibia ataque)
+local GLOBAL_CD = 2050        -- ms de exaustao global (Safety Margin 50ms)
 local SPELL_CD  = 4000        -- ms de CD individual conservador (fallback)
 
 -- Tenta obter o exhaustion real da spell pelo DB do client
@@ -1313,14 +1337,19 @@ end
 local function isOnGlobalCD()
   local now = g_clock.millis()
 
-  -- Fonte 1: modulo nativo (Attack group = 1) ÔÇö bonus quando visivel
+  -- Fonte 1: modulo nativo (Attack group = 1)
   local gc = modules.game_cooldown
   if gc and type(gc.isGroupCooldownIconActive) == 'function' then
     if gc.isGroupCooldownIconActive(1) then return true end
   end
 
-  -- Fonte 2: cronometro local (sempre confiavel)
-  return (now - globalAttackTimer) < GLOBAL_CD
+  -- Fonte 2: cronometro local de ataque
+  if (now - globalAttackTimer) < GLOBAL_CD then return true end
+
+  -- Fonte 3: sincronizacao com cura (evita colisao de pacotes)
+  if (now - BotHelper.lastHealTime) < 100 then return true end
+
+  return false
 end
 
 -- ==================================================================
@@ -1349,6 +1378,10 @@ end
 
 function BotHelper.startCasterEngine()
   BotHelper.stopCasterEngine()
+  if BOT_USE_CPP_SCHEDULER then 
+    g_logger.info("[BotHelper] startCasterEngine chamado, CPP=" .. tostring(BOT_USE_CPP_SCHEDULER))
+    return 
+  end
 
   BotHelper.casterCycle = cycleEvent(function()
     if not isTabEnabled('caster') then return end
@@ -1382,6 +1415,10 @@ function BotHelper.startCasterEngine()
     for _, entry in ipairs(orderedSlots) do
       local s = entry.data
       local requiredCreatures = tonumber(s.creatures:match('%d+')) or 1
+      g_logger.info("[Caster] spell=" .. s.text .. 
+          " creatures_raw=" .. tostring(s.creatures) ..
+          " required=" .. tostring(requiredCreatures) ..
+          " onScreen=" .. tostring(creaturesNaTela))
 
       if manaPct >= s.manaPct and creaturesNaTela >= requiredCreatures and not isSpellOnCD(s) then
         -- Ô£à GCD limpo + CD limpo + recursos OK ÔåÆ DISPARA

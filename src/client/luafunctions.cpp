@@ -236,6 +236,10 @@ void Client::registerLuaFunctions()
         int minMana = lua->polymorphicPop<int>();
         int minHp = lua->polymorphicPop<int>();
         std::string words = lua->polymorphicPop<std::string>();
+        
+        g_logger.info(fmt::format("[addHeal binding] words={} minHp={} minMana={} cooldown={}",
+            words, minHp, minMana, cooldown));
+        
         g_botScheduler.addHeal(words, minHp, minMana, cooldown);
         return 0;
     });

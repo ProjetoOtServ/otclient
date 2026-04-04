@@ -31,7 +31,11 @@
 
 BotScheduler g_botScheduler;
 
-BotScheduler::BotScheduler() {}
+BotScheduler::BotScheduler() {
+    uint64_t now = g_clock.millis();
+    m_lastAttackTime = now;
+    m_lastHealTime = now;
+}
 
 BotScheduler::~BotScheduler() {
     stop();
@@ -41,6 +45,11 @@ void BotScheduler::start() {
     if (m_running) return;
     m_running = true;
     m_paused = false;
+    // Sincroniza timers com o tempo atual para evitar burst inicial
+    uint64_t now = g_clock.millis();
+    m_lastHealTime = now;
+    m_lastAttackTime = now;
+    m_consecutiveFailures = 0;
     m_thread = std::thread(&BotScheduler::threadLoop, this);
 }
 
@@ -121,10 +130,14 @@ void BotScheduler::onSpellCooldown(uint16_t spellId, uint32_t delay) {
 }
 
 void BotScheduler::onSpellGroupCooldown(uint8_t groupId, uint32_t delay) {
+    uint64_t now = g_clock.millis();
+    m_lastConfirmedCastTime = now;
+    m_consecutiveFailures = 0; // Success!
+
     if (groupId == 1) { // Attack
-        m_lastAttackTime = g_clock.millis();
+        m_lastAttackTime = now + delay - m_dynamicSafetyMargin.load();
     } else if (groupId == 2) { // Healing
-        m_lastHealTime = g_clock.millis();
+        m_lastHealTime = now + delay;
     }
     
     // Auto-confirm as ACK
@@ -138,6 +151,7 @@ void BotScheduler::onCastSent() {
 void BotScheduler::onCastConfirmed(uint32_t delay) {
     uint64_t now = g_clock.millis();
     m_lastConfirmedCastTime = now;
+    m_consecutiveFailures = 0; // Any success resets penalty
 
     uint64_t sent = m_lastSentCastTime.load();
     if (sent > 0 && now > sent) {
@@ -155,9 +169,14 @@ void BotScheduler::onCastConfirmed(uint32_t delay) {
 }
 
 void BotScheduler::onCastFailed() {
-    // Penalize current tick on failure (exhausted) to prevent network spam
-    m_lastAttackTime = g_clock.millis() + 50;
-    m_lastHealTime = g_clock.millis() + 50;
+    uint64_t now = g_clock.millis();
+    int failures = ++m_consecutiveFailures;
+    
+    // Scaling penalty: 1s, 2s, or 3s based on failures
+    int penalty = std::min(3000, failures * 1000);
+    
+    m_lastAttackTime = now + penalty;
+    m_lastHealTime = now + penalty;
 }
 
 void BotScheduler::threadLoop() {
@@ -171,6 +190,12 @@ void BotScheduler::threadLoop() {
 
 void BotScheduler::processCombat() {
     uint64_t now = g_clock.millis();
+    
+    static int callCount = 0;
+    if (++callCount % 1000 == 0) {
+        g_logger.info(fmt::format("[BotScheduler] processCombat chamado {} vezes, lastHeal={}, now={}",
+            callCount, m_lastHealTime.load(), g_clock.millis()));
+    }
     
     static int cycleCount = 0;
     static long long totalContentionUs = 0;

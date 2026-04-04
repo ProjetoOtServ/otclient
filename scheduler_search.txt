@@ -1,0 +1,9 @@
+﻿9: BOT_USE_CPP_SCHEDULER = true
+102:     if not BOT_USE_CPP_SCHEDULER then return end
+166:   if BOT_USE_CPP_SCHEDULER then
+183:   if BOT_USE_CPP_SCHEDULER then
+340:   if BOT_USE_CPP_SCHEDULER then
+683:   if BOT_USE_CPP_SCHEDULER then 
+684:     g_logger.info("[BotHelper] startHealingEngine chamado, CPP=" .. tostring(BOT_USE_CPP_SCHEDULER))
+1373:   if BOT_USE_CPP_SCHEDULER then 
+1374:     g_logger.info("[BotHelper] startCasterEngine chamado, CPP=" .. tostring(BOT_USE_CPP_SCHEDULER))
