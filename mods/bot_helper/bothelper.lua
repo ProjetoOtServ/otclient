@@ -19,6 +19,7 @@ BotHelper.currentTab    = 'tools'
 BotHelper.healingCycle  = nil
 BotHelper.keyCapturing  = nil
 BotHelper._hotkeyHandler = nil  -- handler persistente de hotkeys no rootWidget
+BotHelper._pzHandler    = nil  -- handler de estados do jogador para detectar PZ
 
 -- === HELPERS LOCAIS ===
 local function table_contains(table, element)
@@ -174,12 +175,28 @@ function BotHelper.onGameStart()
   
   -- Atualiza o painel de rodape visivel
   BotHelper.refreshFooter()
+
+  -- Conecta o guardiao de PZ ao state change do player
+  local player = g_game.getLocalPlayer()
+  if player then
+    BotHelper._pzHandler = { onStatesChange = BotHelper.onPZStateChange }
+    connect(player, BotHelper._pzHandler)
+  end
 end
 
 function BotHelper.onGameEnd()
   BotHelper.stopToolsEngine()
   BotHelper.stopHealingEngine()
   BotHelper.stopCasterEngine()
+
+  -- Desconecta o guardiao de PZ
+  if BotHelper._pzHandler then
+    local player = g_game.getLocalPlayer()
+    if player then
+      pcall(function() disconnect(player, BotHelper._pzHandler) end)
+    end
+    BotHelper._pzHandler = nil
+  end
 
   if BOT_USE_CPP_SCHEDULER then
     g_botScheduler:stop()
@@ -188,6 +205,25 @@ function BotHelper.onGameEnd()
   BotHelper.Tools.loadConfigToUI()
   BotHelper.Healing.loadConfigToUI()
   BotHelper.SpellCaster.loadConfigToUI()
+end
+
+-- =============================================================
+-- HOOK: PROTECTION ZONE — Desativa SpellCaster ao entrar em PZ
+-- Healing e Tools NAO sao afetados.
+-- =============================================================
+function BotHelper.onPZStateChange(player, now, old)
+  local PZ_BIT = 16384 -- Valor absoluto para evitar erros de enum
+  local wasInPZ = (bit.band(old, PZ_BIT) ~= 0)
+  local isInPZ  = (bit.band(now, PZ_BIT) ~= 0)
+
+  if isInPZ and not wasInPZ then -- Transicao OFF -> ON
+    if isTabEnabled('caster') then
+      cfgSet('caster', 'enabled', false)
+      BotHelper.stopCasterEngine()
+      if BotHelper.currentTab == 'caster' then BotHelper.refreshFooter() end
+      BotHelper.showGameMessage("SpellCaster DESATIVADO em Zona de Prote" .. string.char(231) .. string.char(227) .. "o")
+    end
+  end
 end
 
 -- =============================================================
