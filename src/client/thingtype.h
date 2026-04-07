@@ -190,8 +190,14 @@ public:
     int getExactHeight();
     const TexturePtr& getTexture(int animationPhase);
 
+    bool hasHdTexture() const { return !m_hdTexturePath.empty(); }
+    void setHdTexturePath(const std::string& path) { m_hdTexturePath = path; m_hdTexture = nullptr; }
+
     std::string getName() { return m_name; }
     std::string getDescription() { return m_description; }
+
+    std::string m_hdTexturePath;
+    TexturePtr m_hdTexture;
 
 private:
     static ThingFlagAttr thingAttrToThingFlagAttr(ThingAttr attr);

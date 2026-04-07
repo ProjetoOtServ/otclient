@@ -26,6 +26,9 @@
 #include "framework/otml/otmlnode.h"
 #include "gameconfig.h"
 #include "item.h"
+#include "thingtype.h"
+#include "thingtypemanager.h"
+#include "framework/graphics/texturemanager.h"
 
 UIItem::UIItem() { setProp(PropDraggable, true, false); }
 
@@ -49,6 +52,24 @@ void UIItem::drawSelf(const DrawPoolType drawPane)
         }
 
         const int exactSize = std::max<int>(g_gameConfig.getSpriteSize(), m_item->getExactSize());
+        const auto& thingType = g_things.getThingType(m_item->getId(), ThingCategoryItem);
+
+        if (thingType->hasHdTexture()) {
+            if (!thingType->m_hdTexture) {
+                thingType->m_hdTexture = g_textures.getTexture(thingType->m_hdTexturePath);
+            }
+            if (thingType->m_hdTexture) {
+                const auto& hdSize = thingType->m_hdTexture->getSize();
+                g_drawPool.addTexturedRect(getPaddingRect(), thingType->m_hdTexture, Rect(0, 0, hdSize.width(), hdSize.height()), m_color);
+
+                drawBorder(m_rect);
+                drawIcon(m_rect);
+                drawText(m_rect);
+                return;
+            } else {
+                g_logger.error("HD OVERRIDE: Failed to load UI texture for item {} at path {}", m_item->getId(), thingType->m_hdTexturePath);
+            }
+        }
 
         g_drawPool.bindFrameBuffer(exactSize);
         m_item->setColor(m_color);

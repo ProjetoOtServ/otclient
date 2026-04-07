@@ -78,7 +78,7 @@ if ENABLE_SERVERS then
         --
         ["ip.net"] = {
             port = 7171,
-            protocol = 860,
+            protocol = 1500,
             httpLogin = false
         }
     }

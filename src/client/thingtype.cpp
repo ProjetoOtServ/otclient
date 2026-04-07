@@ -28,6 +28,7 @@
 #include "lightview.h"
 #include "spriteappearances.h"
 #include "spritemanager.h"
+#include "framework/graphics/texturemanager.h"
 #include "framework/core/asyncdispatcher.h"
 #include "framework/core/filestream.h"
 #include "framework/graphics/drawpoolmanager.h"
@@ -667,6 +668,20 @@ void ThingType::draw(const Point& dest, const int layer, const int xPattern, con
     // outfits like 126 and 127 don't have animation
     // this line fixes a bug that makes them disappear while moving
     int animationFrameId = animationPhase % m_animationPhases;
+
+    if (hasHdTexture() && drawThings) {
+        if (!m_hdTexture) {
+            m_hdTexture = g_textures.getTexture(m_hdTexturePath);
+        }
+        if (m_hdTexture) {
+            const Size visualSize = m_size * g_gameConfig.getSpriteSize();
+            const Rect screenRect(dest - (m_displacement + (m_size.toPoint() - Point(1)) * g_gameConfig.getSpriteSize()) * g_drawPool.getScaleFactor(), visualSize * g_drawPool.getScaleFactor());
+            g_drawPool.addTexturedRect(screenRect, m_hdTexture, Rect(Point(0), m_hdTexture->getSize()), m_opacity < 1.0f ? Color(color, m_opacity) : color);
+            return;
+        } else {
+            g_logger.error("HD OVERRIDE: Failed to get texture for path {}", m_hdTexturePath);
+        }
+    }
 
     const auto& texture = getTexture(animationFrameId);
     if (!texture) {

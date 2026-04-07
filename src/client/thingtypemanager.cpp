@@ -54,6 +54,8 @@ void ThingTypeManager::init()
     m_nullItemType = std::make_shared<ItemType>();
     m_itemTypes.resize(1, m_nullItemType);
 #endif
+
+    loadHdAssets("data/hd_assets/mapping.json");
 }
 
 void ThingTypeManager::terminate()
@@ -623,5 +625,44 @@ void ThingTypeManager::loadXml(const std::string& file)
 }
 
 #endif
+
+void ThingTypeManager::loadHdAssets(const std::string& fileName)
+{
+    try {
+        std::string jsonStr = g_resources.readFileContents(fileName);
+        if (jsonStr.empty()) {
+            g_logger.error("HD OVERRIDE: mapping.json not found or empty!");
+            return;
+        }
+
+        const json document = json::parse(jsonStr);
+
+        const auto parseCategory = [&](const std::string& key, ThingCategory cat) {
+            if (document.contains(key)) {
+                for (auto& [idStr, texPath] : document[key].items()) {
+                    try {
+                        const uint16_t id = std::stoi(idStr);
+                        if (auto* type = getRawThingType(id, cat)) {
+                            std::string path = texPath.get<std::string>();
+                            type->setHdTexturePath(path);
+                            g_logger.info("HD OVERRIDE: Bound Item ID {} to {}", id, path);
+                        }
+                    } catch (...) {
+                        g_logger.error("Invalid ID in HD mapping: {}", idStr);
+                    }
+                }
+            }
+        };
+
+        parseCategory("items", ThingCategoryItem);
+        parseCategory("creatures", ThingCategoryCreature);
+        parseCategory("effects", ThingCategoryEffect);
+        parseCategory("missiles", ThingCategoryMissile);
+
+        g_logger.info("HD OVERRIDE: mapping.json loaded successfully.");
+    } catch (const std::exception& e) {
+        g_logger.error("Failed to load HD assets mapping: {}", e.what());
+    }
+}
 
 /* vim: set ts=4 sw=4 et: */

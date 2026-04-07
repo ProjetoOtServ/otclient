@@ -37,6 +37,7 @@ public:
     bool loadOtml(std::string file);
     bool loadAppearances(const std::string& file);
     bool loadStaticData(const std::string& file);
+    void loadHdAssets(const std::string& fileName);
 
 #ifdef FRAMEWORK_EDITOR
     void parseItemType(uint16_t id, pugi::xml_node node);
