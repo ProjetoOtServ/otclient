@@ -89,9 +89,15 @@ public:
     void onCastConfirmed(uint32_t delay);
     void onCastFailed();
 
+    // Auto Target — isolado, nao depende do m_running do Healing/Caster
+    void setAutoTarget(bool enabled, const std::string& mode);
+    void stopAutoTarget();
+
 private:
     void threadLoop();
     void processCombat();
+    void autoTargetLoop();    // Thread dedicada ao Auto Target
+    void processAutoTarget(); // Logica de busca e ataque (executa na Main Thread)
 
     std::thread m_thread;
     std::atomic<bool> m_running{false};
@@ -120,6 +126,13 @@ private:
     std::atomic<uint64_t> m_lastConfirmedCastTime{0};
     std::atomic<double>   m_avgRtt{20.0};
     std::atomic<int>      m_dynamicSafetyMargin{30};
+
+    // Auto Target — isolado, nao depende de m_running
+    std::atomic<bool>     m_autoTargetEnabled{false};
+    std::atomic<char>     m_targetMode{'A'};
+    std::atomic<char>     m_lastTargetMode{'A'};
+    std::atomic<uint32_t> m_currentTargetId{0};
+    std::thread           m_autoTargetThread;
 };
 
 

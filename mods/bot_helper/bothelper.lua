@@ -201,6 +201,10 @@ function BotHelper.onGameEnd()
   if BOT_USE_CPP_SCHEDULER then
     g_botScheduler:stop()
   end
+  -- Para sempre o Auto Target, independente da flag global
+  if g_botScheduler then
+    g_botScheduler:stopAutoTarget()
+  end
   -- Em caso de deslogar, reverter UI para o estado "Default" limpo
   BotHelper.Tools.loadConfigToUI()
   BotHelper.Healing.loadConfigToUI()
@@ -1213,6 +1217,18 @@ function BotHelper.SpellCaster.loadConfigToUI()
   local chkShooter = p:recursiveGetChildById('chkEnableShooter')
   if chkShooter then chkShooter:setChecked(BotHelper.SpellCaster.shooterEnabled) end
 
+  -- Restaura estado do Auto Target e propaga ao C++ (usa chkAutoTarget, NAO chkEnableShooter)
+  BotHelper.SpellCaster.autoTargetEnabled = cfgGet('caster', 'autoTargetEnabled', false)
+  local chkAT = p:recursiveGetChildById('chkAutoTarget')
+  if chkAT then chkAT:setChecked(BotHelper.SpellCaster.autoTargetEnabled) end
+
+  if g_game.isOnline() and g_botScheduler then
+    g_botScheduler:setAutoTarget(
+      BotHelper.SpellCaster.autoTargetEnabled,  -- CheckBox correto: chkAutoTarget
+      BotHelper.SpellCaster.autoTargetMode
+    )
+  end
+
   for i = 1, 5 do
     BotHelper.SpellCaster.spells[i].text      = cfgGet('caster', 'spell'..i..'.text', '')
     BotHelper.SpellCaster.spells[i].icon      = cfgGet('caster', 'spell'..i..'.icon', 0)
@@ -1254,6 +1270,26 @@ function BotHelper.SpellCaster.syncFromUI()
   if chkShooter then
     BotHelper.SpellCaster.shooterEnabled = chkShooter:isChecked()
     cfgSet('caster', 'shooterEnabled', BotHelper.SpellCaster.shooterEnabled)
+  end
+
+  -- Sincroniza Enable Shooter (independente do Auto Target)
+  local chkShooter = p:recursiveGetChildById('chkEnableShooter')
+  if chkShooter then
+    BotHelper.SpellCaster.shooterEnabled = chkShooter:isChecked()
+    cfgSet('caster', 'shooterEnabled', BotHelper.SpellCaster.shooterEnabled)
+  end
+
+  -- Sincroniza Auto Target C++ usando APENAS o chkAutoTarget (widget correto)
+  local chkAT = p:recursiveGetChildById('chkAutoTarget')
+  if chkAT then
+    BotHelper.SpellCaster.autoTargetEnabled = chkAT:isChecked()
+    cfgSet('caster', 'autoTargetEnabled', BotHelper.SpellCaster.autoTargetEnabled)
+  end
+  if g_botScheduler then
+    g_botScheduler:setAutoTarget(
+      BotHelper.SpellCaster.autoTargetEnabled, -- CheckBox correto: chkAutoTarget
+      BotHelper.SpellCaster.autoTargetMode
+    )
   end
 
   for i = 1, 5 do
@@ -1338,7 +1374,7 @@ local function countVisibleCreatures()
   local count = 0
   local creatures = g_map.getSpectators(player:getPosition(), false)
   for _, creature in ipairs(creatures) do
-    if creature ~= player and creature:isCreature() and not creature:isNpc() then
+    if creature ~= player and creature:isCreature() and not creature:isNpc() and creature:getHealthPercent() > 0 then
       count = count + 1
     end
   end
@@ -1457,11 +1493,23 @@ function BotHelper.startCasterEngine()
           " onScreen=" .. tostring(creaturesNaTela))
 
       if manaPct >= s.manaPct and creaturesNaTela >= requiredCreatures and not isSpellOnCD(s) then
-        -- Ô£à GCD limpo + CD limpo + recursos OK ÔåÆ DISPARA
-        g_game.talk(s.text)
-        spellTimers[s.text] = g_clock.millis()
-        globalAttackTimer   = g_clock.millis()
-        return  -- 1 cast por ciclo; retorna e aguarda o proximo tick
+        -- ACAO 2: Fim do Sequestro Manual
+        local runeId = tonumber(s.text)
+        local currentTarget = g_game.getAttackingCreature()
+        
+        if runeId and not BotHelper.SpellCaster.autoTargetEnabled and not currentTarget then
+          -- Se for Runa e AutoTarget OFF e sem target manual: IGNORA. Nao sequestra / ataca sozinho.
+        else
+          -- GCD limpo + CD limpo + recursos OK -> DISPARA
+          if runeId and currentTarget then
+            g_game.useInventoryItemWith(runeId, currentTarget)
+          else
+            g_game.talk(s.text)
+          end
+          spellTimers[s.text] = g_clock.millis()
+          globalAttackTimer   = g_clock.millis()
+          return  -- 1 cast por ciclo; retorna e aguarda o proximo tick
+        end
       end
       -- Condicao nao atendida: continua automaticamente para o proximo slot
     end

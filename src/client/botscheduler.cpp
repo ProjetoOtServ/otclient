@@ -22,11 +22,14 @@
 
 #include "botscheduler.h"
 #include "game.h"
+#include "map.h"
+#include "creature.h"
 #include "creaturecache.h"
 #include "localplayer.h"
 #include <framework/core/clock.h>
 #include <framework/core/eventdispatcher.h>
 #include <fmt/format.h>
+#include <algorithm>
 #include <chrono>
 
 BotScheduler g_botScheduler;
@@ -104,6 +107,8 @@ void BotScheduler::stop() {
     if (m_thread.joinable()) {
         m_thread.join();
     }
+    // Para a thread de Auto Target sem depender de m_running
+    stopAutoTarget();
 }
 
 void BotScheduler::setSpellQueue(const std::vector<BotSpell>& queue) {
@@ -277,4 +282,165 @@ void BotScheduler::processCombat() {
     }
 }
 
+// =============================================================
+// AUTO TARGET ENGINE — ISOLADO
+// Nao depende de m_running. Roda sua propria thread.
+// Todo o acesso ao mapa ocorre dentro do g_dispatcher (Main Thread).
+// =============================================================
+
+void BotScheduler::stopAutoTarget() {
+    m_autoTargetEnabled = false;
+    if (m_autoTargetThread.joinable()) {
+        m_autoTargetThread.join();
+    }
+}
+
+void BotScheduler::setAutoTarget(bool enabled, const std::string& mode) {
+    m_autoTargetEnabled = enabled;
+    if (!mode.empty())
+        m_targetMode = mode[0];
+
+    if (enabled) {
+        // Inicia thread dedicada apenas se ainda nao estiver rodando
+        if (!m_autoTargetThread.joinable()) {
+            m_autoTargetThread = std::thread(&BotScheduler::autoTargetLoop, this);
+        }
+    } else {
+        // Sinaliza cancelamento do ataque atual na Main Thread
+        m_currentTargetId = 0;
+        g_dispatcher.addEvent([]() {
+            if (g_game.isOnline())
+                g_game.cancelAttack();
+        });
+        // Thread vai se encerrar sozinha ao ver m_autoTargetEnabled == false
+        if (m_autoTargetThread.joinable()) {
+            m_autoTargetThread.join();
+        }
+    }
+}
+
+void BotScheduler::autoTargetLoop() {
+    while (m_autoTargetEnabled.load()) {
+        processAutoTarget();
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+}
+
+void BotScheduler::processAutoTarget() {
+    if (!m_autoTargetEnabled)
+        return;
+
+    // ── GATEKEEPER: verifica cooldown ANTES de enfileirar no dispatcher ──────
+    // Isso evita que a Main Thread receba 20 eventos/s que seriam descartados
+    // depois. O static e thread-local porque esta funcao roda em uma unica
+    // thread (autoTargetLoop), entao nao ha risco de corrida.
+    static uint64_t lastDispatch = 0;
+    uint64_t nowBg = g_clock.millis();
+    if (nowBg - lastDispatch < 1000) return;
+    lastDispatch = nowBg;
+
+    // Captura atomics antes de entrar no dispatcher
+    char     mode  = m_targetMode.load();
+    char     lastMode = m_lastTargetMode.load();
+    uint32_t curId = m_currentTargetId.load();
+
+    // TODA a interacao com o mapa/criaturas ocorre na Main Thread via dispatcher
+    g_dispatcher.addEvent([this, mode, curId, lastMode]() {
+        // ── KILL SWITCH: descarta eventos enfileirados apos desativacao ─────
+        if (!m_autoTargetEnabled) return;
+
+        if (!g_game.isOnline()) return;
+
+        auto player = g_game.getLocalPlayer();
+        if (!player) return;
+
+        auto playerPos = player->getPosition();
+        int  pz        = playerPos.z;
+        uint32_t pid   = player->getId();
+
+        bool modeChanged = (mode != lastMode);
+
+        // ── STICKINESS ABSOLUTA: se ja esta atacando algo valido, nao faz nada
+        // O bot so busca novo alvo quando o jogador estiver ocioso (sem alvo).
+        auto attacking = g_game.getAttackingCreature();
+        if (!modeChanged && attacking
+            && !attacking->isDead()
+            && attacking->getHealthPercent() > 0
+            && !attacking->isRemoved()
+            && attacking->getPosition().z == pz) {
+            // Garante que m_currentTargetId reflete o alvo atual do cliente
+            m_currentTargetId = attacking->getId();
+            return; // Alvo valido → sem troca, sem pacote extra
+        }
+        
+        m_lastTargetMode = mode;
+
+        // Se chegou aqui: modo mudou, jogador esta ocioso ou alvo morreu/saiu → buscar novo alvo
+
+        // Varredura segura: g_map.getSpectators apenas na Main Thread
+        auto spectators = g_map.getSpectators(playerPos, false);
+
+        // Distancia de Chebyshev
+        auto chebyshev = [&](const CreaturePtr& c) -> int {
+            auto p = c->getPosition();
+            return std::max(std::abs(p.x - playerPos.x), std::abs(p.y - playerPos.y));
+        };
+
+        // Filtro estrito: aceita apenas monstros vivos no mesmo andar.
+        std::vector<CreaturePtr> candidates;
+        candidates.reserve(spectators.size());
+        for (const auto& c : spectators) {
+            if (!c)                              continue; // nulo
+            if (c->isRemoved())                  continue; // saiu do mapa
+            if (c->isDead() || c->getHealthPercent() <= 0) continue; // hp=0 (Limpeza de Fantasmas)
+            if (c->getId() == pid)               continue; // o proprio player
+            if (c->isPlayer())                   continue; // outros jogadores
+            if (c->getPosition().z != pz)        continue; // andar diferente
+            if (!c->isMonster())                 continue; // NPC / outra coisa
+            candidates.push_back(c);
+        }
+
+        if (candidates.empty()) {
+            m_currentTargetId = 0;
+            return;
+        }
+
+        // Score de cluster para Modo E
+        auto clusterScore = [&](const CreaturePtr& c) -> int {
+            int count = 0;
+            auto cp = c->getPosition();
+            for (const auto& other : candidates) {
+                if (other->getId() == c->getId()) continue;
+                auto op = other->getPosition();
+                if (std::abs(op.x - cp.x) <= 2 && std::abs(op.y - cp.y) <= 2)
+                    ++count;
+            }
+            return count;
+        };
+
+        // Ordena pelo modo selecionado (A-I)
+        std::sort(candidates.begin(), candidates.end(),
+            [&](const CreaturePtr& a, const CreaturePtr& b) -> bool {
+                int da = chebyshev(a), db = chebyshev(b);
+                int ha = a->getHealthPercent(), hb = b->getHealthPercent();
+                switch (mode) {
+                    case 'A': return da < db;
+                    case 'B': return da > db;
+                    case 'C': return ha < hb;
+                    case 'D': return ha > hb;
+                    case 'E': return clusterScore(a) > clusterScore(b);
+                    case 'F': return da != db ? (da < db) : (ha < hb);
+                    case 'G': return da != db ? (da < db) : (ha > hb);
+                    case 'H': return da != db ? (da > db) : (ha < hb);
+                    case 'I': return da != db ? (da > db) : (ha > hb);
+                    default:  return da < db;
+                }
+            }
+        );
+
+        auto best = candidates.front();
+        m_currentTargetId = best->getId();
+        g_game.attack(best);
+    });
+}
 

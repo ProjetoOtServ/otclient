@@ -1,0 +1,55 @@
+204: -- Para sempre o Auto Target, independente da flag global
+206: g_botScheduler:stopAutoTarget()
+1089: g_mouse.pushCursor('target')
+1102: g_mouse.popCursor('target')
+1174: BotHelper.SpellCaster.autoTargetMode = 'A'
+1175: BotHelper.SpellCaster.shooterEnabled = false
+1185: local targetModes   = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'}
+1198: -- Auto Target ComboBox
+1199: local cmbTarget = p:recursiveGetChildById('cmbAutoTargetMode')
+1200: if cmbTarget then
+1201: for _, opt in ipairs(targetModes) do cmbTarget:addOption(opt) end
+1210: -- Restaura Auto Target
+1211: BotHelper.SpellCaster.autoTargetMode = cfgGet('caster', 'autoTargetMode', 'A')
+1212: local cmbTarget = p:recursiveGetChildById('cmbAutoTargetMode')
+1213: if cmbTarget then cmbTarget:setCurrentOption(BotHelper.SpellCaster.autoTargetMode) end
+1215: -- Restaura Enable Shooter
+1216: BotHelper.SpellCaster.shooterEnabled = cfgGet('caster', 'shooterEnabled', false)
+1217: local chkShooter = p:recursiveGetChildById('chkEnableShooter')
+1218: if chkShooter then chkShooter:setChecked(BotHelper.SpellCaster.shooterEnabled) end
+1220: -- Restaura estado do Auto Target e propaga ao C++ (usa chkAutoTarget, NAO chkEnableShooter)
+1221: BotHelper.SpellCaster.autoTargetEnabled = cfgGet('caster', 'autoTargetEnabled', false)
+1222: local chkAT = p:recursiveGetChildById('chkAutoTarget')
+1223: if chkAT then chkAT:setChecked(BotHelper.SpellCaster.autoTargetEnabled) end
+1226: g_botScheduler:setAutoTarget(
+1227: BotHelper.SpellCaster.autoTargetEnabled,  -- CheckBox correto: chkAutoTarget
+1228: BotHelper.SpellCaster.autoTargetMode
+1260: -- Sincroniza Auto Target
+1261: local cmbTarget = p:recursiveGetChildById('cmbAutoTargetMode')
+1262: if cmbTarget then
+1263: local v = cmbTarget:getCurrentOption().text
+1264: BotHelper.SpellCaster.autoTargetMode = v
+1265: cfgSet('caster', 'autoTargetMode', v)
+1268: -- Sincroniza Enable Shooter
+1269: local chkShooter = p:recursiveGetChildById('chkEnableShooter')
+1270: if chkShooter then
+1271: BotHelper.SpellCaster.shooterEnabled = chkShooter:isChecked()
+1272: cfgSet('caster', 'shooterEnabled', BotHelper.SpellCaster.shooterEnabled)
+1275: -- Sincroniza Enable Shooter (independente do Auto Target)
+1276: local chkShooter = p:recursiveGetChildById('chkEnableShooter')
+1277: if chkShooter then
+1278: BotHelper.SpellCaster.shooterEnabled = chkShooter:isChecked()
+1279: cfgSet('caster', 'shooterEnabled', BotHelper.SpellCaster.shooterEnabled)
+1282: -- Sincroniza Auto Target C++ usando APENAS o chkAutoTarget (widget correto)
+1283: local chkAT = p:recursiveGetChildById('chkAutoTarget')
+1285: BotHelper.SpellCaster.autoTargetEnabled = chkAT:isChecked()
+1286: cfgSet('caster', 'autoTargetEnabled', BotHelper.SpellCaster.autoTargetEnabled)
+1289: g_botScheduler:setAutoTarget(
+1290: BotHelper.SpellCaster.autoTargetEnabled, -- CheckBox correto: chkAutoTarget
+1291: BotHelper.SpellCaster.autoTargetMode
+1385: -- MOTOR DO SPELL SHOOTER ÔÇö cascata de prioridade + cooldowns
+1390: local globalAttackTimer = 0   -- millis do ultimo cast de qualquer spell de ataque
+1412: -- Fonte 1: modulo nativo (Attack group = 1)
+1419: if (now - globalAttackTimer) < GLOBAL_CD then return true end
+1460: if not BotHelper.SpellCaster.shooterEnabled then return end
+1499: globalAttackTimer   = g_clock.millis()

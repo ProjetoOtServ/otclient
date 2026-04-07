@@ -1,0 +1,74 @@
+function BotHelper.startCasterEngine()
+  BotHelper.stopCasterEngine()
+  if BOT_USE_CPP_SCHEDULER then 
+    g_logger.info("[BotHelper] startCasterEngine chamado, CPP=" .. tostring(BOT_USE_CPP_SCHEDULER))
+    return 
+  end
+
+  BotHelper.casterCycle = cycleEvent(function()
+    if not isTabEnabled('caster') then return end
+    if not BotHelper.SpellCaster.shooterEnabled then return end
+
+    local player = g_game.getLocalPlayer()
+    if not player then return end
+
+    -- === TRAVA 1: GCD global ÔÇö aborta o ciclo inteiro ===
+    -- Nao adianta testar nenhuma spell enquanto o GCD nao limpar
+    if isOnGlobalCD() then return end
+
+    -- === Coleta e ordena slots configurados por prioridade ===
+    local orderedSlots = {}
+    for i = 1, 5 do
+      local s = BotHelper.SpellCaster.spells[i]
+      if s and s.text and s.text ~= '' then
+        local prioNum = tonumber(s.priority:match('%d+')) or i
+        table.insert(orderedSlots, { prio = prioNum, data = s })
+      end
+    end
+    if #orderedSlots == 0 then return end
+    table.sort(orderedSlots, function(a, b) return a.prio < b.prio end)
+
+    -- === Recursos do jogador (calculados uma unica vez por ciclo) ===
+    local maxMana = player:getMaxMana()
+    local manaPct = (maxMana > 0) and math.floor(player:getMana() * 100 / maxMana) or 0
+    local creaturesNaTela = countVisibleCreatures()
+
+    -- === CASCATA: itera por prioridade, pula CD individuais ===
+    for _, entry in ipairs(orderedSlots) do
+      local s = entry.data
+      local requiredCreatures = tonumber(s.creatures:match('%d+')) or 1
+      g_logger.info("[Caster] spell=" .. s.text .. 
+          " creatures_raw=" .. tostring(s.creatures) ..
+          " required=" .. tostring(requiredCreatures) ..
+          " onScreen=" .. tostring(creaturesNaTela))
+
+      if manaPct >= s.manaPct and creaturesNaTela >= requiredCreatures and not isSpellOnCD(s) then
+        -- Ô£à GCD limpo + CD limpo + recursos OK ÔåÆ DISPARA
+        g_game.talk(s.text)
+        spellTimers[s.text] = g_clock.millis()
+        globalAttackTimer   = g_clock.millis()
+        return  -- 1 cast por ciclo; retorna e aguarda o proximo tick
+      end
+      -- Condicao nao atendida: continua automaticamente para o proximo slot
+    end
+  end, 200)
+
+  -- Sincronizacao de UI num ciclo separado e mais lento
+  BotHelper.casterSyncCycle = cycleEvent(function()
+    if not isTabEnabled('caster') then return end
+    BotHelper.SpellCaster.syncFromUI()
+  end, 500)
+end
+
+function BotHelper.stopCasterEngine()
+  if BotHelper.casterCycle then
+    removeEvent(BotHelper.casterCycle)
+    BotHelper.casterCycle = nil
+  end
+  if BotHelper.casterSyncCycle then
+    removeEvent(BotHelper.casterSyncCycle)
+    BotHelper.casterSyncCycle = nil
+  end
+end
+
+

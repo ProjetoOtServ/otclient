@@ -257,6 +257,19 @@ void Client::registerLuaFunctions()
         g_botScheduler.addPotion(itemId, minHp, minMana, cooldown);
         return 0;
     });
+    g_lua.registerClassMemberFunction("g_botScheduler", "setAutoTarget", [](LuaInterface* lua) -> int {
+        // Chamada: g_botScheduler:setAutoTarget(enabled_bool, mode_string)
+        if (lua->stackSize() > 2) lua->remove(1); // descarta self se vier
+        std::string mode = lua->polymorphicPop<std::string>();
+        bool enabled     = lua->polymorphicPop<bool>();
+        g_botScheduler.setAutoTarget(enabled, mode);
+        return 0;
+    });
+    g_lua.registerClassMemberFunction("g_botScheduler", "stopAutoTarget", [](LuaInterface* lua) -> int {
+        if (lua->stackSize() > 0) lua->clearStack();
+        g_botScheduler.stopAutoTarget();
+        return 0;
+    });
 
     g_lua.registerSingletonClass("g_minimap");
     g_lua.bindSingletonFunction("g_minimap", "clean", &Minimap::clean, &g_minimap);
