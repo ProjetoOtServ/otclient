@@ -672,6 +672,7 @@ void ThingType::draw(const Point& dest, const int layer, const int xPattern, con
     if (hasHdTexture() && drawThings) {
         if (!m_hdTexture) {
             m_hdTexture = g_textures.getTexture(m_hdTexturePath);
+            if (m_hdTexture) m_hdTexture->setSmooth(true);
         }
         if (m_hdTexture) {
             const Size visualSize = m_size * g_gameConfig.getSpriteSize();

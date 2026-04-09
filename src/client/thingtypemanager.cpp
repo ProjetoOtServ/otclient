@@ -55,7 +55,6 @@ void ThingTypeManager::init()
     m_itemTypes.resize(1, m_nullItemType);
 #endif
 
-    loadHdAssets("data/hd_assets/mapping.json");
 }
 
 void ThingTypeManager::terminate()
@@ -104,6 +103,7 @@ bool ThingTypeManager::loadDat(std::string file)
 
         m_datLoaded = true;
         g_lua.callGlobalField("g_things", "onLoadDat", file);
+        loadHdAssets("/hd_assets/mapping.json");
         return true;
     } catch (const stdext::exception& e) {
         g_logger.error("Failed to read dat '{}': {}'", file, e.what());
@@ -222,6 +222,7 @@ bool ThingTypeManager::loadAppearances(const std::string& file)
                 }
             }
         }
+        loadHdAssets("/hd_assets/mapping.json");
         return true;
     } catch (const std::exception& e) {
         g_logger.error("Failed to load '{}' (Appearances): {}", file, e.what());
