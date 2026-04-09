@@ -31,10 +31,14 @@
 #include "framework/graphics/texturemanager.h"
 #include "framework/core/asyncdispatcher.h"
 #include "framework/core/filestream.h"
+#include "framework/core/clock.h"
+#include "framework/core/resourcemanager.h"
 #include "framework/graphics/drawpoolmanager.h"
 #include "framework/graphics/image.h"
 #include "framework/otml/otmlnode.h"
 #include <framework/core/graphicalapplication.h>
+
+#include <nlohmann/json.hpp>
 
 const static TexturePtr m_textureNull;
 
@@ -648,6 +652,116 @@ void ThingType::drawWithFrameBuffer(const TexturePtr& texture, const Rect& scree
     g_drawPool.resetShaderProgram();
 }
 
+void ThingType::setHdTexturePath(const std::string& path)
+{
+    m_hdTexturePath = path;
+    m_hdTexture = nullptr;
+    m_hdAnimationData = {};
+
+    // Zero-Config: Auto-detect sibling JSON file (silent - no logs for missing files)
+    const size_t dotPos = path.rfind('.');
+    if (dotPos != std::string::npos) {
+        std::string jsonPath = path.substr(0, dotPos) + ".json";
+        
+        // Ensure path starts with / for VFS root resolution
+        if (!jsonPath.empty() && jsonPath[0] != '/')
+            jsonPath = "/" + jsonPath;
+        
+        if (g_resources.fileExists(jsonPath)) {
+            loadHdAnimationData(jsonPath);
+        }
+        // Silent fallback: no JSON means static texture (expected behavior)
+    }
+}
+
+void ThingType::loadHdAnimationData(const std::string& jsonPath)
+{
+    try {
+        const std::string jsonContent = g_resources.readFileContents(jsonPath);
+        if (jsonContent.empty()) {
+            g_logger.error("HD ANIMATION: JSON content is EMPTY: {}", jsonPath);
+            return;
+        }
+
+        const auto doc = nlohmann::json::parse(jsonContent);
+
+        // Parse Aseprite Hash format: frames object with frame keys
+        if (!doc.contains("frames")) {
+            g_logger.error("HD ANIMATION: JSON missing 'frames' key: {}", jsonPath);
+            return;
+        }
+
+        const auto& frames = doc["frames"];
+        m_hdAnimationData.frames.clear();
+        m_hdAnimationData.totalDuration = 0;
+
+        // Aseprite exports frames as either object (hash) or array
+        if (frames.is_array()) {
+            for (const auto& frame : frames) {
+                if (!frame.contains("frame")) {
+                    g_logger.error("HD ANIMATION: Frame missing 'frame' sub-object");
+                    continue;
+                }
+                const auto& f = frame["frame"];
+                HdAnimationFrame af;
+                const int x = f.value("x", 0);
+                const int y = f.value("y", 0);
+                const int w = f.value("w", 0);
+                const int h = f.value("h", 0);
+                af.rect = Rect(x, y, w, h);
+                af.duration = frame.value("duration", 100); // Default 100ms
+                m_hdAnimationData.frames.push_back(af);
+                m_hdAnimationData.totalDuration += af.duration;
+            }
+        } else if (frames.is_object()) {
+            for (const auto& [key, frame] : frames.items()) {
+                if (!frame.contains("frame")) {
+                    g_logger.error("HD ANIMATION: Hash frame '{}' missing 'frame' sub-object", key);
+                    continue;
+                }
+                const auto& f = frame["frame"];
+                HdAnimationFrame af;
+                const int x = f.value("x", 0);
+                const int y = f.value("y", 0);
+                const int w = f.value("w", 0);
+                const int h = f.value("h", 0);
+                af.rect = Rect(x, y, w, h);
+                af.duration = frame.value("duration", 100);
+                m_hdAnimationData.frames.push_back(af);
+                m_hdAnimationData.totalDuration += af.duration;
+            }
+        } else {
+            g_logger.error("HD ANIMATION: 'frames' is neither array nor object");
+        }
+
+        m_hdAnimationData.valid = !m_hdAnimationData.frames.empty();
+        if (!m_hdAnimationData.valid) {
+            g_logger.error("HD ANIMATION: FAILED - No valid frames loaded from {}", jsonPath);
+        }
+    } catch (const std::exception& e) {
+        g_logger.error("HD ANIMATION: EXCEPTION parsing {}: {}", jsonPath, e.what());
+    }
+}
+
+Rect ThingType::getHdAnimationFrameRect() const
+{
+    if (!m_hdAnimationData.valid || m_hdAnimationData.frames.empty())
+        return Rect(Point(0), m_hdTexture ? m_hdTexture->getSize() : Size(64, 64));
+
+    // Stateless animation: use global clock modulo total duration
+    const ticks_t now = g_clock.millis();
+    const uint32_t elapsed = static_cast<uint32_t>(now % m_hdAnimationData.totalDuration);
+
+    uint32_t accumulated = 0;
+    for (const auto& frame : m_hdAnimationData.frames) {
+        accumulated += frame.duration;
+        if (elapsed < accumulated)
+            return frame.rect;
+    }
+
+    return m_hdAnimationData.frames.back().rect;
+}
+
 void ThingType::draw(const Point& dest, const int layer, const int xPattern, const int yPattern, const int zPattern, const int animationPhase, const Color& color, const bool drawThings, LightView* lightView)
 {
     // items:
@@ -677,7 +791,9 @@ void ThingType::draw(const Point& dest, const int layer, const int xPattern, con
         if (m_hdTexture) {
             const Size visualSize = m_size * g_gameConfig.getSpriteSize();
             const Rect screenRect(dest - (m_displacement + (m_size.toPoint() - Point(1)) * g_gameConfig.getSpriteSize()) * g_drawPool.getScaleFactor(), visualSize * g_drawPool.getScaleFactor());
-            g_drawPool.addTexturedRect(screenRect, m_hdTexture, Rect(Point(0), m_hdTexture->getSize()), m_opacity < 1.0f ? Color(color, m_opacity) : color);
+            // Use animation frame rect if available, else full texture
+            const Rect srcRect = m_hdAnimationData.valid ? getHdAnimationFrameRect() : Rect(Point(0), m_hdTexture->getSize());
+            g_drawPool.addTexturedRect(screenRect, m_hdTexture, srcRect, m_opacity < 1.0f ? Color(color, m_opacity) : color);
             return;
         } else {
             g_logger.error("HD OVERRIDE: Failed to get texture for path {}", m_hdTexturePath);

@@ -57,10 +57,15 @@ void UIItem::drawSelf(const DrawPoolType drawPane)
         if (thingType->hasHdTexture()) {
             if (!thingType->m_hdTexture) {
                 thingType->m_hdTexture = g_textures.getTexture(thingType->m_hdTexturePath);
+                if (thingType->m_hdTexture) thingType->m_hdTexture->setSmooth(true);
             }
             if (thingType->m_hdTexture) {
-                const auto& hdSize = thingType->m_hdTexture->getSize();
-                g_drawPool.addTexturedRect(getPaddingRect(), thingType->m_hdTexture, Rect(0, 0, hdSize.width(), hdSize.height()), m_color);
+                // UI HD Animation: use same slicing logic as world rendering
+                const Rect srcRect = thingType->m_hdAnimationData.valid 
+                    ? thingType->getHdAnimationFrameRect() 
+                    : Rect(Point(0), thingType->m_hdTexture->getSize());
+                
+                g_drawPool.addTexturedRect(getPaddingRect(), thingType->m_hdTexture, srcRect, m_color);
 
                 drawBorder(m_rect);
                 drawIcon(m_rect);

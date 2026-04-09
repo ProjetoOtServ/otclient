@@ -34,6 +34,8 @@
 #include "framework/graphics/declarations.h"
 #include "framework/luaengine/luaobject.h"
 
+#include <vector>
+
 #ifdef FRAMEWORK_PROTOBUF
 using namespace otclient::protobuf;
 #endif
@@ -191,13 +193,29 @@ public:
     const TexturePtr& getTexture(int animationPhase);
 
     bool hasHdTexture() const { return !m_hdTexturePath.empty(); }
-    void setHdTexturePath(const std::string& path) { m_hdTexturePath = path; m_hdTexture = nullptr; }
+    void setHdTexturePath(const std::string& path);
+    void loadHdAnimationData(const std::string& jsonPath);
+    Rect getHdAnimationFrameRect() const;
 
     std::string getName() { return m_name; }
     std::string getDescription() { return m_description; }
 
+    struct HdAnimationFrame
+    {
+        Rect rect;
+        uint16_t duration;
+    };
+
+    struct HdAnimationData
+    {
+        std::vector<HdAnimationFrame> frames;
+        uint32_t totalDuration{ 0 };
+        bool valid{ false };
+    };
+
     std::string m_hdTexturePath;
     TexturePtr m_hdTexture;
+    HdAnimationData m_hdAnimationData;
 
 private:
     static ThingFlagAttr thingAttrToThingFlagAttr(ThingAttr attr);
