@@ -1,0 +1,11 @@
+Module
+  name: game_supertrader
+  description: Super Trader Blacklist System - Adds context menu options for managing sell blacklist
+  author: OTClient Team
+  website: https://github.com/edubart/otclient
+  sandboxed: true
+  autoload: true
+  scripts:
+    - game_supertrader.lua
+  @onLoad: init()
+  @onUnload: terminate()

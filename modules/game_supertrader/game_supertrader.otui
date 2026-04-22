@@ -1,0 +1,56 @@
+MainWindow
+  id: supertraderBlacklistWindow
+  !text: tr('Sell Blacklist')
+  size: 400 350
+  @onEscape: modules.game_supertrader.hideBlacklistWindow()
+
+  Label
+    id: titleLabel
+    !text: tr('These items will NOT be sold to NPCs:')
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-top: 10
+    margin-left: 10
+    text-auto-resize: true
+    color: #c0c0c0
+
+  FlatPanel
+    id: itemsContainer
+    anchors.top: titleLabel.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-top: 10
+    margin-left: 10
+    margin-right: 10
+    margin-bottom: 50
+
+    VerticalScrollBar
+      id: itemsScrollBar
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 42
+      pixels-scroll: true
+
+    ScrollablePanel
+      id: itemsGrid
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+      anchors.right: prev.left
+      margin: 5
+      layout:
+        type: grid
+        cell-size: 42 42
+        flow: true
+        auto-spacing: true
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 10
+    size: 100 30
+    @onClick: modules.game_supertrader.hideBlacklistWindow()

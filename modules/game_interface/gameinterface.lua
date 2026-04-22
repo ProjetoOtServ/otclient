@@ -725,6 +725,26 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
         end)
     end
 
+    -- Super Trader Blacklist options
+    if lookThing and modules.game_supertrader then
+        local itemId = lookThing:getId()
+        if itemId then
+            menu:addSeparator()
+            if modules.game_supertrader.isBlacklisted(itemId) then
+                menu:addOption(tr('Remove from Sell Blacklist'), function()
+                    modules.game_supertrader.removeFromBlacklist(itemId)
+                end)
+            else
+                menu:addOption(tr('Add to Sell Blacklist'), function()
+                    modules.game_supertrader.addToBlacklist(itemId)
+                end)
+            end
+            menu:addOption(tr('View Blacklist'), function()
+                modules.game_supertrader.showBlacklistWindow()
+            end)
+        end
+    end
+
     if lookThing then
         local parentContainer = lookThing:getParentContainer()
         if parentContainer and parentContainer:hasParent() then

@@ -184,18 +184,45 @@ function itemPopup(self, mousePosition, mouseButton)
         return false
     end
 
+    local item = self:getItem()
+    if not item then return false end
+    
+    local itemId = item:getId()
+
     if mouseButton == MouseRightButton then
         local menu = g_ui.createWidget('PopupMenu')
         menu:setGameMenu(true)
+        
+        -- Look option
         menu:addOption(tr('Look'), function()
-            return g_game.inspectNpcTrade(self:getItem())
+            return g_game.inspectNpcTrade(item)
         end)
+        
+        -- Super Trader Blacklist options
+        if modules.game_supertrader and itemId then
+            menu:addSeparator()
+            
+            if modules.game_supertrader.isBlacklisted(itemId) then
+                menu:addOption(tr('Remove from Sell Blacklist'), function()
+                    modules.game_supertrader.removeFromBlacklist(itemId)
+                end)
+            else
+                menu:addOption(tr('Add to Sell Blacklist'), function()
+                    modules.game_supertrader.addToBlacklist(itemId)
+                end)
+            end
+            
+            menu:addOption(tr('View Blacklist'), function()
+                modules.game_supertrader.showBlacklistWindow()
+            end)
+        end
+        
         menu:display(mousePosition)
         return true
     elseif ((g_mouse.isPressed(MouseLeftButton) and mouseButton == MouseRightButton) or
         (g_mouse.isPressed(MouseRightButton) and mouseButton == MouseLeftButton)) then
         cancelNextRelease = true
-        g_game.inspectNpcTrade(self:getItem())
+        g_game.inspectNpcTrade(item)
         return true
     end
     return false
@@ -339,28 +366,99 @@ function refreshTradeItems()
     end
     radioItems = UIRadioGroup.create()
 
-    local currentTradeItems = tradeItems[getCurrentTradeType()]
-    for key, item in pairs(currentTradeItems) do
-        local itemBox = g_ui.createWidget('NPCItemBox', itemsPanel)
-        itemBox.item = item
-
-        local text = ''
-        local name = item.name
-        text = text .. name
-        if showWeight then
-            local weight = string.format('%.2f', item.weight) .. ' ' .. WEIGHT_UNIT
-            text = text .. '\n' .. weight
-        end
-        local price = formatCurrency(item.price)
-        text = text .. '\n' .. price
-        itemBox:setText(text)
-
-        local itemWidget = itemBox:getChildById('item')
-        itemWidget:setItem(item.ptr)
-        itemWidget.onMouseRelease = itemPopup
-
-        radioItems:addWidget(itemBox)
+    local currentTradeType = getCurrentTradeType()
+    local currentTradeItems = tradeItems[currentTradeType]
+    
+    if not currentTradeItems then
+        g_logger.info("[npctrade] refreshTradeItems() called but no trade items for type=" .. tostring(currentTradeType))
+        layout:enableUpdates()
+        layout:update()
+        return
     end
+    
+    local hiddenCount = 0
+    local shownCount = 0
+    
+    g_logger.info("[npctrade] refreshTradeItems() called, type=" .. currentTradeType .. ", total trade items=" .. #currentTradeItems)
+    
+    for key, item in pairs(currentTradeItems) do
+        -- Filter blacklisted items in SELL tab
+        if currentTradeType == SELL then
+            if modules.game_supertrader then
+                local itemId = item.ptr and item.ptr:getId()
+                if itemId and modules.game_supertrader.isBlacklisted(itemId) then
+                    g_logger.info("[npctrade] Hiding blacklisted item: " .. itemId .. " (" .. item.name .. ")")
+                    hiddenCount = hiddenCount + 1
+                    -- Skip this item (don't show in list)
+                else
+                    shownCount = shownCount + 1
+                    local itemBox = g_ui.createWidget('NPCItemBox', itemsPanel)
+                    itemBox.item = item
+
+                    local text = ''
+                    local name = item.name
+                    text = text .. name
+                    if showWeight then
+                        local weight = string.format('%.2f', item.weight) .. ' ' .. WEIGHT_UNIT
+                        text = text .. '\n' .. weight
+                    end
+                    local price = formatCurrency(item.price)
+                    text = text .. '\n' .. price
+                    itemBox:setText(text)
+
+                    local itemWidget = itemBox:getChildById('item')
+                    itemWidget:setItem(item.ptr)
+                    itemWidget.onMouseRelease = itemPopup
+
+                    radioItems:addWidget(itemBox)
+                end
+            else
+                shownCount = shownCount + 1
+                local itemBox = g_ui.createWidget('NPCItemBox', itemsPanel)
+                itemBox.item = item
+
+                local text = ''
+                local name = item.name
+                text = text .. name
+                if showWeight then
+                    local weight = string.format('%.2f', item.weight) .. ' ' .. WEIGHT_UNIT
+                    text = text .. '\n' .. weight
+                end
+                local price = formatCurrency(item.price)
+                text = text .. '\n' .. price
+                itemBox:setText(text)
+
+                local itemWidget = itemBox:getChildById('item')
+                itemWidget:setItem(item.ptr)
+                itemWidget.onMouseRelease = itemPopup
+
+                radioItems:addWidget(itemBox)
+            end
+        else
+            shownCount = shownCount + 1
+            local itemBox = g_ui.createWidget('NPCItemBox', itemsPanel)
+            itemBox.item = item
+
+            local text = ''
+            local name = item.name
+            text = text .. name
+            if showWeight then
+                local weight = string.format('%.2f', item.weight) .. ' ' .. WEIGHT_UNIT
+                text = text .. '\n' .. weight
+            end
+            local price = formatCurrency(item.price)
+            text = text .. '\n' .. price
+            itemBox:setText(text)
+
+            local itemWidget = itemBox:getChildById('item')
+            itemWidget:setItem(item.ptr)
+            itemWidget.onMouseRelease = itemPopup
+
+            radioItems:addWidget(itemBox)
+        end
+    end
+
+    g_logger.info("[npctrade] refreshTradeItems() complete: shown=" .. shownCount .. ", hidden=" .. hiddenCount)
 
     layout:enableUpdates()
     layout:update()
@@ -435,6 +533,14 @@ function onOpenNpcTrade(items)
 
     refreshTradeItems()
     addEvent(show) -- player goods has not been parsed yet
+    
+    -- Safety net: refresh sell tab after a short delay to ensure blacklist module is ready
+    scheduleEvent(function()
+        if getCurrentTradeType() == SELL then
+            refreshTradeItems()
+            refreshPlayerGoods()
+        end
+    end, 200)
 end
 
 function closeNpcTrade()
@@ -546,11 +652,94 @@ function getMaxAmount()
 end
 
 function sellAll()
-    for itemid, item in pairs(playerItems) do
-        local item = Item.create(itemid)
-        local amount = getSellQuantity(item)
-        if amount > 0 then
-            g_game.sellItem(item, amount, ignoreEquipped:isChecked())
+    g_logger.info("[npctrade] Sell All started")
+    
+    -- Collect all items to sell first
+    local itemsToSell = {}
+    local skippedCount = 0
+    
+    for itemId, count in pairs(playerItems) do
+        -- Check blacklist
+        if modules.game_supertrader and modules.game_supertrader.isBlacklisted(itemId) then
+            skippedCount = skippedCount + 1
+            g_logger.info("[npctrade] Skipping blacklisted item: " .. itemId)
+            goto continue
         end
+        
+        -- Get trade data (contains the real item pointer from server)
+        local tradeData = getTradeItemData(itemId, SELL)
+        if tradeData and tradeData.ptr then
+            local amount = getSellQuantity(tradeData.ptr)
+            if amount > 0 then
+                table.insert(itemsToSell, {
+                    id = itemId,
+                    ptr = tradeData.ptr,
+                    amount = amount,
+                    price = tradeData.price * amount
+                })
+            end
+        else
+            g_logger.warning("[npctrade] No trade data found for item " .. itemId)
+        end
+        
+        ::continue::
     end
+    
+    if #itemsToSell == 0 then
+        if modules.game_textmessage then
+            modules.game_textmessage.displayGameMessage("Sell All: No items to sell.")
+        end
+        return
+    end
+    
+    -- Sell items sequentially with delay
+    local currentIndex = 1
+    local soldCount = 0
+    local totalGold = 0
+    
+    local function sellNextItem()
+        if currentIndex > #itemsToSell then
+            -- All done - show summary
+            local msg = "Sell All: " .. soldCount .. " items sold"
+            if skippedCount > 0 then
+                msg = msg .. ", " .. skippedCount .. " blacklisted items skipped"
+            end
+            msg = msg .. " (Total: " .. totalGold .. " gold)"
+            
+            if modules.game_textmessage then
+                modules.game_textmessage.displayGameMessage(msg)
+            end
+            if modules.game_console then
+                modules.game_console.addText(msg, nil, "Server Log")
+            end
+            g_logger.info("[npctrade] Sell All completed: " .. soldCount .. " items, " .. skippedCount .. " skipped, " .. totalGold .. " gold")
+            return
+        end
+        
+        local itemData = itemsToSell[currentIndex]
+        currentIndex = currentIndex + 1
+        
+        -- Double-check blacklist before selling (may have changed)
+        if modules.game_supertrader and modules.game_supertrader.isBlacklisted(itemData.id) then
+            g_logger.info("[npctrade] Item " .. itemData.id .. " was blacklisted during Sell All, skipping")
+            sellNextItem() -- Skip and continue immediately
+            return
+        end
+        
+        -- Sell using the real trade item pointer
+        if g_game and g_game.isOnline() and itemData.ptr then
+            g_logger.info("[npctrade] Selling item " .. itemData.id .. " x" .. itemData.amount)
+            g_game.sellItem(itemData.ptr, itemData.amount, ignoreEquipped:isChecked())
+            soldCount = soldCount + 1
+            totalGold = totalGold + itemData.price
+        else
+            g_logger.warning("[npctrade] Cannot sell item " .. itemData.id .. " - no valid pointer or not online")
+        end
+        
+        -- Schedule next item with 100ms delay
+        scheduleEvent(sellNextItem, 100)
+    end
+    
+    -- Start selling
+    sellNextItem()
 end
