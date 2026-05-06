@@ -59,6 +59,10 @@ function UIItem:onDrop(widget, mousePos, forced)
     if not (toPos) and self:getParent() and self:getParent().slotPosition then
         toPos = self:getParent().slotPosition
     end
+
+    if not toPos then
+        return false
+    end
     if modules.game_actionbar and modules.game_actionbar.tryAssignActionButtonFromDrop(mousePos, widget, item:getId()) then
         return true
     end

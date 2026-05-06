@@ -1,0 +1,121 @@
+BuildingBookItem < UIItem
+  size: 64 64
+  background-color: #ffffff11
+  border-width: 1
+  border-color: #ffffff22
+  margin: 2
+  $hover:
+    background-color: #ffffff22
+    border-color: #ffffff44
+  $focus:
+    background-color: #ffffff33
+    border-color: #ffffff66
+
+BuildingBookWindow < MainWindow
+  id: buildingBookWindow
+  !text: tr('Building Book')
+  size: 780 540
+  visible: false
+  anchors.centerIn: parent
+  @onEscape: self:hide()
+
+  // Sidebar de Categorias
+  UIScrollArea
+    id: listCategory
+    width: 190
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-bottom: 40
+    image-source: /images/ui/panel_flat
+    image-border: 3
+    padding: 5
+    layout: verticalBox
+    vertical-scrollbar: listCategoryScroll
+
+  VerticalScrollBar
+    id: listCategoryScroll
+    anchors.top: listCategory.top
+    anchors.bottom: listCategory.bottom
+    anchors.right: listCategory.right
+    step: 14
+    pixels-scroll: true
+
+  // Painel Principal (Grid de Itens)
+  Panel
+    id: panelItems
+    anchors.top: parent.top
+    anchors.left: listCategory.right
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-bottom: 120
+    margin-left: 8
+    padding: 6
+    image-source: /images/ui/panel_flat
+    image-border: 3
+
+    UIScrollArea
+      id: listProduct
+      anchors.fill: parent
+      vertical-scrollbar: scrollList
+      layout:
+        type: grid
+        cell-size: 64 64
+        cell-spacing: 5
+        flow: true
+
+    VerticalScrollBar
+      id: scrollList
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 14
+      pixels-scroll: true
+
+  // Painel Inferior de Detalhes
+  Panel
+    id: detailPanel
+    height: 80
+    anchors.top: panelItems.bottom
+    anchors.left: listCategory.right
+    anchors.right: parent.right
+    margin-top: 8
+    padding: 10
+    image-source: /images/ui/panel_flat
+    image-border: 3
+
+    Label
+      id: itemName
+      anchors.top: parent.top
+      anchors.left: parent.left
+      !text: tr('Selecione um item')
+      font: verdana-11px-rounded
+      color: #dfdfdf
+
+    Label
+      id: itemMaterials
+      anchors.top: itemName.bottom
+      anchors.left: parent.left
+      margin-top: 5
+      !text: tr('Materiais necessários: -')
+      color: #aaaaaa
+
+    Button
+      id: btnPlace
+      !text: tr('Place on Map')
+      width: 120
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin-bottom: 2
+      margin-right: 5
+      enabled: false
+
+  // Botão Fechar
+  Button
+    id: btnClose
+    !text: tr('Close')
+    width: 80
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    margin-bottom: 0
+    @onClick: self:getParent():hide()

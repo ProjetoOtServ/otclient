@@ -679,7 +679,7 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
                 end, shortcut)
             end
         else
-            if useThing:isMultiUse() then
+            if useThing:isMultiUse() or useThing:getId() == 5300 or useThing:getId() == 953 then
                 menu:addOption(tr('Use with ...'), function()
                     startUseWith(useThing)
                 end, shortcut)
@@ -984,6 +984,7 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
 end
 
 function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, useThing, creatureThing, attackCreature)
+
     local keyboardModifiers = g_keyboard.getModifiers()
 
     local smartLeftClick = modules.client_options.getOption('smartLeftClick')
@@ -1106,7 +1107,7 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
                             g_game.open(useThing)
                         end
                         return true
-                    elseif useThing:isMultiUse() then
+                    elseif useThing:isMultiUse() or useThing:getId() == 5300 or useThing:getId() == 953 then
                         startUseWith(useThing)
                         return true
                     else

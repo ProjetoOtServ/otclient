@@ -1,0 +1,11 @@
+Module
+  name: game_construction
+  description: Manage construction system preview and placement
+  author: Antigravity
+  website: https://github.com/edubart/otclient
+  sandboxed: true
+  dependencies: [ game_interface, game_mainpanel ]
+  scripts:
+    - game_construction.lua
+  @onLoad: init()
+  @onUnload: terminate()
