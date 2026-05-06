@@ -8,6 +8,8 @@ local selectedItemId = 0
 local constructionMode = false
 local bookWindow = nil
 local bookButton = nil
+local managerWindow = nil
+local lastSitePos = nil
 
 -- Definição de Receitas (ID -> {name, planks, nails})
 local RECIPES = {
@@ -40,32 +42,37 @@ local CATEGORIES = {
   {name = "Roofs", items = {}}
 }
 
+-- === Inicialização ===
+
 function init()
   g_logger.info("[game_construction] Initializing...")
   
   -- Garante que o estilo seja importado
   g_ui.importStyle('game_construction.otui')
   
-  -- Tenta criar a janela no root panel
+  -- Tenta criar as janelas no root panel
   local rootPanel = modules.game_interface.getRootPanel()
   if rootPanel then
     bookWindow = g_ui.createWidget('BuildingBookWindow', rootPanel)
-    if bookWindow then
-      bookWindow:hide()
-      setupWindow()
-    end
+    managerWindow = g_ui.createWidget('ConstructionManagerWindow', rootPanel)
+    if bookWindow then bookWindow:hide() end
+    if managerWindow then managerWindow:hide() end
+    setupWindow()
   else
     addEvent(function()
       local root = modules.game_interface.getRootPanel()
-      if root and not bookWindow then
-        bookWindow = g_ui.createWidget('BuildingBookWindow', root)
-        if bookWindow then
-          bookWindow:hide()
-          setupWindow()
-        end
+      if root then
+        if not bookWindow then bookWindow = g_ui.createWidget('BuildingBookWindow', root) end
+        if not managerWindow then managerWindow = g_ui.createWidget('ConstructionManagerWindow', root) end
+        if bookWindow then bookWindow:hide() end
+        if managerWindow then managerWindow:hide() end
+        setupWindow()
       end
     end)
   end
+
+  -- Opcodes
+  ProtocolGame.registerExtendedOpcode(102, onConstructionStatus)
 
   -- Eventos
   connect(g_game, {
@@ -79,9 +86,9 @@ function init()
 end
 
 function setupWindow()
-  if not bookWindow then return end
+  if not bookWindow or not managerWindow then return end
 
-  -- Inicializa Categorias
+  -- Inicializa Categorias do Livro
   local catList = bookWindow:getChildById('listCategory')
   if catList then
     catList:destroyChildren()
@@ -93,7 +100,7 @@ function setupWindow()
     end
   end
 
-  -- Botão de Posicionamento
+  -- Botão de Posicionamento do Livro
   local btnPlace = bookWindow:recursiveGetChildById('btnPlace')
   if btnPlace then
     btnPlace.onClick = function()
@@ -103,6 +110,30 @@ function setupWindow()
       end
     end
   end
+
+  -- Slots do Manager
+  for i=1, 4 do
+    local slot = managerWindow:recursiveGetChildById('slot' .. i)
+    slot.onDrop = function(widget, droppedWidget, mousePos)
+        if not droppedWidget or not droppedWidget.getItem then return false end
+        local item = droppedWidget:getItem()
+        if not item then return false end
+        
+        local itemId = item:getId()
+        if itemId == 5901 or itemId == 953 then
+            addMaterial(itemId, item:getCount())
+            return true
+        end
+        return false
+    end
+  end
+
+  local btnBuild = managerWindow:getChildById('btnBuild')
+  btnBuild.onClick = function()
+      if not lastSitePos then return end
+      g_game.getProtocolGame():sendExtendedOpcode(104, string.format("%d,%d,%d", lastSitePos.x, lastSitePos.y, lastSitePos.z))
+      managerWindow:hide()
+  end
 end
 
 function terminate()
@@ -111,15 +142,111 @@ function terminate()
     onGameEnd = onGameEnd
   })
   
-  if bookWindow then
-    bookWindow:destroy()
-    bookWindow = nil
-  end
-  if bookButton then
-    bookButton:destroy()
-    bookButton = nil
-  end
+  ProtocolGame.unregisterExtendedOpcode(102)
+
+  if bookWindow then bookWindow:destroy(); bookWindow = nil end
+  if managerWindow then managerWindow:destroy(); managerWindow = nil end
+  if bookButton then bookButton:destroy(); bookButton = nil end
   stopConstruction()
+end
+
+-- === Opcodes e Comunicação ===
+
+function onConstructionStatus(protocol, opcode, buffer)
+    if buffer == "CLOSE" then
+        if managerWindow then managerWindow:hide() end
+        return
+    end
+
+    -- Buffer: Name|P_Cur|P_Ned|N_Cur|N_Ned|X|Y|Z
+    local parts = buffer:split("|")
+    if #parts < 8 then return end
+
+    local name = parts[1]
+    local pCur = tonumber(parts[2])
+    local pNed = tonumber(parts[3])
+    local nCur = tonumber(parts[4])
+    local nNed = tonumber(parts[5])
+    lastSitePos = {x = tonumber(parts[6]), y = tonumber(parts[7]), z = tonumber(parts[8])}
+
+    managerWindow:getChildById('projectTitle'):setText(name)
+    
+    -- Calcula o que falta
+    local pMissing = pNed - pCur
+    local nMissing = nNed - nCur
+    local statusText = ""
+    if pMissing > 0 and nMissing > 0 then
+        statusText = string.format("Faltam: %d Madeira e %d Pregos", pMissing, nMissing)
+    elseif pMissing > 0 then
+        statusText = string.format("Faltam: %d Madeira", pMissing)
+    elseif nMissing > 0 then
+        statusText = string.format("Faltam: %d Pregos", nMissing)
+    else
+        statusText = "Materiais prontos!"
+    end
+    managerWindow:getChildById('materialStatus'):setText(statusText)
+
+    -- Atualiza visual dos slots
+    local slot1 = managerWindow:recursiveGetChildById('slot1')
+    local slot2 = managerWindow:recursiveGetChildById('slot2')
+    
+    if pCur > 0 then
+        slot1:setItemId(5901)
+        slot1:setItemCount(pCur)
+    else
+        slot1:setItemId(0)
+    end
+
+    if nCur > 0 then
+        slot2:setItemId(953)
+        slot2:setItemCount(nCur)
+    else
+        slot2:setItemId(0)
+    end
+
+    -- Habilita botão se materiais estiverem prontos
+    local btnBuild = managerWindow:getChildById('btnBuild')
+    if pCur >= pNed and nCur >= nNed then
+        btnBuild:setEnabled(true)
+    else
+        btnBuild:setEnabled(false)
+    end
+
+    if not managerWindow:isVisible() then
+        managerWindow:show()
+        managerWindow:raise()
+        startDistanceCheck()
+    end
+end
+
+local distanceCheckEvent = nil
+
+function startDistanceCheck()
+    if distanceCheckEvent then removeEvent(distanceCheckEvent) end
+    distanceCheckEvent = cycleEvent(function()
+        if not managerWindow:isVisible() then
+            removeEvent(distanceCheckEvent)
+            distanceCheckEvent = nil
+            return
+        end
+
+        local player = g_game.getLocalPlayer()
+        if player and lastSitePos then
+            local pPos = player:getPosition()
+            local dist = math.max(math.abs(pPos.x - lastSitePos.x), math.abs(pPos.y - lastSitePos.y))
+            if dist > 1 or pPos.z ~= lastSitePos.z then
+                managerWindow:hide()
+            end
+        end
+    end, 500)
+end
+
+function addMaterial(materialId, count)
+    if not lastSitePos then return end
+    count = count or 1
+    local payload = string.format("%d,%d,%d,%d,%d", materialId, count, lastSitePos.x, lastSitePos.y, lastSitePos.z)
+    g_logger.info("[game_construction] Sending Opcode 103: " .. payload)
+    g_game.getProtocolGame():sendExtendedOpcode(103, payload)
 end
 
 function onGameStart()
@@ -183,7 +310,7 @@ function selectItem(itemId)
   local recipe = RECIPES[itemId]
   if recipe then
     nameLabel:setText(recipe.name)
-    matLabel:setText(string.format("Materiais necessários: %d Planks, %d Nails", recipe.planks, recipe.nails))
+    matLabel:setText(string.format("Materiais necessários: %d Madeira, %d Pregos", recipe.planks, recipe.nails))
     btnPlace:setEnabled(true)
   else
     nameLabel:setText("Item ID: " .. itemId)

@@ -118,4 +118,89 @@ BuildingBookWindow < MainWindow
     anchors.bottom: parent.bottom
     anchors.right: parent.right
     margin-bottom: 0
+    margin-bottom: 0
+    @onClick: self:getParent():hide()
+
+ConstructionManagerWindow < MainWindow
+  id: constructionManagerWindow
+  !text: tr('Canteiro de Obras')
+  size: 260 200
+  visible: false
+  anchors.centerIn: parent
+  @onEscape: self:hide()
+
+  Label
+    id: projectTitle
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    text-align: center
+    font: verdana-11px-rounded
+    color: #dfdfdf
+    margin-top: 5
+
+  Label
+    id: materialStatus
+    anchors.top: projectTitle.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    text-align: center
+    font: verdana-11px-rounded
+    color: #ffaa66
+    margin-top: 2
+    !text: tr('Faltam materiais')
+
+  Label
+    id: dragLabel
+    anchors.top: materialStatus.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    text-align: center
+    !text: tr('Arraste os materiais para os slots')
+    color: #aaaaaa
+    font: verdana-11px-rounded
+    margin-top: 5
+
+  Panel
+    id: slotPanel
+    anchors.top: dragLabel.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    size: 160 40
+    margin-top: 15
+    layout:
+      type: grid
+      cell-size: 34 34
+      cell-spacing: 5
+      flow: true
+
+    Item
+      id: slot1
+      virtual: true
+    Item
+      id: slot2
+      virtual: true
+    Item
+      id: slot3
+      virtual: true
+    Item
+      id: slot4
+      virtual: true
+
+  Button
+    id: btnBuild
+    !text: tr('Construir')
+    width: 100
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 5
+    enabled: false
+
+  Button
+    id: btnClose
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-top: -5
+    margin-right: -5
+    size: 20 20
+    !text: tr('X')
     @onClick: self:getParent():hide()
